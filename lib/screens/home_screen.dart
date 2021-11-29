@@ -1,4 +1,5 @@
 import 'package:curl_manitoba/screens/news_feed_screen.dart';
+import 'package:curl_manitoba/screens/scores_screen.dart';
 import 'package:curl_manitoba/screens/twitter_feed_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
@@ -19,7 +20,7 @@ class _HomeScreenState extends State<HomeScreen> {
         length: 2,
         child: Scaffold(
             body: TabBarView(
-          children: [NewsFeedScreen(), TwitterFeedScreen()],
+          children: [NewsFeedScreen(), ScoresScreen()],
         )));
   }
 }

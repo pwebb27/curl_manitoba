@@ -56,6 +56,7 @@ class _TabsScreenState extends State<TabsScreen> {
                     height: 42,
                     color: Colors.white,
                     child: TabBar(
+                      
                       indicatorWeight: 3.5,
                       labelColor: Theme.of(context).primaryColor,
                       unselectedLabelColor: Colors.grey.shade700,
