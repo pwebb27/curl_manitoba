@@ -7,7 +7,6 @@ class NewsStoryScreen extends StatelessWidget {
 
   void goBack(BuildContext context) {}
 
-
   @override
   Widget build(BuildContext context) {
     final newsStoryId = ModalRoute.of(context)!.settings.arguments as String;
@@ -15,18 +14,20 @@ class NewsStoryScreen extends StatelessWidget {
         NEWS_STORIES.firstWhere((newsStory) => newsStory.id == newsStoryId);
     return Scaffold(
         appBar: AppBar(
-            backgroundColor: Theme.of(context).primaryColor,
-            leading: IconButton(
-              icon: Icon(
-                Icons.arrow_back,
-                color: Colors.white,
-              ),
-              onPressed: () => goBack(context),
-            ),
-            title: Padding(
-                padding: EdgeInsets.only(right: 120),
-                child: Image.asset('assets/images/Curl_Manitoba_Logo.png',
-                    fit: BoxFit.cover))),
+          leading: Padding(
+              padding: const EdgeInsets.only(top: 18),
+              child: Builder(
+                builder: (context) => IconButton(
+                  icon: Icon(Icons.arrow_back, size: 30),
+                  onPressed: () => Navigator.of(context).pop(),
+                ),
+              )),
+          backgroundColor: Theme.of(context).primaryColor,
+          title: Padding(
+              padding: EdgeInsets.only(right: 150, left: 0),
+              child: Image.asset('assets/images/Curl_Manitoba_Logo.png',
+                  fit: BoxFit.cover)),
+        ),
         body: Column(
           children: <Widget>[
             Container(
