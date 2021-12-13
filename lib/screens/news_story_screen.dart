@@ -1,6 +1,8 @@
-import 'package:flutter/material.dart';
-import '../news_stories_data.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:flutter/material.dart';
+
+import '../news_stories_data.dart';
+import '../widgets/custom_app_bar.dart';
 
 class NewsStoryScreen extends StatelessWidget {
   static const routeName = '/news-story';
@@ -9,11 +11,12 @@ class NewsStoryScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    
     final newsStoryId = ModalRoute.of(context)!.settings.arguments as String;
     final selectedNewsStory =
         NEWS_STORIES.firstWhere((newsStory) => newsStory.id == newsStoryId);
     return Scaffold(
-        appBar: AppBar(
+        appBar: CustomAppBar(Icon(Icons.arrow_back, size: 25), context),/* AppBar(
           leading: Padding(
               padding: const EdgeInsets.only(top: 18),
               child: Builder(
@@ -27,7 +30,7 @@ class NewsStoryScreen extends StatelessWidget {
               padding: EdgeInsets.only(right: 150, left: 0),
               child: Image.asset('assets/images/Curl_Manitoba_Logo.png',
                   fit: BoxFit.cover)),
-        ),
+        ), */
         body: Column(
           children: <Widget>[
             Container(

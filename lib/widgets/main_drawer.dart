@@ -1,9 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import '../menu_data.dart';
-import '../menu.dart';
 
-import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import '../drawer_data.dart';
 
 class MainDrawer extends StatelessWidget {
   Theme buildExpansionTiles(BuildContext context, int index) {
@@ -20,9 +18,9 @@ class MainDrawer extends StatelessWidget {
         child: ExpansionTile(
             collapsedIconColor: Colors.grey.shade700,
             collapsedTextColor: Colors.grey.shade700,
-            leading: (EXPANSION_MENU_DATA[index].getIcon as Icon),
+            leading: (EXPANSION_TILES_DATA[index].getIcon as Icon),
             title: Text(
-              EXPANSION_MENU_DATA[index].getMenuTitle as String,
+              EXPANSION_TILES_DATA[index].getMenuTitle as String,
               style: TextStyle(
                 fontFamily: 'Neuzeit Office',
                 fontWeight: FontWeight.bold,
@@ -37,13 +35,13 @@ class MainDrawer extends StatelessWidget {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: <ListTileTheme>[
                     for (int i = 0;
-                        i < EXPANSION_MENU_DATA[index].getSubmenus!.length;
+                        i < EXPANSION_TILES_DATA[index].getSubmenus!.length;
                         i++)
                       ListTileTheme(
                         dense: true,
                         child: ListTile(
                             title: Text(
-                          EXPANSION_MENU_DATA[index].getSubmenus![i].toString(),
+                          EXPANSION_TILES_DATA[index].getSubmenus![i].toString(),
                           style: TextStyle(
                               fontFamily: 'Neuzeit Office',
                               fontWeight: FontWeight.bold,
@@ -62,12 +60,12 @@ class MainDrawer extends StatelessWidget {
   Column buildListTiles(BuildContext context) {
     List<Widget> widgets = [];
 
-    for (int i = 0; i < LIST_MENU_DATA.length; i++) {
+    for (int i = 0; i < LIST_TILES_DATA.length; i++) {
       widgets.add(ListTile(
           dense: true,
-          leading: LIST_MENU_DATA[i].getIcon,
+          leading: LIST_TILES_DATA[i].getIcon,
           title: Text(
-            LIST_MENU_DATA[i].getMenuTitle as String,
+            LIST_TILES_DATA[i].getMenuTitle as String,
             style: TextStyle(
               fontSize: 14,
               color: Colors.grey.shade700,
@@ -100,7 +98,7 @@ class MainDrawer extends StatelessWidget {
               Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  for (int i = 0; i < EXPANSION_MENU_DATA.length; i++)
+                  for (int i = 0; i < EXPANSION_TILES_DATA.length; i++)
                     buildExpansionTiles(context, i),
                   Divider(
                     height: 10,

@@ -1,26 +1,32 @@
 import 'package:flutter/material.dart';
-import 'main.dart';
 import 'package:flutter/cupertino.dart';
 
-class Menu {
-  String? menuTitle;
+class DrawerWidget {
+  late String menuTitle;
+  late double iconSize;
   Widget? icon;
-  List<String>? subMenus = null;
+  List<String>? subMenus;
+  
 
-  Menu(String menuTitle, IconData iconData, List<String> subMenus, [double iconSize = 19]) {
+  ///Creates an ExpansionTile widget for the drawer
+  DrawerWidget(String menuTitle, IconData iconData, List<String> subMenus, [double iconSize = 19]) {
     this.menuTitle = menuTitle;
     this.subMenus = subMenus;
+    this.iconSize = iconSize;
 
     this.icon = Icon(
       iconData,
       size: iconSize,
     );
   }
-  Menu.m2(String menuTitle, dynamic iconData,[double iconSize = 19]) {
+
+  ///Creates a ListTile widget for the drawer
+  DrawerWidget.m2(String menuTitle, dynamic iconData,[double iconSize = 19]) {
     this.icon = icon;
     this.menuTitle = menuTitle;
 
-    iconData.runtimeType == AssetImage
+    //icon may be an image
+    (iconData.runtimeType == AssetImage)
         ? this.icon = ColorFiltered(colorFilter: ColorFilter.mode(Colors.grey, BlendMode.saturation), child: Image(image: iconData, height: 28))
         : this.icon = Icon(
             iconData as IconData,

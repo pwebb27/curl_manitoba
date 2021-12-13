@@ -1,20 +1,19 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import '../menu_data.dart';
-import '../menu.dart';
-
-import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 
 class CustomAppBar extends StatelessWidget with PreferredSizeWidget {
-  late IconData iconData;
+  late Icon icon;
+  ///Boolean that determines whether a tabbar is required or not
   late bool tabbar;
   late BuildContext context;
 
   @override
-  Size get preferredSize => (!tabbar)?Size.fromHeight(56):Size.fromHeight(98);
+  Size get preferredSize =>
+      //Determine the size of AppBar based on whether or not a tabbar exists
+      (!tabbar) ? Size.fromHeight(56) : Size.fromHeight(98);
 
-  CustomAppBar(IconData iconData, BuildContext context, [bool tabbar = false]) {
-    this.iconData = iconData;
+  CustomAppBar(Icon icon, BuildContext context, [bool tabbar = false]) {
+    this.icon = icon;
     this.tabbar = tabbar;
     this.context = context;
   }
@@ -24,12 +23,11 @@ class CustomAppBar extends StatelessWidget with PreferredSizeWidget {
     BuildContext context,
   ) {
     return AppBar(
-      
         leading: Padding(
           padding: const EdgeInsets.only(top: 18),
           child: Builder(
               builder: (context) => IconButton(
-                  icon: new Icon(iconData, size: 21),
+                  icon: icon,
                   onPressed: () => Scaffold.of(context).openDrawer())),
         ),
         backgroundColor: Theme.of(context).primaryColor,

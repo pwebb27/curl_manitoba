@@ -1,13 +1,13 @@
-import 'package:curl_manitoba/widgets/custom_app_bar.dart';
-import 'package:curl_manitoba/widgets/font_awesome_pro_icons.dart';
-import 'package:flutter/material.dart';
-import 'e_entry_screen.dart';
-import 'calendar_screen.dart';
-import 'scores_screen.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
-import 'home_screen.dart';
-import '../widgets/main_drawer.dart';
+import 'package:flutter/material.dart';
+
 import '../widgets/custom_app_bar.dart';
+import '../widgets/font_awesome_pro_icons.dart';
+import '../widgets/main_drawer.dart';
+import 'calendar_screen.dart';
+import 'e_entry_screen.dart';
+import 'home_screen.dart';
+import 'scores_screen.dart';
 
 class TabsScreen extends StatefulWidget {
   @override
@@ -43,7 +43,7 @@ class _TabsScreenState extends State<TabsScreen> {
     return DefaultTabController(
         length: 2,
         child: Scaffold(
-          appBar: CustomAppBar(FontAwesomePro.bars, context, (_selectedPageIndex==0)?true:false),
+          appBar: CustomAppBar(Icon(FontAwesomePro.bars, size: 21), context, (_selectedPageIndex==0)?true:false),
           drawer: MainDrawer(),
           body: _pages[_selectedPageIndex],
           bottomNavigationBar: SizedBox(
