@@ -1,7 +1,8 @@
-
+import 'package:curl_manitoba/widgets/tweet_item.dart';
 import 'package:http/http.dart' as http;
 import '../models/twitter_feed.dart';
 import '../models/tweet.dart';
+import '../models/twitter_api.dart';
 
 import 'package:flutter/material.dart';
 import 'dart:convert';
@@ -14,45 +15,43 @@ class TwitterFeedScreen extends StatefulWidget {
 }
 
 class TwitterFeedScreenState extends State<TwitterFeedScreen> {
+  List<dynamic>? data;
   TwitterFeed feed = TwitterFeed();
-  void callTwitterAPI() async {
-    String bearerToken =
-        'AAAAAAAAAAAAAAAAAAAAANDnWgEAAAAAQ0%2BkRHKSb1CbJ0I1nJPhAlyBggU%3DqvnkZaPQjBQZ4DPAPDyArtDcTq2JTPkdYJoUqxTQLV921z3WuC';
-    final response = await http.get(
-        Uri.https("api.twitter.com", "2/users/92376817/tweets", {
-          "max_results": "30",
-          "tweet.fields": "created_at,attachments",
-        }),
-        headers: {
-          "Authorization":
-              'Bearer $bearerToken', 
-          "Content-Type": "application/json"
-        });
-
- 
-    Map<String, dynamic> map = jsonDecode(response.body);
-    List<dynamic> data = map["data"];
-
-    
-    for (Map<String, dynamic> tweet in data) {
-      feed.addTweet(Tweet.fromJson(tweet));
-    }
-    for(Tweet tweet in feed.tweets){
-      print(tweet.id);
-    }
-
+  TwitterAPI api = TwitterAPI();
+  void getAPIData() async {
+    var response = await api.callTwitterAPI("2/users/92376817/tweets", {
+      "max_results": "30",
+      "expansions": "attachments.media_keys",
+      "tweet.fields": "created_at,attachments",
+      "user.fields": "username",
+    });
+    Map<String, dynamic> map = json.decode(response);
+    data = map["data"];
+    data?.forEach((element) {
+      feed.addTweet(Tweet.fromJson(element));
+    });
   }
 
   @override
   void initState() {
     super.initState();
-    callTwitterAPI();
+    getAPIData();
   }
 
   @override
   Widget build(BuildContext context) {
-    return Center(
-      child: Text('Test'),
-    );
+    for (Tweet tweet in feed.tweets) {
+      print(tweet.id);
+    }
+
+    return ListView.builder(
+        itemBuilder: (ctx, index) {
+          return TweetItem(
+            id: feed.tweets[index].id,
+            creationTime: feed.tweets[index].createdAt,
+            attachments: feed.tweets[index].attachments,
+          );
+        },
+        itemCount: feed.tweets.length);
   }
 }
