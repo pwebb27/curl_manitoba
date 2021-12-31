@@ -81,46 +81,53 @@ class MainDrawer extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-        width: 290,
-        child: Drawer(
-          child: SingleChildScrollView(
-            child: Column(children: <Widget>[
-              Container(
-                padding: EdgeInsets.only(bottom: 100),
-                decoration: BoxDecoration(
-                  image: DecorationImage(
-                      image: AssetImage('assets/images/DrawerImage.PNG'),
-                      fit: BoxFit.fill),
-                ),
-                
-                height: 180
-              ),
-              Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  for (int i = 0; i < EXPANSION_TILES_DATA.length; i++)
-                    buildExpansionTiles(context, i),
-                  Divider(
-                    height: 10,
-                    thickness: 1,
-                  ),
-                  Padding(
-                    padding: const EdgeInsets.only(left: 8, bottom: 12, top: 9),
-                    child: Text("Useful Links",
-                        style: TextStyle(
-                          fontSize: 14,
-                          color: Colors.grey.shade600,
-                          fontFamily: 'Neuzeit Office',
-                          fontWeight: FontWeight.bold,
-                        )),
-                  ),
+      color: Colors.black,
+      child: SafeArea(
+        
+        child: Container(
+            width: 290,
+            child: Drawer(
+              child: SingleChildScrollView(
+                child: Column(children: <Widget>[
                   Container(
-                    child: buildListTiles(context),
-                  )
-                ],
+                    padding: EdgeInsets.only(bottom: 100),
+                    decoration: BoxDecoration(
+                      image: DecorationImage(
+                          image: AssetImage('assets/images/DrawerImage.PNG'),
+                          fit: BoxFit.contain),
+                    ),
+                    height: 170
+                    
+                    
+                  ),
+                  Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      for (int i = 0; i < EXPANSION_TILES_DATA.length; i++)
+                        buildExpansionTiles(context, i),
+                      Divider(
+                        height: 10,
+                        thickness: 1,
+                      ),
+                      Padding(
+                        padding: const EdgeInsets.only(left: 8, bottom: 12, top: 9),
+                        child: Text("Useful Links",
+                            style: TextStyle(
+                              fontSize: 14,
+                              color: Colors.grey.shade600,
+                              fontFamily: 'Neuzeit Office',
+                              fontWeight: FontWeight.bold,
+                            )),
+                      ),
+                      Container(
+                        child: buildListTiles(context),
+                      )
+                    ],
+                  ),
+                ]),
               ),
-            ]),
-          ),
-        ));
+            )),
+      ),
+    );
   }
 }

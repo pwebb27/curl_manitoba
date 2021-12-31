@@ -22,20 +22,26 @@ class CustomAppBar extends StatelessWidget with PreferredSizeWidget {
   Widget build(
     BuildContext context,
   ) {
-    return AppBar(
-        leading: Padding(
-          padding: const EdgeInsets.only(top: 18),
-          child: Builder(
-              builder: (context) => IconButton(
-                  icon: icon,
-                  onPressed: () => Scaffold.of(context).openDrawer())),
-        ),
-        backgroundColor: Theme.of(context).primaryColor,
-        title: Padding(
-            padding: EdgeInsets.only(right: 150, left: 0),
-            child: Image.asset('assets/images/Curl_Manitoba_Logo.png',
-                fit: BoxFit.cover)),
-        bottom: _buildTabbar());
+    return Container(
+      color: Colors.black,
+      child: SafeArea(
+        
+        child: AppBar(
+            leading: Padding(
+              padding: const EdgeInsets.only(top: 18),
+              child: Builder(
+                  builder: (context) => IconButton(
+                      icon: icon,
+                      onPressed: () => Scaffold.of(context).openDrawer())),
+            ),
+            backgroundColor: Theme.of(context).primaryColor,
+            title: Padding(
+                padding: EdgeInsets.only(right: 150, left: 0),
+                child: Image.asset('assets/images/Curl_Manitoba_Logo.png',
+                    fit: BoxFit.cover)),
+            bottom: _buildTabbar()),
+      ),
+    );
   }
 
   _buildTabbar() {

@@ -19,11 +19,9 @@ class TwitterFeedScreenState extends State<TwitterFeedScreen> {
   TwitterFeed feed = TwitterFeed();
   TwitterAPI api = TwitterAPI();
   void getAPIData() async {
-    var response = await api.callTwitterAPI("2/users/92376817/tweets", {
-      "max_results": "30",
-      "expansions": "attachments.media_keys",
-      "tweet.fields": "created_at,attachments",
-      "user.fields": "username",
+    var response = await api.callTwitterAPI("1.1/statuses/user_timeline.json", {
+      "user_id": "92376817",
+      "count": "30",
     });
     Map<String, dynamic> map = json.decode(response);
     data = map["data"];
@@ -41,7 +39,7 @@ class TwitterFeedScreenState extends State<TwitterFeedScreen> {
   @override
   Widget build(BuildContext context) {
     for (Tweet tweet in feed.tweets) {
-      print(tweet.id);
+      print(tweet.attachments);
     }
 
     return ListView.builder(
