@@ -1,5 +1,4 @@
 import 'package:curl_manitoba/widgets/tweet_item.dart';
-import 'package:http/http.dart' as http;
 import '../models/twitter_feed.dart';
 import '../models/tweet.dart';
 import '../models/twitter_api.dart';
@@ -21,13 +20,15 @@ class TwitterFeedScreenState extends State<TwitterFeedScreen> {
   void getAPIData() async {
     var response = await api.callTwitterAPI("1.1/statuses/user_timeline.json", {
       "user_id": "92376817",
-      "count": "30",
+      "count": "1",
+      "tweet_mode": "extended"
     });
-    Map<String, dynamic> map = json.decode(response);
-    data = map["data"];
-    data?.forEach((element) {
+    List<dynamic> map = json.decode(response);
+
+    
+    for (var element in map) {
       feed.addTweet(Tweet.fromJson(element));
-    });
+    }
   }
 
   @override
@@ -39,15 +40,15 @@ class TwitterFeedScreenState extends State<TwitterFeedScreen> {
   @override
   Widget build(BuildContext context) {
     for (Tweet tweet in feed.tweets) {
-      print(tweet.attachments);
+
     }
 
     return ListView.builder(
         itemBuilder: (ctx, index) {
           return TweetItem(
-            id: feed.tweets[index].id,
+            text: feed.tweets[index].text,
             creationTime: feed.tweets[index].createdAt,
-            attachments: feed.tweets[index].attachments,
+            mediaUrl: feed.tweets[index].mediaUrl
           );
         },
         itemCount: feed.tweets.length);
