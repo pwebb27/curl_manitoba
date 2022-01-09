@@ -33,6 +33,7 @@ dependencies:
   flutter_svg: ^0.23.0+1
   http: ^0.13.4
   pretty_json: ^2.0.0
+  get_time_ago: ^1.1.1
 
 
  
@@ -89,13 +90,16 @@ flutter:
   # list giving the asset and other descriptors for the font. For
   # example:
   fonts:
+    - family: BeVietnamPro
+      fonts:
+        - asset: assets/fonts/BeVietnamPro-ExtraLight.ttf
     - family: Ani Dimitrova
       fonts:
         - asset: assets/fonts/Ani-Dimitrova-Quat-ExtraBold.otf
     - family: FontAwesomePro
       fonts:
         - asset: assets/fonts/FontAwesomePro.ttf
-    - family: Neuzeit Office
+    - family: NeuzeitOffice
       fonts:
         - asset: assets/fonts/NeuzeitOfficeW01Regular.ttf
   

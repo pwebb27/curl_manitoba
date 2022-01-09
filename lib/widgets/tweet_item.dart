@@ -14,29 +14,34 @@ class TweetItem extends StatelessWidget {
   Widget build(BuildContext context) {
     print(mediaUrl);
 
-    return InkWell(
-        child: Card(
-            elevation: 4,
-            margin: EdgeInsets.all(10),
-            child: Column(children: [
-              Padding(
-                padding: const EdgeInsets.only(bottom: 5),
-                child: Row(
-                  children: [
-                    Padding(
-                      padding: const EdgeInsets.only(right: 7),
-                      child: Image(
-                        image:
-                            AssetImage('assets/images/Curl_Manitoba_Twitter_Logo.jpg'),
-                        height: 45,
+    return Theme(
+      data: ThemeData(fontFamily: 'BeVietnamPro' ),
+      child: InkWell(
+          child: Container(
+              margin: EdgeInsets.all(10),
+              child: Column(children: [
+                Padding(
+                  padding: const EdgeInsets.only(bottom: 5),
+                  child: Row(
+                    children: [
+                      Padding(
+                        padding: const EdgeInsets.only(right: 7),
+                        child: Image(
+                          image: AssetImage(
+                              'assets/images/Curl_Manitoba_Twitter_Logo.jpg'),
+                          height: 45,
+                        ),
                       ),
-                    ), Column(crossAxisAlignment: CrossAxisAlignment.start, children: [Text('CurlManitoba'), Text(creationTime)],)
-                  ],
+                      Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [Text('CurlManitoba'), Text(creationTime)],
+                      )
+                    ],
+                  ),
                 ),
-              ),
-              
-              if (text != null) Text(text),
-              Image.network(mediaUrl)
-            ])));
+                if (text != null) Text(text),
+                Image.network(mediaUrl)
+              ]))),
+    );
   }
 }

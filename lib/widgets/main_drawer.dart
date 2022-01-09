@@ -22,7 +22,7 @@ class MainDrawer extends StatelessWidget {
             title: Text(
               EXPANSION_TILES_DATA[index].getMenuTitle as String,
               style: TextStyle(
-                fontFamily: 'Neuzeit Office',
+                fontFamily: 'NeuzeitOffice',
                 fontWeight: FontWeight.bold,
                 fontSize: 14,
               ),
@@ -43,7 +43,7 @@ class MainDrawer extends StatelessWidget {
                             title: Text(
                           EXPANSION_TILES_DATA[index].getSubmenus![i].toString(),
                           style: TextStyle(
-                              fontFamily: 'Neuzeit Office',
+                              fontFamily: 'NeuzeitOffice',
                               fontWeight: FontWeight.bold,
                               fontSize: 14,
                               color: Colors.grey.shade700),
@@ -69,7 +69,7 @@ class MainDrawer extends StatelessWidget {
             style: TextStyle(
               fontSize: 14,
               color: Colors.grey.shade700,
-              fontFamily: 'Neuzeit Office',
+              fontFamily: 'NeuzeitOffice',
               fontWeight: FontWeight.bold,
             ),
           )));
@@ -115,7 +115,7 @@ class MainDrawer extends StatelessWidget {
                             style: TextStyle(
                               fontSize: 14,
                               color: Colors.grey.shade600,
-                              fontFamily: 'Neuzeit Office',
+                              fontFamily: 'NeuzeitOffice',
                               fontWeight: FontWeight.bold,
                             )),
                       ),
