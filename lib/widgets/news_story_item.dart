@@ -53,13 +53,20 @@ class NewsStoryItem extends StatelessWidget {
                             style: TextStyle(fontSize: 17),
                           ),
                         ),
-                        Text('$date  |  $author',
-                            style: TextStyle(
-                                fontSize: 12,
-                                color: Theme.of(context).primaryColor)),
+                        Row(
+                          children: [
+                            Icon(Icons.person, size: 15, color: Theme.of(context).primaryColor,),
+                            Text(' $author  |  $date',
+                                style: TextStyle(
+                                    fontSize: 12,
+                                    color: Theme.of(context).primaryColor)),
+                          ],
+                        ),
                         Padding(
                           padding: const EdgeInsets.only(bottom: 5),
-                          child: Text('$subtext', style: TextStyle(color: Colors.grey.shade700, fontSize: 12)),
+                          child: Text('$subtext',
+                              style: TextStyle(
+                                  color: Colors.grey.shade700, fontSize: 12)),
                         )
                       ]))
             ])));
