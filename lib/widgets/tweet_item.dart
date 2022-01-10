@@ -40,7 +40,7 @@ class TweetItem extends StatelessWidget {
                   ),
                 ),
                 if (text != null) Text(text),
-                Image.network(mediaUrl)
+                if(mediaUrl != null)Image.network(mediaUrl)
               ]))),
     );
   }

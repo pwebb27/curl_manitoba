@@ -20,12 +20,12 @@ class TwitterFeedScreenState extends State<TwitterFeedScreen> {
   void getAPIData() async {
     var response = await api.callTwitterAPI("1.1/statuses/user_timeline.json", {
       "user_id": "92376817",
-      "count": "1",
+      "count": "2",
       "tweet_mode": "extended"
     });
     List<dynamic> map = json.decode(response);
 
-    
+
     for (var element in map) {
       feed.addTweet(Tweet.fromJson(element));
     }
@@ -40,6 +40,7 @@ class TwitterFeedScreenState extends State<TwitterFeedScreen> {
   @override
   Widget build(BuildContext context) {
     for (Tweet tweet in feed.tweets) {
+      print(tweet.text);
 
     }
 

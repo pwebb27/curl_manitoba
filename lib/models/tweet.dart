@@ -11,8 +11,24 @@ class Tweet {
   Tweet.fromJson(Map<String, dynamic> json) {
     createdAt = GetTimeAgo.parse(
         DateTime.parse(convertToDateTimeFormat(json['created_at'])));
-    text = json['full_text'];
-    mediaUrl = json['entities']['media'][0]['media_url'];
+    if (json['retweeted_status'] != null) {
+      text = shortenRetweetText(json);
+      
+    } else {
+      text = json['full_text'];
+    }
+    if (json['entities']['media'] != null) {
+      mediaUrl = json['entities']['media'][0]['media_url'];
+    }
+  }
+
+  String shortenRetweetText(Map<String,dynamic> json) {
+    String usermentions = "";
+      for (Map<String,dynamic> usermention in json['retweeted_status']['entities']
+          ['user_mentions']) {
+        usermentions = usermentions + '@' + usermention['screen_name'] + " ";
+      }
+      return json['retweeted_status']['full_text'].replaceAll(usermentions, "");
   }
 
   String convertToDateTimeFormat(String timestamp) {
@@ -56,7 +72,7 @@ class Tweet {
         month = '12';
     }
     String day = timestamp.substring(8, 10);
-    if(day.length == 1){
+    if (day.length == 1) {
       day = '0' + day;
     }
     String hours = timestamp.substring(11, 13);
