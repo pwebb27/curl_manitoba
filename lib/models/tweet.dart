@@ -4,12 +4,12 @@ import 'package:get_time_ago/get_time_ago.dart';
 import 'package:flutter/cupertino.dart';
 
 class Tweet {
-  String? createdAt;
-  String? text;
-  String? mediaUrl;
+  late String timePassed;
+  late String text;
+  late String mediaUrl;
 
   Tweet.fromJson(Map<String, dynamic> json) {
-    createdAt = GetTimeAgo.parse(
+    timePassed = GetTimeAgo.parse(
         DateTime.parse(convertToDateTimeFormat(json['created_at'])));
     if (json['retweeted_status'] != null) {
       text = shortenRetweetText(json);

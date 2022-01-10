@@ -39,16 +39,10 @@ class TwitterFeedScreenState extends State<TwitterFeedScreen> {
 
   @override
   Widget build(BuildContext context) {
-    for (Tweet tweet in feed.tweets) {
-
-    }
-
     return ListView.builder(
         itemBuilder: (ctx, index) {
           return TweetItem(
-            text: feed.tweets[index].text,
-            creationTime: feed.tweets[index].createdAt,
-            mediaUrl: feed.tweets[index].mediaUrl
+            feed.tweets[index]
           );
         },
         itemCount: feed.tweets.length);

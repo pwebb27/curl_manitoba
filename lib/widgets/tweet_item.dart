@@ -1,19 +1,16 @@
 import 'dart:ffi';
+import '../models/tweet.dart';
 
 import 'package:flutter/material.dart';
 
 class TweetItem extends StatelessWidget {
-  final dynamic text;
-  final dynamic creationTime;
-  final dynamic mediaUrl;
+  final Tweet tweet;
 
-  TweetItem(
-      {required this.text, required this.creationTime, required this.mediaUrl});
+  TweetItem(this.tweet);
+  
 
   @override
   Widget build(BuildContext context) {
-    print(mediaUrl);
-
     return Theme(
       data: ThemeData(fontFamily: 'BeVietnamPro' ),
       child: InkWell(
@@ -34,13 +31,13 @@ class TweetItem extends StatelessWidget {
                       ),
                       Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [Text('CurlManitoba'), Text(creationTime)],
+                        children: [Text('CurlManitoba'), Text(tweet.text)],
                       )
                     ],
                   ),
                 ),
-                if (text != null) Text(text),
-                if(mediaUrl != null)Image.network(mediaUrl)
+                if (tweet.text != null) Text(tweet.text),
+                if(tweet.mediaUrl != null)Image.network(tweet.mediaUrl)
               ]))),
     );
   }
