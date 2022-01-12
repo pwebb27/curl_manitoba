@@ -7,33 +7,43 @@ class Tweet {
   late String profilePicURL;
   late String timePassed;
   late String text;
-  String mediaUrl = "";
+  String mediaURL = "";
   String userName = 'Curl Manitoba';
 
   Tweet.fromJson(Map<String, dynamic> json) {
-    timePassed = GetTimeAgo.parse(
-        DateTime.parse(convertToDateTimeFormat(json['created_at'])));
-    if (json['retweeted_status'] != null) {
-      text = shortenRetweetText(json);
-      profilePicURL = json['retweeted_status']['user']['profile_image_url'];
-      userName = json['retweeted_status']['user']['name'];
-      
-    } else {
-      profilePicURL = json['user']['profile_image_url'];
-      text = json['full_text'];
-    }
+    (json['retweeted_status'] != null)
+        ? generateRetweet(json)
+        : generateTweet(json);
     if (json['entities']['media'] != null) {
-      mediaUrl = json['entities']['media'][0]['media_url'];
+      mediaURL = json['entities']['media'][0]['media_url'];
     }
   }
 
-  String shortenRetweetText(Map<String,dynamic> json) {
+  generateRetweet(Map<String, dynamic> json) {
+    timePassed = GetTimeAgo.parse(DateTime.parse(
+        convertToDateTimeFormat(json['retweeted_status']['created_at'])));
+    text = shortenRetweetText(json);
+    profilePicURL = json['retweeted_status']['user']['profile_image_url'];
+    userName = json['retweeted_status']['user']['name'];
+    if (json['retweeted_status']['entities']['media'] != null) {
+      mediaURL = json['retweeted_status']['entities']['media'][0]['media_url'];
+    }
+  }
+
+  generateTweet(Map<String, dynamic> json) {
+    timePassed = GetTimeAgo.parse(
+        DateTime.parse(convertToDateTimeFormat(json['created_at'])));
+    profilePicURL = json['user']['profile_image_url'];
+    text = json['full_text'];
+  }
+
+  String shortenRetweetText(Map<String, dynamic> json) {
     String usermentions = "";
-      for (Map<String,dynamic> usermention in json['retweeted_status']['entities']
-          ['user_mentions']) {
-        usermentions = usermentions + '@' + usermention['screen_name'] + " ";
-      }
-      return json['retweeted_status']['full_text'].replaceAll(usermentions, "");
+    for (Map<String, dynamic> usermention in json['retweeted_status']
+        ['entities']['user_mentions']) {
+      usermentions = usermentions + '@' + usermention['screen_name'] + " ";
+    }
+    return json['retweeted_status']['full_text'].replaceAll(usermentions, "");
   }
 
   String convertToDateTimeFormat(String timestamp) {
