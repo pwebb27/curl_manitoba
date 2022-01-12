@@ -9,6 +9,7 @@ class Tweet {
   late String text;
   String mediaURL = "";
   String userName = 'Curl Manitoba';
+  bool retweet = false;
 
   Tweet.fromJson(Map<String, dynamic> json) {
     (json['retweeted_status'] != null)
@@ -17,6 +18,7 @@ class Tweet {
   }
 
   generateRetweet(Map<String, dynamic> json) {
+    retweet = true;
     timePassed = GetTimeAgo.parse(DateTime.parse(
         convertToDateTimeFormat(json['retweeted_status']['created_at'])));
     text = shortenRetweetText(json);

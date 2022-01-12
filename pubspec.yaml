@@ -90,9 +90,6 @@ flutter:
   # list giving the asset and other descriptors for the font. For
   # example:
   fonts:
-    - family: BeVietnamPro
-      fonts:
-        - asset: assets/fonts/BeVietnamPro-ExtraLight.ttf
     - family: Ani Dimitrova
       fonts:
         - asset: assets/fonts/Ani-Dimitrova-Quat-ExtraBold.otf

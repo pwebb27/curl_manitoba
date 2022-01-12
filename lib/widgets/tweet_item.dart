@@ -1,4 +1,6 @@
 import 'dart:ffi';
+import 'package:curl_manitoba/widgets/font_awesome_pro_icons.dart';
+
 import '../models/tweet.dart';
 
 import 'package:flutter/material.dart';
@@ -7,44 +9,64 @@ class TweetItem extends StatelessWidget {
   final Tweet tweet;
 
   TweetItem(this.tweet);
-  
 
   @override
   Widget build(BuildContext context) {
     return Theme(
-      data: ThemeData(fontFamily: 'BeVietnamPro' ),
+      data: ThemeData(fontFamily: 'NeuzeitOffice'),
       child: InkWell(
-        
-          child: Card(
-
-            elevation: 7,
-              margin: EdgeInsets.only(bottom: 6, top: 6),
-              child: Container(
-                padding: const EdgeInsets.all(7),
-                child: Column(children: [
-                  Padding(
-                    padding: const EdgeInsets.only(bottom: 5),
-                    child: Row(
-                      children: [
-                        Padding(
-                          padding: const EdgeInsets.only(right: 7),
-
-                          child: 
-                          Image.network(tweet.profilePicURL,
-                            height: 45,
-                          ),
-                        ),
-                        Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [Text(tweet.userName, style: TextStyle(fontWeight: FontWeight.bold)), Text(tweet.timePassed)],
-                        )
-                      ],
-                    ),
+          child: Container(
+        color: Colors.grey.shade600,
+        child: Card(
+            margin: EdgeInsets.only(bottom: 4),
+            child: Container(
+              padding:
+                  const EdgeInsets.only(left: 7, right: 7, bottom: 10, top: 10),
+              child: Column(children: [
+                if (tweet.retweet)
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      Icon(FontAwesomePro.retweet, size: 15),
+                      Text('   Curl Manitoba retweeted',
+                          style: TextStyle(
+                              fontWeight: FontWeight.w700,
+                              color: Colors.grey.shade700)),
+                    ],
                   ),
-                  if (tweet.text != null) Text(tweet.text),
-                  if(tweet.mediaURL != "")Image.network(tweet.mediaURL)
-                ]),
-              ))),
+                Padding(
+                  padding: const EdgeInsets.only(top: 5, bottom: 5),
+                  child: Row(
+                    children: [
+                      Padding(
+                          padding: const EdgeInsets.only(right: 7),
+                          child: ClipRRect(
+                            borderRadius: BorderRadius.circular(8.0),
+                            child: Image.network(
+                              tweet.profilePicURL,
+                              height: 38,
+                            ),
+                          )),
+                      Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text(tweet.userName,
+                              style: TextStyle(fontWeight: FontWeight.bold)),
+                          Text(tweet.timePassed)
+                        ],
+                      )
+                    ],
+                  ),
+                ),
+                if (tweet.text != null) Text(tweet.text),
+                if (tweet.mediaURL != "")
+                  Padding(
+                    padding: const EdgeInsets.only(top: 6),
+                    child: Image.network(tweet.mediaURL),
+                  )
+              ]),
+            )),
+      )),
     );
   }
 }
