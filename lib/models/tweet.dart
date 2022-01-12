@@ -4,17 +4,22 @@ import 'package:get_time_ago/get_time_ago.dart';
 import 'package:flutter/cupertino.dart';
 
 class Tweet {
+  late String profilePicURL;
   late String timePassed;
   late String text;
-  late String mediaUrl;
+  String mediaUrl = "";
+  String userName = 'Curl Manitoba';
 
   Tweet.fromJson(Map<String, dynamic> json) {
     timePassed = GetTimeAgo.parse(
         DateTime.parse(convertToDateTimeFormat(json['created_at'])));
     if (json['retweeted_status'] != null) {
       text = shortenRetweetText(json);
+      profilePicURL = json['retweeted_status']['user']['profile_image_url'];
+      userName = json['retweeted_status']['user']['name'];
       
     } else {
+      profilePicURL = json['user']['profile_image_url'];
       text = json['full_text'];
     }
     if (json['entities']['media'] != null) {

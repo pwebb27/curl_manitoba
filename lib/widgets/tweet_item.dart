@@ -23,21 +23,21 @@ class TweetItem extends StatelessWidget {
                     children: [
                       Padding(
                         padding: const EdgeInsets.only(right: 7),
-                        child: Image(
-                          image: AssetImage(
-                              'assets/images/Curl_Manitoba_Twitter_Logo.jpg'),
+
+                        child: 
+                        Image.network(tweet.profilePicURL,
                           height: 45,
                         ),
                       ),
                       Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [Text('CurlManitoba'), Text(tweet.text)],
+                        children: [Text(tweet.userName), Text(tweet.timePassed)],
                       )
                     ],
                   ),
                 ),
                 if (tweet.text != null) Text(tweet.text),
-                if(tweet.mediaUrl != null)Image.network(tweet.mediaUrl)
+                if(tweet.mediaUrl != "")Image.network(tweet.mediaUrl)
               ]))),
     );
   }
