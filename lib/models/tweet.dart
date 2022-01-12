@@ -14,9 +14,6 @@ class Tweet {
     (json['retweeted_status'] != null)
         ? generateRetweet(json)
         : generateTweet(json);
-    if (json['entities']['media'] != null) {
-      mediaURL = json['entities']['media'][0]['media_url'];
-    }
   }
 
   generateRetweet(Map<String, dynamic> json) {
@@ -35,6 +32,9 @@ class Tweet {
         DateTime.parse(convertToDateTimeFormat(json['created_at'])));
     profilePicURL = json['user']['profile_image_url'];
     text = json['full_text'];
+    if (json['entities']['media'] != null) {
+      mediaURL = json['entities']['media'][0]['media_url'];
+    }
   }
 
   String shortenRetweetText(Map<String, dynamic> json) {
