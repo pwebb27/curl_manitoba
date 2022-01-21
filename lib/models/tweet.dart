@@ -24,7 +24,7 @@ class Tweet {
     timePassed = GetTimeAgo.parse(DateTime.parse(
         convertToDateTimeFormat(json['retweeted_status']['created_at'])));
     text = json['retweeted_status']['full_text'];
-    generateColoredText(json, text);
+    generateColoredText(json['retweeted_status']['entities']['hashtags'],json['retweeted_status']['entities']['user_mentions'], text);
     spans[0] = removeUserMentions(json, spans[0]);
 
     profilePicURL = json['retweeted_status']['user']['profile_image_url'];
@@ -39,6 +39,8 @@ class Tweet {
         DateTime.parse(convertToDateTimeFormat(json['created_at'])));
     profilePicURL = json['user']['profile_image_url'];
     text = json['full_text'];
+    generateColoredText(json['entities']['hashtags'],json['entities']['user_mentions'], text);
+    
     if (json['entities']['media'] != null) {
       mediaURL = json['entities']['media'][0]['media_url'];
     }
@@ -106,34 +108,43 @@ class Tweet {
     return year + month + day + 'T' + hours + minutes + seconds;
   }
 
-  generateColoredText(Map<String, dynamic> json, String text) {
+  generateColoredText(List hashtags, List usermentions, String text) {
+    print(text);
     List<int> indices = [];
-    if (json['retweeted_status']['entities']['hashtags'] != null)
-      for (var hashtag in json['retweeted_status']['entities']['hashtags']) {
+    if (hashtags != null) {
+      for (var hashtag in hashtags) {
         indices.add(hashtag['indices'][0]);
         indices.add(hashtag['indices'][1]);
       }
-    final TextStyle normalStyle = TextStyle(color: Colors.black);
-    final TextStyle hypertextStyle = TextStyle(color: Colors.blue);
+      if (usermentions != null) {
+        for (var usermention in usermentions) {
+          indices.add(usermention['indices'][0]);
+          indices.add(usermention['indices'][1]);
+        }
+        indices.sort((a,b) => a.compareTo(b));
+        final TextStyle normalStyle = TextStyle(color: Colors.black);
+        final TextStyle hypertextStyle = TextStyle(color: Colors.blue);
 
-    spans
-        .add(TextSpan(text: text.substring(0, indices[0]), style: normalStyle));
-    int i = 0;
+        spans.add(
+            TextSpan(text: text.substring(0, indices[0]), style: normalStyle));
+        int i = 0;
 
-    do {
-      spans.add(TextSpan(
-          text: text.substring(indices[i], indices[++i]),
-          style: hypertextStyle));
-      if (i != indices.length - 1) {
-        spans.add(TextSpan(
-            text: text.substring(indices[i], indices[++i]),
-            style: normalStyle));
-      } else {
-        spans.add(TextSpan(
-            text: text.substring(indices[i], text.length - 1),
-            style: normalStyle));
-        break;
+        do {
+          spans.add(TextSpan(
+              text: text.substring(indices[i], indices[++i]),
+              style: hypertextStyle));
+          if (i != indices.length - 1) {
+            spans.add(TextSpan(
+                text: text.substring(indices[i], indices[++i]),
+                style: normalStyle));
+          } else {
+            spans.add(TextSpan(
+                text: text.substring(indices[i], text.length - 1),
+                style: normalStyle));
+            break;
+          }
+        } while (true);
       }
-    } while (true);
+    }
   }
 }

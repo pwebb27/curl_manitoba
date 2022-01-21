@@ -20,7 +20,7 @@ class TwitterFeedScreenState extends State<TwitterFeedScreen> {
   void getAPIData() async {
     var response = await api.callTwitterAPI("1.1/statuses/user_timeline.json", {
       "user_id": "92376817",
-      "count": "2",
+      "count": "30",
       "tweet_mode": "extended"
     });
     List<dynamic> map = json.decode(response);
