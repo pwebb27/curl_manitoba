@@ -58,7 +58,7 @@ class TweetItem extends StatelessWidget {
                     ],
                   ),
                 ),
-                if (tweet.text != null) Text(tweet.text),
+                if (tweet.text != null) RichText(text:TextSpan(children: tweet.spans)),
                 if (tweet.mediaURL != "")
                   Padding(
                     padding: const EdgeInsets.only(top: 6),
