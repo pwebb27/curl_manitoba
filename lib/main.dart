@@ -9,10 +9,11 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
       theme: ThemeData(
+        
           primaryColor: Color.fromRGBO(111, 18, 0, 1),
           colorScheme:
               ColorScheme.fromSwatch().copyWith(secondary: Colors.white),
-          fontFamily: 'Ani Dimitrova'
+          fontFamily: 'Roboto'
 
           ),
           

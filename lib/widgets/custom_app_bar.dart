@@ -57,12 +57,14 @@ class CustomAppBar extends StatelessWidget with PreferredSizeWidget {
               indicatorWeight: 3.5,
               labelColor: Theme.of(context).primaryColor,
               unselectedLabelColor: Colors.grey.shade700,
+              unselectedLabelStyle: TextStyle(fontWeight: FontWeight.w600),
+              labelStyle: TextStyle(fontWeight: FontWeight.w700, fontSize: 13),
               indicatorColor: Color.fromRGBO(111, 17, 0, 1),
               tabs: <Widget>[
-                Tab(child: Text('LEAGUE NEWS', style: TextStyle(fontSize: 13))),
+                Tab(child: Text('LEAGUE NEWS')),
                 Tab(
                     child:
-                        Text('SOCIAL MEDIA', style: TextStyle(fontSize: 13))),
+                        Text('SOCIAL MEDIA')),
               ],
             )),
       );

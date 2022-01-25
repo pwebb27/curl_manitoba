@@ -33,7 +33,7 @@ dependencies:
   flutter_svg: ^0.23.0+1
   http: ^0.13.4
   pretty_json: ^2.0.0
-  get_time_ago: ^1.1.1
+  timeago: ^3.1.0
 
 
  
@@ -90,15 +90,28 @@ flutter:
   # list giving the asset and other descriptors for the font. For
   # example:
   fonts:
-    - family: Ani Dimitrova
-      fonts:
-        - asset: assets/fonts/Ani-Dimitrova-Quat-ExtraBold.otf
     - family: FontAwesomePro
       fonts:
         - asset: assets/fonts/FontAwesomePro.ttf
     - family: NeuzeitOffice
       fonts:
         - asset: assets/fonts/NeuzeitOfficeW01Regular.ttf
+    - family: Roboto
+      fonts:
+        - asset: assets/fonts/Roboto-Black.ttf
+          weight: 900
+        - asset: assets/fonts/Roboto-Bold.ttf
+          weight: 700
+        - asset: assets/fonts/Roboto-Light.ttf
+          weight: 300
+        - asset: assets/fonts/Roboto-Medium.ttf
+          weight: 500
+        - asset: assets/fonts/Roboto-Regular.ttf
+          weight: 400
+        - asset: assets/fonts/Roboto-Thin.ttf
+          weight: 100
+
+        
   
   # For details regarding fonts from package dependencies,
   # see https://flutter.dev/custom-fonts/#from-packages

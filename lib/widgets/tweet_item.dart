@@ -18,16 +18,16 @@ class TweetItem extends StatelessWidget {
           child: Container(
         color: Colors.grey.shade600,
         child: Card(
-            margin: EdgeInsets.only(bottom: 4),
+            margin: EdgeInsets.only(bottom: 2),
             child: Container(
               padding:
-                  const EdgeInsets.only(left: 7, right: 7, bottom: 10, top: 10),
+                  const EdgeInsets.only(left: 7, right: 7, bottom: 16, top: 12),
               child: Column(children: [
                 if (tweet.retweet)
                   Row(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
-                      Icon(FontAwesomePro.retweet, size: 15),
+                      Icon(FontAwesomePro.retweet, size: 15, color: Colors.grey.shade700),
                       Text('   Curl Manitoba retweeted',
                           style: TextStyle(
                               fontWeight: FontWeight.w700,
@@ -35,7 +35,7 @@ class TweetItem extends StatelessWidget {
                     ],
                   ),
                 Padding(
-                  padding: const EdgeInsets.only(top: 5, bottom: 5),
+                  padding: const EdgeInsets.only(top: 5, bottom: 6),
                   child: Row(
                     children: [
                       Padding(

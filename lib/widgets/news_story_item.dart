@@ -42,31 +42,35 @@ class NewsStoryItem extends StatelessWidget {
                         height: 200, width: double.infinity, fit: BoxFit.cover))
               ]),
               Padding(
-                  padding: EdgeInsets.only(left: 20, right: 20),
+                  padding: EdgeInsets.only(left: 13, right: 13),
                   child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: <Widget>[
                         Padding(
-                          padding: const EdgeInsets.symmetric(vertical: 5),
+                          padding: const EdgeInsets.only(top:10),
                           child: Text(
                             '$title',
-                            style: TextStyle(fontSize: 17),
+                            style: TextStyle(fontSize: 17, fontWeight: FontWeight.w700),
                           ),
                         ),
-                        Row(
-                          children: [
-                            Icon(Icons.person, size: 15, color: Theme.of(context).primaryColor,),
-                            Text(' $author  |  $date',
-                                style: TextStyle(
-                                    fontSize: 12,
-                                    color: Theme.of(context).primaryColor)),
-                          ],
+                        Padding(
+                          padding: const EdgeInsets.symmetric(vertical: 4),
+                          child: Row(
+                            children: [
+                              Icon(Icons.person, size: 15, color: Theme.of(context).primaryColor,),
+                              Text(' $author  |  $date',
+                                  style: TextStyle(
+                                      fontWeight: FontWeight.w500,
+                                      fontSize: 12.5,
+                                      color: Theme.of(context).primaryColor)),
+                            ],
+                          ),
                         ),
                         Padding(
                           padding: const EdgeInsets.only(bottom: 5),
                           child: Text('$subtext',
                               style: TextStyle(
-                                  color: Colors.grey.shade700, fontSize: 12)),
+                                  color: Colors.grey.shade800, fontSize: 12.5, fontWeight: FontWeight.w400)),
                         )
                       ]))
             ])));

@@ -1,6 +1,6 @@
 import 'dart:ffi';
 import 'package:flutter/material.dart';
-import 'package:get_time_ago/get_time_ago.dart';
+import 'package:timeago/timeago.dart' as timeago;
 
 import 'package:flutter/cupertino.dart';
 
@@ -21,10 +21,12 @@ class Tweet {
 
   generateRetweet(Map<String, dynamic> json) {
     retweet = true;
-    timePassed = GetTimeAgo.parse(DateTime.parse(
-        convertToDateTimeFormat(json['retweeted_status']['created_at'])));
+
+    timePassed = generateTimePassed(json['created_at']);
+
     text = json['retweeted_status']['full_text'];
-    generateColoredText(json['retweeted_status']['entities']['hashtags'],json['retweeted_status']['entities']['user_mentions'], text);
+    generateColoredText(json['retweeted_status']['entities']['hashtags'],
+        json['retweeted_status']['entities']['user_mentions'], text);
     spans[0] = removeUserMentions(json, spans[0]);
 
     profilePicURL = json['retweeted_status']['user']['profile_image_url'];
@@ -35,15 +37,31 @@ class Tweet {
   }
 
   generateTweet(Map<String, dynamic> json) {
-    timePassed = GetTimeAgo.parse(
-        DateTime.parse(convertToDateTimeFormat(json['created_at'])));
+
+    timePassed = generateTimePassed(json['created_at']);
+
     profilePicURL = json['user']['profile_image_url'];
     text = json['full_text'];
-    generateColoredText(json['entities']['hashtags'],json['entities']['user_mentions'], text);
-    
+    generateColoredText(
+        json['entities']['hashtags'], json['entities']['user_mentions'], text);
+
     if (json['entities']['media'] != null) {
       mediaURL = json['entities']['media'][0]['media_url'];
     }
+  }
+
+  String generateTimePassed(String timestamp){
+    DateTime timeNow = DateTime.now().toUtc();
+    timeNow = DateTime.parse(timeNow.toString().substring(0, 19));
+
+    DateTime timeOfTweet =
+        DateTime.parse(convertToDateTimeFormat(timestamp));
+    timeOfTweet = DateTime.parse(timeOfTweet.toString().substring(0, 19));
+
+    final difference = timeNow.difference(timeOfTweet);
+
+    return timeago.format(DateTime.now().subtract(difference));
+
   }
 
   TextSpan removeUserMentions(Map<String, dynamic> json, TextSpan span) {
@@ -109,7 +127,6 @@ class Tweet {
   }
 
   generateColoredText(List hashtags, List usermentions, String text) {
-    print(text);
     List<int> indices = [];
     if (hashtags != null) {
       for (var hashtag in hashtags) {
@@ -121,7 +138,7 @@ class Tweet {
           indices.add(usermention['indices'][0]);
           indices.add(usermention['indices'][1]);
         }
-        indices.sort((a,b) => a.compareTo(b));
+        indices.sort((a, b) => a.compareTo(b));
         final TextStyle normalStyle = TextStyle(color: Colors.black);
         final TextStyle hypertextStyle = TextStyle(color: Colors.blue);
 
