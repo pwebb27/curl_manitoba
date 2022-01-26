@@ -61,18 +61,20 @@ class MainDrawer extends StatelessWidget {
     List<Widget> widgets = [];
 
     for (int i = 0; i < LIST_TILES_DATA.length; i++) {
-      widgets.add(ListTile(
-          dense: true,
-          leading: LIST_TILES_DATA[i].getIcon,
-          title: Text(
-            LIST_TILES_DATA[i].getMenuTitle as String,
-            style: TextStyle(
-              fontSize: 14,
-              color: Colors.grey.shade700,
-              fontFamily: 'NeuzeitOffice',
-              fontWeight: FontWeight.bold,
-            ),
-          )));
+      widgets.add(GestureDetector(
+        child: ListTile(
+            dense: true,
+            leading: LIST_TILES_DATA[i].getIcon,
+            title: Text(
+              LIST_TILES_DATA[i].getMenuTitle as String,
+              style: TextStyle(
+                fontSize: 14,
+                color: Colors.grey.shade700,
+                fontFamily: 'NeuzeitOffice',
+                fontWeight: FontWeight.bold,
+              ),
+            )),
+      ));
     }
     Column column = new Column(children: widgets);
     return column;
