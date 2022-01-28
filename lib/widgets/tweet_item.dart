@@ -16,9 +16,9 @@ class TweetItem extends StatelessWidget {
       data: ThemeData(fontFamily: 'NeuzeitOffice'),
       child: InkWell(
           child: Container(
-        color: Colors.grey.shade600,
+        color: Colors.grey.shade400,
         child: Card(
-            margin: EdgeInsets.only(bottom: 2),
+            margin: EdgeInsets.only(bottom: 1.3),
             child: Container(
               padding:
                   const EdgeInsets.only(left: 7, right: 7, bottom: 16, top: 12),
