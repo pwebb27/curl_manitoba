@@ -26,42 +26,48 @@ class Tweet {
 
     text = json['retweeted_status']['full_text'];
     generateColoredText(json['retweeted_status']['entities']['hashtags'],
-        json['retweeted_status']['entities']['user_mentions'], text);
+        json['retweeted_status']['entities']['user_mentions'], json['retweeted_status']['entities']['urls'], text);
     spans[0] = removeUserMentions(json, spans[0]);
 
     profilePicURL = json['retweeted_status']['user']['profile_image_url'];
     userName = json['retweeted_status']['user']['name'];
     if (json['retweeted_status']['entities']['media'] != null) {
       mediaURL = json['retweeted_status']['entities']['media'][0]['media_url'];
+      spans[spans.length-1] = removeMediaURL(json, spans[spans.length-1]);
     }
   }
 
   generateTweet(Map<String, dynamic> json) {
-
     timePassed = generateTimePassed(json['created_at']);
 
     profilePicURL = json['user']['profile_image_url'];
     text = json['full_text'];
     generateColoredText(
-        json['entities']['hashtags'], json['entities']['user_mentions'], text);
+        json['entities']['hashtags'], json['entities']['user_mentions'], json['entities']['urls'], text);
 
     if (json['entities']['media'] != null) {
       mediaURL = json['entities']['media'][0]['media_url'];
     }
   }
 
-  String generateTimePassed(String timestamp){
+  String generateTimePassed(String timestamp) {
     DateTime timeNow = DateTime.now().toUtc();
     timeNow = DateTime.parse(timeNow.toString().substring(0, 19));
 
-    DateTime timeOfTweet =
-        DateTime.parse(convertToDateTimeFormat(timestamp));
+    DateTime timeOfTweet = DateTime.parse(convertToDateTimeFormat(timestamp));
     timeOfTweet = DateTime.parse(timeOfTweet.toString().substring(0, 19));
 
     final difference = timeNow.difference(timeOfTweet);
 
     return timeago.format(DateTime.now().subtract(difference));
+  }
+  
+  TextSpan removeMediaURL(Map<String,dynamic> json, TextSpan span){
+    String mediaURL = json['retweeted_status']['entities']['media'][0]['url'];
+    String spanText = span.text as String;
 
+    spanText = spanText.replaceAll(" " + mediaURL.substring(0, mediaURL.length-1),"");
+    return TextSpan(text: spanText, style: TextStyle(color:Colors.black));
   }
 
   TextSpan removeUserMentions(Map<String, dynamic> json, TextSpan span) {
@@ -71,7 +77,7 @@ class Tweet {
         ['entities']['user_mentions']) {
       usermentions = usermentions + '@' + usermention['screen_name'] + " ";
     }
-    text.replaceAll(usermentions, "");
+    spanText = spanText.replaceAll(usermentions, "");
     return TextSpan(text: spanText, style: TextStyle(color: Colors.black));
   }
 
@@ -126,7 +132,7 @@ class Tweet {
     return year + month + day + 'T' + hours + minutes + seconds;
   }
 
-  generateColoredText(List hashtags, List usermentions, String text) {
+  generateColoredText(List hashtags, List usermentions, List urls, String text) {
     List<int> indices = [];
     if (hashtags != null) {
       for (var hashtag in hashtags) {
@@ -137,6 +143,12 @@ class Tweet {
         for (var usermention in usermentions) {
           indices.add(usermention['indices'][0]);
           indices.add(usermention['indices'][1]);
+        }
+        if(urls!=null){
+          for(var url in urls){
+            indices.add(url['indices'][0]);
+            indices.add(url['indices'][1]);
+          }
         }
         indices.sort((a, b) => a.compareTo(b));
         final TextStyle normalStyle = TextStyle(color: Colors.black);
