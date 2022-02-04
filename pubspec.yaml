@@ -34,7 +34,7 @@ dependencies:
   http: ^0.13.4
   pretty_json: ^2.0.0
   timeago: ^3.1.0
-
+  
 
  
 
@@ -51,6 +51,14 @@ dependencies:
 dev_dependencies:
   flutter_test:
     sdk: flutter
+
+  flutter_native_splash: ^2.0.1+1
+
+flutter_native_splash: 
+  color: "#6F1200"
+  image: 'assets/images/curl_manitoba_circle.png'
+  android: true
+  ios: true
 
   # The "flutter_lints" package below contains a set of recommended lints to
   # encourage good coding practices. The lint set provided by the package is
