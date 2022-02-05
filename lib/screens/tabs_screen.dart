@@ -43,7 +43,7 @@ class _TabsScreenState extends State<TabsScreen> {
     return DefaultTabController(
         length: 2,
         child: Scaffold(
-          appBar: CustomAppBar(Icon(FontAwesomePro.bars, size: 21), context, (_selectedPageIndex==0)?true:false),
+          appBar: CustomAppBar(Icon(FontAwesomePro.bars, size: 26), context, (_selectedPageIndex==0)?true:false),
           drawer: MainDrawer(),
           body: _pages[_selectedPageIndex],
           bottomNavigationBar: SizedBox(

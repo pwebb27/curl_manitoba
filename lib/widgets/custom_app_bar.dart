@@ -10,7 +10,7 @@ class CustomAppBar extends StatelessWidget with PreferredSizeWidget {
   @override
   Size get preferredSize =>
       //Determine the size of AppBar based on whether or not a tabbar exists
-      (!tabbar) ? Size.fromHeight(56) : Size.fromHeight(98);
+      (!tabbar) ? Size.fromHeight(62) : Size.fromHeight(104);
 
   CustomAppBar(Icon icon, BuildContext context, [bool tabbar = false]) {
     this.icon = icon;
@@ -36,7 +36,7 @@ class CustomAppBar extends StatelessWidget with PreferredSizeWidget {
             ),
             backgroundColor: Theme.of(context).primaryColor,
             title: Padding(
-                padding: EdgeInsets.only(right: 150, left: 0),
+                padding: EdgeInsets.only(top: 5, right: 150, left: 0),
                 child: Image.asset('assets/images/Curl_Manitoba_Logo.png',
                     fit: BoxFit.cover)),
             bottom: _buildTabbar()),

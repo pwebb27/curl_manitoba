@@ -67,10 +67,10 @@ class NewsStoryItem extends StatelessWidget {
                           ),
                         ),
                         Padding(
-                          padding: const EdgeInsets.only(bottom: 5),
+                          padding: const EdgeInsets.only(bottom: 8),
                           child: Text('$subtext',
                               style: TextStyle(
-                                  color: Colors.grey.shade800, fontSize: 12.5, fontWeight: FontWeight.w400)),
+                                  color: Colors.grey.shade600, fontSize: 12.5, fontWeight: FontWeight.w400)),
                         )
                       ]))
             ])));
