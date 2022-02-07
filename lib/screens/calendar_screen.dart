@@ -25,7 +25,7 @@ class _CalendarScreenState extends State<CalendarScreen> {
             print('Page finished loading: $url');
 
             _myController!.runJavascript(
-                "document.getElementById('footer').style.display='none'; document.getElementsByClassName('masthead inline-header center widgets full-height full-width shadow-decoration shadow-mobile-header-decoration small-mobile-menu-icon dt-parent-menu-clickable show-sub-menu-on-hover show-device-logo show-mobile-logo masthead-mobile masthead-mobile-header')[0].style.display='none'; document.getElementsByClassName('mobile-header-space')[0].style.display='none'; document.getElementById('tribe-events').style.paddingTop = '0';");
+                "document.getElementById('footer').style.display='none'; document.getElementsByClassName('masthead inline-header center widgets full-height full-width shadow-decoration shadow-mobile-header-decoration small-mobile-menu-icon dt-parent-menu-clickable show-sub-menu-on-hover show-device-logo show-mobile-logo masthead-mobile masthead-mobile-header')[0].style.display='none'; document.getElementsByClassName('mobile-header-space')[0].style.display='none'; document.getElementById('tribe-events').style.paddingTop = '0'; document.getElementById('main').style.paddingBottom = '0';");
 
             setState(() {
               _loadedPage = true;
