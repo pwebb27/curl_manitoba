@@ -37,13 +37,22 @@ class _TabsScreenState extends State<TabsScreen> {
     );
   }
 
-
   @override
   Widget build(BuildContext context) {
     return DefaultTabController(
         length: 2,
         child: Scaffold(
-          appBar: CustomAppBar(Icon(FontAwesomePro.bars, size: 26), context, (_selectedPageIndex==0)?true:false),
+          appBar: CustomAppBar(
+              Icon(FontAwesomePro.bars, size: 26),
+              context,
+              (_selectedPageIndex == 1)
+                  ? 'e-Entry'
+                  : (_selectedPageIndex == 2)
+                      ? 'Scores'
+                      : (_selectedPageIndex == 3)
+                          ? 'Calendar'
+                          : "",
+              (_selectedPageIndex == 0) ? true : false),
           drawer: MainDrawer(),
           body: _pages[_selectedPageIndex],
           bottomNavigationBar: SizedBox(

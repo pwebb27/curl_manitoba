@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:webview_flutter/webview_flutter.dart';
+import '../widgets/circular_progress_bar.dart';
 
 class CalendarScreen extends StatefulWidget {
   @override
@@ -33,9 +34,7 @@ class _CalendarScreenState extends State<CalendarScreen> {
           },
         ),
         _loadedPage == false
-            ? Center(
-                child: CircularProgressIndicator(backgroundColor: Colors.green),
-              )
+            ? CircularProgressBar()
             : Container(),
       ],
     );

@@ -5,6 +5,7 @@ import 'package:html/parser.dart' as parser;
 
 import '../news_stories_data.dart';
 import '../widgets/news_story_item.dart';
+import '../widgets/circular_progress_bar.dart';
 
 class NewsFeedScreen extends StatefulWidget {
   @override
@@ -55,7 +56,7 @@ class _NewsFeedScreenState extends State<NewsFeedScreen> {
         future: _getDataFromWeb(),
         builder: (context, snapshot) {
           if (snapshot.data == null) {
-            return Container(child: Center(child: Text('Loading...')));
+            return CircularProgressBar();
           } else
             buildContent(snapshot.data as dom.Document);
             return ListView.builder(

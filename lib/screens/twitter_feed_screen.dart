@@ -2,9 +2,11 @@ import 'package:curl_manitoba/widgets/tweet_item.dart';
 import '../models/twitter_feed.dart';
 import '../models/tweet.dart';
 import '../models/twitter_api.dart';
+import '../widgets/circular_progress_bar.dart';
 
 import 'package:flutter/material.dart';
 import 'dart:convert';
+
 
 class TwitterFeedScreen extends StatefulWidget {
   @override
@@ -42,7 +44,7 @@ class TwitterFeedScreenState extends State<TwitterFeedScreen> {
         future: _getAPIData(),
         builder: (context, snapshot) {
           if (snapshot.data == null) {
-            return Container(child: Center(child: Text('Loading...')));
+            return CircularProgressBar();
           } else
             buildContent(snapshot.data as List<dynamic>);
           return ListView.builder(

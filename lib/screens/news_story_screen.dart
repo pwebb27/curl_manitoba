@@ -16,7 +16,7 @@ class NewsStoryScreen extends StatelessWidget {
     final selectedNewsStory =
         NEWS_STORIES.firstWhere((newsStory) => newsStory.id == newsStoryId);
     return Scaffold(
-        appBar: CustomAppBar(Icon(Icons.arrow_back, size: 25), context),
+        appBar: CustomAppBar(Icon(Icons.arrow_back, size: 25), context,""),
         body: Column(
           children: <Widget>[
             Container(

@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:webview_flutter/webview_flutter.dart';
+import '../widgets/circular_progress_bar.dart';
 
 
 
@@ -35,9 +36,7 @@ class _eEntryScreenState extends State<eEntryScreen> {
           },
         ),
         _loadedPage == false
-            ? Center(
-                child: CircularProgressIndicator(backgroundColor: Colors.green),
-              )
+            ? CircularProgressBar()
             : Container(),
       ],
     );

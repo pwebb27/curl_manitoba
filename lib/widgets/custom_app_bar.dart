@@ -3,19 +3,23 @@ import 'package:flutter/material.dart';
 
 class CustomAppBar extends StatelessWidget with PreferredSizeWidget {
   late Icon icon;
+
   ///Boolean that determines whether a tabbar is required or not
   late bool tabbar;
   late BuildContext context;
+  late String pageTitle;
 
   @override
   Size get preferredSize =>
       //Determine the size of AppBar based on whether or not a tabbar exists
       (!tabbar) ? Size.fromHeight(62) : Size.fromHeight(104);
 
-  CustomAppBar(Icon icon, BuildContext context, [bool tabbar = false]) {
+  CustomAppBar(Icon icon, BuildContext context, String pageTitle,
+      [bool tabbar = false]) {
     this.icon = icon;
     this.tabbar = tabbar;
     this.context = context;
+    this.pageTitle = pageTitle;
   }
 
   @override
@@ -25,21 +29,24 @@ class CustomAppBar extends StatelessWidget with PreferredSizeWidget {
     return Container(
       color: Colors.black,
       child: SafeArea(
-        
         child: AppBar(
             leading: Padding(
-              padding: const EdgeInsets.only(top: 18),
+              padding: const EdgeInsets.only(top: 18, left:5),
               child: Builder(
                   builder: (context) => IconButton(
                       icon: icon,
                       onPressed: () => Scaffold.of(context).openDrawer())),
             ),
             backgroundColor: Theme.of(context).primaryColor,
-            title: Padding(
+            title: (pageTitle=="")? Padding(
                 padding: EdgeInsets.only(top: 5, right: 150, left: 0),
                 child: Image.asset('assets/images/Curl_Manitoba_Logo.png',
-                    fit: BoxFit.cover)),
-            bottom: _buildTabbar()),
+                    fit: BoxFit.cover))
+            
+            :Padding(
+              padding: const EdgeInsets.only(top:25),
+              child: Text(pageTitle, style: TextStyle(fontSize: 22.5, color: Colors.white, fontWeight: FontWeight.w500),),
+            ),           bottom: _buildTabbar()),
       ),
     );
   }
@@ -62,9 +69,7 @@ class CustomAppBar extends StatelessWidget with PreferredSizeWidget {
               indicatorColor: Color.fromRGBO(111, 17, 0, 1),
               tabs: <Widget>[
                 Tab(child: Text('LEAGUE NEWS')),
-                Tab(
-                    child:
-                        Text('SOCIAL MEDIA')),
+                Tab(child: Text('SOCIAL MEDIA')),
               ],
             )),
       );
