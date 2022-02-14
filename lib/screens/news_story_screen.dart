@@ -16,21 +16,7 @@ class NewsStoryScreen extends StatelessWidget {
     final selectedNewsStory =
         NEWS_STORIES.firstWhere((newsStory) => newsStory.id == newsStoryId);
     return Scaffold(
-        appBar: CustomAppBar(Icon(Icons.arrow_back, size: 25), context),/* AppBar(
-          leading: Padding(
-              padding: const EdgeInsets.only(top: 18),
-              child: Builder(
-                builder: (context) => IconButton(
-                  icon: Icon(Icons.arrow_back, size: 30),
-                  onPressed: () => Navigator.of(context).pop(),
-                ),
-              )),
-          backgroundColor: Theme.of(context).primaryColor,
-          title: Padding(
-              padding: EdgeInsets.only(right: 150, left: 0),
-              child: Image.asset('assets/images/Curl_Manitoba_Logo.png',
-                  fit: BoxFit.cover)),
-        ), */
+        appBar: CustomAppBar(Icon(Icons.arrow_back, size: 25), context),
         body: Column(
           children: <Widget>[
             Container(

@@ -47,17 +47,22 @@ class NewsStoryItem extends StatelessWidget {
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: <Widget>[
                         Padding(
-                          padding: const EdgeInsets.only(top:10),
+                          padding: const EdgeInsets.only(top: 10),
                           child: Text(
                             '$title',
-                            style: TextStyle(fontSize: 17, fontWeight: FontWeight.w700),
+                            style: TextStyle(
+                                fontSize: 17, fontWeight: FontWeight.w700),
                           ),
                         ),
                         Padding(
                           padding: const EdgeInsets.symmetric(vertical: 4),
                           child: Row(
                             children: [
-                              Icon(Icons.person, size: 15, color: Theme.of(context).primaryColor,),
+                              Icon(
+                                Icons.person,
+                                size: 15,
+                                color: Theme.of(context).primaryColor,
+                              ),
                               Text(' $author  |  $date',
                                   style: TextStyle(
                                       fontWeight: FontWeight.w500,
@@ -69,9 +74,13 @@ class NewsStoryItem extends StatelessWidget {
                         Padding(
                           padding: const EdgeInsets.only(bottom: 8),
                           child: Text('$subtext',
+                              maxLines: 2,
+                              overflow: TextOverflow.ellipsis,
                               style: TextStyle(
-                                  color: Colors.grey.shade600, fontSize: 12.5, fontWeight: FontWeight.w400)),
-                        )
+                                  color: Colors.grey.shade600,
+                                  fontSize: 12.5,
+                                  fontWeight: FontWeight.w400)),
+                        ),
                       ]))
             ])));
   }

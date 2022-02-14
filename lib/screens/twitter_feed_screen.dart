@@ -17,15 +17,14 @@ class TwitterFeedScreenState extends State<TwitterFeedScreen> {
   List<dynamic>? data;
   TwitterFeed feed = TwitterFeed();
   TwitterAPI api = TwitterAPI();
-  void getAPIData() async {
-    var response = await api.callTwitterAPI("1.1/statuses/user_timeline.json", {
-      "user_id": "92376817",
-      "count": "15",
-      "tweet_mode": "extended"
-    });
-    List<dynamic> map = json.decode(response);
 
+  Future<List<dynamic>> _getAPIData() async {
+    var response = await api.callTwitterAPI("1.1/statuses/user_timeline.json",
+        {"user_id": "92376817", "count": "15", "tweet_mode": "extended"});
+    return json.decode(response);
+  }
 
+  void buildContent(List<dynamic> map) {
     for (var element in map) {
       feed.addTweet(Tweet.fromJson(element));
     }
@@ -34,17 +33,23 @@ class TwitterFeedScreenState extends State<TwitterFeedScreen> {
   @override
   void initState() {
     super.initState();
-    getAPIData();
+    _getAPIData();
   }
 
   @override
   Widget build(BuildContext context) {
-    return ListView.builder(
-        itemBuilder: (ctx, index) {
-          return TweetItem(
-            feed.tweets[index]
-          );
-        },
-        itemCount: feed.tweets.length);
+    return FutureBuilder(
+        future: _getAPIData(),
+        builder: (context, snapshot) {
+          if (snapshot.data == null) {
+            return Container(child: Center(child: Text('Loading...')));
+          } else
+            buildContent(snapshot.data as List<dynamic>);
+          return ListView.builder(
+              itemBuilder: (ctx, index) {
+                return TweetItem(feed.tweets[index]);
+              },
+              itemCount: feed.tweets.length);
+        });
   }
 }
