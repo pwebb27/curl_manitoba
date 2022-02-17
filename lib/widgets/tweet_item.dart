@@ -1,4 +1,3 @@
-import 'dart:ffi';
 import 'package:curl_manitoba/widgets/font_awesome_pro_icons.dart';
 
 import '../models/tweet.dart';

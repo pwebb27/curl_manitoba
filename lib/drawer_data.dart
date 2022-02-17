@@ -1,3 +1,4 @@
+
 import 'drawer_widget.dart';
 import '../widgets/font_awesome_pro_icons.dart';
 import 'package:flutter/cupertino.dart';
@@ -10,7 +11,6 @@ List<DrawerWidget> EXPANSION_TILES_DATA = [
     'Newsletter',
     'Did you know?',
   ]),
-
   DrawerWidget('Competitions', FontAwesomeIcons.trophy, [
     'Rules',
     'Qualifying Information',
@@ -26,23 +26,24 @@ List<DrawerWidget> EXPANSION_TILES_DATA = [
     'Youth Events',
     'Manitoba Sport Regions'
   ]),
-
-  DrawerWidget('Development', FontAwesomePro.curling, [
-    'Curling Programs',
-    'Coaching',
-    'Officiating',
-    'Ice Tech',
-    'LTAD',
-    'Safe Sport'
-  ], 18),
-
+  DrawerWidget(
+      'Development',
+      FontAwesomePro.curling,
+      [
+        'Curling Programs',
+        'Coaching',
+        'Officiating',
+        'Ice Tech',
+        'LTAD',
+        'Safe Sport'
+      ],
+      18),
   DrawerWidget('High Perfomance', FontAwesomePro.gauge_max, [
     'High Performance Webinars',
     'Junior Development',
     'Junior High Performance Programs',
     'Junior ID Camps'
   ]),
-
   DrawerWidget('Getting Started', FontAwesomePro.hourglass_start, [
     'Find a Club',
     'What is Curling?',
@@ -51,7 +52,6 @@ List<DrawerWidget> EXPANSION_TILES_DATA = [
     'Curling Tips',
     'Manitoba Stick Curling Association'
   ]),
-
   DrawerWidget('About Us', FontAwesomePro.circle_info, [
     'COVID-19 Information',
     'Contact Us',
@@ -71,12 +71,12 @@ List<DrawerWidget> EXPANSION_TILES_DATA = [
 ];
 
 List<DrawerWidget> LIST_TILES_DATA = [
-  DrawerWidget.m2(
-      'Curling I/O',
-      AssetImage(
-        'assets/images/curling-canada.png',
-      )),
-  DrawerWidget.m2('CurlManitoba Twitter', FontAwesomeIcons.twitter),
-  DrawerWidget.m2('CurlManitoba Instagram', FontAwesomePro.instagram, 20),
-  DrawerWidget.m2('CurlManitoba Facebook', FontAwesomeIcons.facebook),
+  DrawerWidget.m2('Curling I/O', AssetImage('assets/images/curling-canada.png'),
+      'https://www.curling.ca'),
+  DrawerWidget.m2('CurlManitoba Twitter', FontAwesomeIcons.twitter,
+     'https://twitter.com/curlmanitoba'),
+  DrawerWidget.m2('CurlManitoba Instagram', FontAwesomePro.instagram,
+      'https://www.instagram.com/curlmanitoba', 20),
+  DrawerWidget.m2('CurlManitoba Facebook', FontAwesomeIcons.facebook,
+      'https://www.facebook.com/CurlManitoba'),
 ];

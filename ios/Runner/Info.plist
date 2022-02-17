@@ -43,5 +43,12 @@
 		<false/>
 		<key>UIStatusBarHidden</key>
 		<false/>
+		<key>LSApplicationQueriesSchemes</key>
+		<array>
+  			<string>https://www.curling.ca</string>
+  			<string>https://www.facebook.com/CurlManitoba</string>
+			<string>https://www.twitter.com/curlmanitoba</string>
+  			<string>https://www.instagram.com/curlmanitoba</string>
+		</array>
 	</dict>
 </plist>

@@ -1,5 +1,5 @@
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 import '../drawer_data.dart';
 
@@ -41,7 +41,9 @@ class MainDrawer extends StatelessWidget {
                         dense: true,
                         child: ListTile(
                             title: Text(
-                          EXPANSION_TILES_DATA[index].getSubmenus![i].toString(),
+                          EXPANSION_TILES_DATA[index]
+                              .getSubmenus![i]
+                              .toString(),
                           style: TextStyle(
                               fontFamily: 'NeuzeitOffice',
                               fontWeight: FontWeight.bold,
@@ -62,6 +64,16 @@ class MainDrawer extends StatelessWidget {
 
     for (int i = 0; i < LIST_TILES_DATA.length; i++) {
       widgets.add(GestureDetector(
+        onTap: () async {
+          final url = LIST_TILES_DATA[i].getUrl;
+          print(url);
+          if (await canLaunch(url as String)) {
+            await launch(
+              url,
+              forceSafariVC: false,
+            );
+          }
+        },
         child: ListTile(
             dense: true,
             leading: LIST_TILES_DATA[i].getIcon,
@@ -85,23 +97,19 @@ class MainDrawer extends StatelessWidget {
     return Container(
       color: Colors.black,
       child: SafeArea(
-        
         child: Container(
             width: 290,
             child: Drawer(
               child: SingleChildScrollView(
                 child: Column(children: <Widget>[
                   Container(
-                    padding: EdgeInsets.only(bottom: 100),
-                    decoration: BoxDecoration(
-                      image: DecorationImage(
-                          image: AssetImage('assets/images/DrawerImage.PNG'),
-                          fit: BoxFit.contain),
-                    ),
-                    height: 170
-                    
-                    
-                  ),
+                      padding: EdgeInsets.only(bottom: 100),
+                      decoration: BoxDecoration(
+                        image: DecorationImage(
+                            image: AssetImage('assets/images/DrawerImage.PNG'),
+                            fit: BoxFit.contain),
+                      ),
+                      height: 170),
                   Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
@@ -112,7 +120,8 @@ class MainDrawer extends StatelessWidget {
                         thickness: 1,
                       ),
                       Padding(
-                        padding: const EdgeInsets.only(left: 8, bottom: 12, top: 9),
+                        padding:
+                            const EdgeInsets.only(left: 8, bottom: 12, top: 9),
                         child: Text("Useful Links",
                             style: TextStyle(
                               fontSize: 14,

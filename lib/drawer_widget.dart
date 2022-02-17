@@ -1,11 +1,12 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/cupertino.dart';
+
 
 class DrawerWidget {
   late String menuTitle;
   late double iconSize;
   Widget? icon;
   List<String>? subMenus;
+  String? url;
   
 
   ///Creates an ExpansionTile widget for the drawer
@@ -21,9 +22,10 @@ class DrawerWidget {
   }
 
   ///Creates a ListTile widget for the drawer
-  DrawerWidget.m2(String menuTitle, dynamic iconData,[double iconSize = 19]) {
+  DrawerWidget.m2(String menuTitle, dynamic iconData,String url, [double iconSize = 19]) {
     this.icon = icon;
     this.menuTitle = menuTitle;
+    this.url = url;
 
     //icon may be an image
     (iconData.runtimeType == AssetImage)
@@ -45,5 +47,9 @@ class DrawerWidget {
 
   List<String>? get getSubmenus {
     return subMenus;
+  }
+
+  String? get getUrl{
+    return url;
   }
 }

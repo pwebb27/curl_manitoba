@@ -1,4 +1,4 @@
-import 'dart:ffi';
+
 import 'package:flutter/material.dart';
 import 'package:timeago/timeago.dart' as timeago;
 
@@ -168,7 +168,7 @@ class Tweet {
                 style: normalStyle));
           } else {
             spans.add(TextSpan(
-                text: text.substring(indices[i], text.length - 1),
+                text: text. substring(indices[i], text.length - 1),
                 style: normalStyle));
             break;
           }
