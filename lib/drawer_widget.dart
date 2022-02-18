@@ -29,7 +29,7 @@ class DrawerWidget {
 
     //icon may be an image
     (iconData.runtimeType == AssetImage)
-        ? this.icon = ColorFiltered(colorFilter: ColorFilter.mode(Colors.grey, BlendMode.saturation), child: Image(image: iconData, height: 28))
+        ? this.icon = Image(image: iconData, height: 28)
         : this.icon = Icon(
             iconData as IconData,
             size: iconSize,
