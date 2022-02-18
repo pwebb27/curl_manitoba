@@ -1,11 +1,26 @@
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:flutter/material.dart';
+import 'package:html/dom.dart' as dom;
+import 'package:http/http.dart' as http;
+import 'package:html/parser.dart' as parser;
 
 import '../news_stories_data.dart';
 import '../widgets/custom_app_bar.dart';
 
 class NewsStoryScreen extends StatelessWidget {
   static const routeName = '/news-story';
+
+  static const URL = 'https://curlmanitoba.org/news-2/news-archive/';
+
+  Future<dom.Document> _getDataFromWeb() async {
+    final response = await http.get(Uri.parse(URL));
+
+    final body = response.body;
+    dom.Document document = parser.parse(body);
+
+    return document;
+  }
+
 
   void goBack(BuildContext context) {}
 
