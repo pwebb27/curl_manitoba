@@ -76,7 +76,7 @@ List<DrawerWidget> LIST_TILES_DATA = [
   DrawerWidget.m2('CurlManitoba Twitter', FontAwesomeIcons.twitter,
      'https://twitter.com/curlmanitoba'),
   DrawerWidget.m2('CurlManitoba Instagram', FontAwesomePro.instagram,
-      'https://www.instagram.com/curlmanitoba', 20),
+      'https://www.instagram.com/curlmanitoba/?hl=en', 20),
   DrawerWidget.m2('CurlManitoba Facebook', FontAwesomeIcons.facebook,
       'https://www.facebook.com/CurlManitoba'),
 ];
