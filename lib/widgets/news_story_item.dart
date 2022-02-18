@@ -1,26 +1,18 @@
+import 'package:curl_manitoba/models/news_story.dart';
 import 'package:flutter/material.dart';
 
 import '../screens/news_story_screen.dart';
 
 class NewsStoryItem extends StatelessWidget {
   void selectNewsStory(BuildContext context) {
-    Navigator.of(context).pushNamed(NewsStoryScreen.routeName, arguments: id);
+    Navigator.of(context).pushNamed(NewsStoryScreen.routeName, arguments: newsStory);
   }
 
-  final String id;
-  final String title;
-  final String imageUrl;
-  final String author;
-  final String date;
-  final String subtext;
+  final NewsStory newsStory;
 
   NewsStoryItem(
-      {required this.id,
-      required this.title,
-      required this.imageUrl,
-      required this.author,
-      required this.date,
-      required this.subtext});
+      {required this.newsStory,
+ });
 
   @override
   Widget build(BuildContext context) {
@@ -38,7 +30,7 @@ class NewsStoryItem extends StatelessWidget {
                     borderRadius: BorderRadius.only(
                         topLeft: Radius.circular(15),
                         topRight: Radius.circular(15)),
-                    child: Image.network(imageUrl,
+                    child: Image.network(newsStory.imageURL,
                         height: 200, width: double.infinity, fit: BoxFit.cover))
               ]),
               Padding(
@@ -49,7 +41,7 @@ class NewsStoryItem extends StatelessWidget {
                         Padding(
                           padding: const EdgeInsets.only(top: 10),
                           child: Text(
-                            '$title',
+                            newsStory.headline,
                             style: TextStyle(
                                 fontSize: 17, fontWeight: FontWeight.w700),
                           ),
@@ -63,7 +55,7 @@ class NewsStoryItem extends StatelessWidget {
                                 size: 15,
                                 color: Theme.of(context).primaryColor,
                               ),
-                              Text(' $author  |  $date',
+                              Text(newsStory.author + ' | ' + newsStory.date,
                                   style: TextStyle(
                                       fontWeight: FontWeight.w500,
                                       fontSize: 12.5,
@@ -73,7 +65,7 @@ class NewsStoryItem extends StatelessWidget {
                         ),
                         Padding(
                           padding: const EdgeInsets.only(bottom: 8),
-                          child: Text('$subtext',
+                          child: Text(newsStory.content,
                               maxLines: 2,
                               overflow: TextOverflow.ellipsis,
                               style: TextStyle(

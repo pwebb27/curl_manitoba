@@ -3,7 +3,8 @@ import 'package:http/http.dart' as http;
 import 'package:html/dom.dart' as dom;
 import 'package:html/parser.dart' as parser;
 
-import '../news_stories_data.dart';
+
+import '../models/news_story.dart';
 import '../widgets/news_story_item.dart';
 import '../widgets/circular_progress_bar.dart';
 
@@ -61,16 +62,18 @@ class _NewsFeedScreenState extends State<NewsFeedScreen> {
             buildContent(snapshot.data as dom.Document);
             return ListView.builder(
                 itemBuilder: (ctx, index) {
-                  return NewsStoryItem(
-                    id: NEWS_STORIES[index].id,
-                    imageUrl: NEWS_STORIES[index].imageURL,
-                    title: titles[index],
+                  NewsStory newsStory = NewsStory(
+                    id: index,
+                    imageURL: 'https://images.thestar.com/CBZVV_aqoiPFukcZjs74JNLtlF8=/1200x798/smart/filters:cb(2700061000)/https://www.thestar.com/content/dam/thestar/sports/curling/2018/02/04/manitobas-jennifer-jones-heads-to-scotties-tournament-of-hearts-final/jennifer_jones.jpg',
+                    headline: titles[index],
                     author: authors[index],
                     date: dates[index],
-                    subtext: content[index],
+                    content: content[index],
                   );
+                  return NewsStoryItem(newsStory: newsStory,);
+
                 },
-                itemCount: 2);
+                itemCount: 8);
         });
   }
 }

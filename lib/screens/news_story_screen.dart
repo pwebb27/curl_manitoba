@@ -1,10 +1,11 @@
+import 'package:curl_manitoba/models/news_story.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:flutter/material.dart';
 import 'package:html/dom.dart' as dom;
 import 'package:http/http.dart' as http;
 import 'package:html/parser.dart' as parser;
 
-import '../news_stories_data.dart';
+
 import '../widgets/custom_app_bar.dart';
 
 class NewsStoryScreen extends StatelessWidget {
@@ -27,16 +28,14 @@ class NewsStoryScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     
-    final newsStoryId = ModalRoute.of(context)!.settings.arguments as String;
-    final selectedNewsStory =
-        NEWS_STORIES.firstWhere((newsStory) => newsStory.id == newsStoryId);
+    final selectedNewsStory = ModalRoute.of(context)!.settings.arguments as NewsStory;
     return Scaffold(
         appBar: CustomAppBar(Icon(Icons.arrow_back, size: 25), context,""),
         body: Column(
           children: <Widget>[
             Container(
               child:
-                  Image.network(selectedNewsStory.imageURL, fit: BoxFit.cover),
+                  Image.network(selectedNewsStory!.imageURL, fit: BoxFit.cover),
             ),
             Padding(
               padding: const EdgeInsets.symmetric(horizontal: 10),

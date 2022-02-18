@@ -168,7 +168,7 @@ class Tweet {
                 style: normalStyle));
           } else {
             spans.add(TextSpan(
-                text: text. substring(indices[i], text.length - 1),
+                text: text. substring(indices[i], text.length),
                 style: normalStyle));
             break;
           }
