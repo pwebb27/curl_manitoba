@@ -46,11 +46,11 @@ class _TabsScreenState extends State<TabsScreen> {
               Icon(FontAwesomePro.bars, size: 26),
               context,
               (_selectedPageIndex == 1)
-                  ? 'e-Entry'
+                  ? 'Electronic Entry'
                   : (_selectedPageIndex == 2)
-                      ? 'Scores'
+                      ? 'Live Scores & Results'
                       : (_selectedPageIndex == 3)
-                          ? 'Calendar'
+                          ? 'Calendar of Events'
                           : "",
               (_selectedPageIndex == 0) ? true : false),
           drawer: MainDrawer(),

@@ -45,7 +45,7 @@ class CustomAppBar extends StatelessWidget with PreferredSizeWidget {
             
             :Padding(
               padding: const EdgeInsets.only(top:19),
-              child: Text(pageTitle, style: TextStyle(fontSize: 22.5, color: Colors.white, fontWeight: FontWeight.w400),),
+              child: Text(pageTitle, style: TextStyle(fontSize: 20.5, color: Colors.white, fontWeight: FontWeight.w400),),
             ),           bottom: _buildTabbar()),
       ),
     );
