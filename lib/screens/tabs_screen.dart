@@ -43,7 +43,7 @@ class _TabsScreenState extends State<TabsScreen> {
         length: 2,
         child: Scaffold(
           appBar: CustomAppBar(
-              Icon(FontAwesomePro.bars, size: 26),
+              Icon(FontAwesomePro.bars, size: 24),
               context,
               (_selectedPageIndex == 1)
                   ? 'Electronic Entry'

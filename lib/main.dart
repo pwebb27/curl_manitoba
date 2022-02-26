@@ -24,6 +24,9 @@ class MyApp extends StatelessWidget {
       onUnknownRoute: (settings) {
         return;
       },
+      onGenerateRoute: (RouteSettings routeSettings){
+        
+      },
     );
   }
 }

@@ -66,7 +66,6 @@ class MainDrawer extends StatelessWidget {
       widgets.add(GestureDetector(
         onTap: () async {
           final url = LIST_TILES_DATA[i].getUrl;
-          print(url);
           if (await canLaunch(url as String)) {
             await launch(
               url,

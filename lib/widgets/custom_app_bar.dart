@@ -12,7 +12,7 @@ class CustomAppBar extends StatelessWidget with PreferredSizeWidget {
   @override
   Size get preferredSize =>
       //Determine the size of AppBar based on whether or not a tabbar exists
-      (!tabbar) ? Size.fromHeight(58) : Size.fromHeight(100);
+      (!tabbar) ? Size.fromHeight(50) : Size.fromHeight(92);
 
   CustomAppBar(Icon icon, BuildContext context, String pageTitle,
       [bool tabbar = false]) {
@@ -31,7 +31,7 @@ class CustomAppBar extends StatelessWidget with PreferredSizeWidget {
       child: SafeArea(
         child: AppBar(
             leading: Padding(
-              padding: const EdgeInsets.only(top: 15, left:6),
+              padding: const EdgeInsets.only(top: 8.5, left:6),
               child: Builder(
                   builder: (context) => IconButton(
                       icon: icon,
@@ -39,12 +39,12 @@ class CustomAppBar extends StatelessWidget with PreferredSizeWidget {
             ),
             backgroundColor: Theme.of(context).primaryColor,
             title: (pageTitle=="")? Padding(
-                padding: EdgeInsets.only(top: 0.5, right: 150, left: 0),
-                child: Image.asset('assets/images/Curl_Manitoba_Logo.png',
+                padding: EdgeInsets.only(top:10),
+                child: Image.asset('assets/images/Curl_Manitoba_Logo.png',height: 23,
                     fit: BoxFit.cover))
             
             :Padding(
-              padding: const EdgeInsets.only(top:19),
+              padding: const EdgeInsets.only(top:9),
               child: Text(pageTitle, style: TextStyle(fontSize: 20.5, color: Colors.white, fontWeight: FontWeight.w400),),
             ),           bottom: _buildTabbar()),
       ),
