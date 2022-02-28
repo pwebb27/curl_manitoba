@@ -1,3 +1,4 @@
+import 'package:curl_manitoba/screens/home_feed_screen.dart';
 import 'package:flutter/material.dart';
 
 import '../screens/news_feed_screen.dart';
@@ -15,7 +16,7 @@ class _HomeScreenState extends State<HomeScreen> {
   @override
   Widget build(BuildContext context) {
     return TabBarView(
-          children: [NewsFeedScreen(), TwitterFeedScreen()],
+          children: [HomeFeedScreen(), TwitterFeedScreen()],
         );
   }
 }
