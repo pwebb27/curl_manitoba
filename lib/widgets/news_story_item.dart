@@ -21,40 +21,35 @@ class NewsStoryItem extends StatelessWidget {
         onTap: () => selectNewsStory(context),
         child: Card(
             shape: RoundedRectangleBorder(
-              borderRadius: BorderRadius.circular(5),
+              borderRadius: BorderRadius.circular(10.0),
             ),
-            elevation: 4,
-            margin: EdgeInsets.all(10),
-            child: Column(children: <Widget>[
-              Stack(children: <Widget>[
-                ClipRRect(
-                    borderRadius: BorderRadius.only(
-                        topLeft: Radius.circular(5),
-                        topRight: Radius.circular(5)),
-                    child: Image.network(newsStory.imageURL,
-                        height: 200, width: double.infinity, fit: BoxFit.cover))
-              ]),
-              Padding(
-                  padding: EdgeInsets.only(left: 13, right: 13, top: 8),
-                  child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: <Widget>[
-                        Text(newsStory.date,
-                            style: TextStyle(
-                                fontWeight: FontWeight.w500,
-                                fontSize: 14,
-                                color: Theme.of(context).primaryColor)),
-                        Padding(
-                          padding: const EdgeInsets.only(top: 5),
-                          child: Text(
-                            newsStory.headline,
-                            maxLines: 2,
-                            overflow: TextOverflow.ellipsis,
-                            style: TextStyle(
-                                fontSize: 17, fontWeight: FontWeight.w700),
-                          ),
-                        ),
-                      ]))
-            ])));
+            clipBehavior: Clip.antiAlias,
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: <Widget>[
+                Expanded(
+                    child: Container(
+                  decoration: BoxDecoration(
+                    image: DecorationImage(
+                        image: NetworkImage(newsStory.imageURL),
+                        fit: BoxFit.cover),
+                  ),
+                )),
+                Padding(
+                    padding: EdgeInsets.symmetric(horizontal: 10.0, vertical: 5),
+                    child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
+
+                                          Text(
+                        newsStory.date,
+                        style: TextStyle(fontSize: 12, color: Theme.of(context).primaryColor),
+                      ),
+                      Text(
+                        newsStory.headline,
+                        style: TextStyle(fontSize: 13.0),
+                      ),
+  
+                    ])),
+              ],
+            )));
   }
 }
