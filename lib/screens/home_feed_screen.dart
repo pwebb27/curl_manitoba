@@ -1,3 +1,5 @@
+import 'package:curl_manitoba/models/news_story.dart';
+import 'package:curl_manitoba/widgets/news_story_item.dart';
 import 'package:flutter/material.dart';
 import 'package:carousel_slider/carousel_slider.dart';
 
@@ -22,6 +24,11 @@ final List<String> imgList = [
   'assets/images/carousel-image-4.png'
 ];
 
+List<String> titles = [];
+List<String> dates = [];
+List<String> authors = [];
+List<String> content = [];
+
 List<Widget> itemss = imgList
     .map((item) => Container(
           child: Center(child: Image.asset(item)),
@@ -31,20 +38,24 @@ List<Widget> itemss = imgList
 class _HomeFeedScreenState extends State<HomeFeedScreen> {
   List<String> CompetitionTitles = [];
   List<String> CompetitionDates = [];
-  static const URL =
-      'https://legacy-curlingio.global.ssl.fastly.net/api/organizations/MTZFJ5miuro/competitions.json?search=&tags=&page=1';
 
-  Future<Map<String, dynamic>> _getDataFromWeb() async {
-    final response = await http.get(Uri.parse(URL));
+  Future<List<dynamic>> _getDataFromWeb() async {
+    const competitionURL =
+        'https://legacy-curlingio.global.ssl.fastly.net/api/organizations/MTZFJ5miuro/competitions.json?search=&tags=&page=1';
+    const newsURL = 'https://curlmanitoba.org/news-2/news-archive/';
+    var responses = await Future.wait([
+      http.get(Uri.parse(competitionURL)),
+      http.get(Uri.parse(newsURL)),
+    ]);
 
-    final body = response.body;
-
-    Map<String, dynamic> jsonMap = json.decode(body);
-
-    return jsonMap;
+    return responses;
   }
 
-  void buildContent(Map<String, dynamic> jsonMap) {
+  void buildContent(List<dynamic> responses) {
+    final competitionsBody = responses[0].body;
+
+    Map<String, dynamic> jsonMap = json.decode(competitionsBody);
+
     for (int i = 0; i < 3; i++) {
       CompetitionTitles.add(
           jsonMap["paged_competitions"]["competitions"][i]["title"]);
@@ -56,6 +67,23 @@ class _HomeFeedScreenState extends State<HomeFeedScreen> {
       endDate = DateFormat('yMMMMd').format(DateTime.parse(endDate));
       CompetitionDates.add(startDate + ' - ' + endDate);
     }
+
+    final body = responses[1].body;
+    dom.Document document = parser.parse(body);
+
+    final titleElements = document.getElementsByClassName('entry-title');
+    titles = titleElements
+        .map((element) => element.getElementsByTagName("a")[0].innerHtml)
+        .toList();
+
+    final dateElements = document.getElementsByTagName('time');
+    dates = dateElements.map((element) => element.innerHtml).toList();
+
+    final authorElements = document.getElementsByClassName('fn');
+    authors = authorElements.map((element) => element.innerHtml).toList();
+
+    final contentElements = document.getElementsByTagName("p");
+    content = contentElements.map((element) => element.innerHtml).toList();
   }
 
   int _current = 0;
@@ -74,11 +102,12 @@ class _HomeFeedScreenState extends State<HomeFeedScreen> {
           if (snapshot.data == null) {
             return CircularProgressBar();
           } else
-            buildContent(snapshot.data as Map<String, dynamic>);
+            buildContent(snapshot.data as List<dynamic>);
 
-          return Padding(
-              padding: const EdgeInsets.only(top: 9.0),
-              child: Column(
+          return SingleChildScrollView(
+            child: Padding(
+                padding: const EdgeInsets.only(top: 9.0),
+                child: Column(
                   mainAxisAlignment: MainAxisAlignment.start,
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
@@ -86,6 +115,7 @@ class _HomeFeedScreenState extends State<HomeFeedScreen> {
                       CarouselSlider(
                         items: itemss,
                         options: CarouselOptions(
+                            autoPlayInterval: Duration(seconds: 5),
                             height: 233,
                             autoPlay: true,
                             viewportFraction: 1,
@@ -128,7 +158,42 @@ class _HomeFeedScreenState extends State<HomeFeedScreen> {
                       buildCompetitionCard(
                           context, CompetitionTitles[i], CompetitionDates[i]),
                     buildTextWidget('Latest News'),
-                  ]));
+                    CarouselSlider(
+                      items: buildNewsStories(),
+                      options: CarouselOptions(
+                          height: 305,
+                          enlargeCenterPage: true,
+                          viewportFraction: .87,
+                          enlargeStrategy: CenterPageEnlargeStrategy.height,
+                          enableInfiniteScroll: false,
+                          onPageChanged: (index, reason) {
+                            setState(() {
+                              _current = index;
+                            });
+                          }),
+                    ),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: imgList.asMap().entries.map((entry) {
+                        return GestureDetector(
+                          onTap: () => _controller.animateToPage(entry.key),
+                          child: Container(
+                            width: 8.0,
+                            height: 8.0,
+                            margin: EdgeInsets.symmetric(
+                                vertical: 5, horizontal: 2.0),
+                            decoration: BoxDecoration(
+                                shape: BoxShape.circle,
+                                color: _current == entry.key
+                                    ? Theme.of(context).primaryColor
+                                    : Colors.grey.shade500),
+                          ),
+                        );
+                      }).toList(),
+                    )
+                  ],
+                )),
+          );
         });
   }
 }
@@ -173,4 +238,22 @@ buildCompetitionCard(BuildContext context, String title, String date) {
           ])),
     ),
   );
+}
+
+List<Widget> buildNewsStories() {
+  List<NewsStoryItem> newsStories = [];
+  for (int i = 0; i < 4; i++) {
+    newsStories.add(
+      NewsStoryItem(
+          newsStory: NewsStory(
+              id: 0,
+              headline: titles[i],
+              imageURL:
+                  'https://images.thestar.com/CBZVV_aqoiPFukcZjs74JNLtlF8=/1200x798/smart/filters:cb(2700061000)/https://www.thestar.com/content/dam/thestar/sports/curling/2018/02/04/manitobas-jennifer-jones-heads-to-scotties-tournament-of-hearts-final/jennifer_jones.jpg',
+              date: dates[i],
+              author: authors[i],
+              content: content[i])),
+    );
+  }
+  return newsStories;
 }

@@ -5,14 +5,15 @@ import '../screens/news_story_screen.dart';
 
 class NewsStoryItem extends StatelessWidget {
   void selectNewsStory(BuildContext context) {
-    Navigator.of(context).pushNamed(NewsStoryScreen.routeName, arguments: newsStory);
+    Navigator.of(context)
+        .pushNamed(NewsStoryScreen.routeName, arguments: newsStory);
   }
 
   final NewsStory newsStory;
 
-  NewsStoryItem(
-      {required this.newsStory,
- });
+  NewsStoryItem({
+    required this.newsStory,
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -20,7 +21,7 @@ class NewsStoryItem extends StatelessWidget {
         onTap: () => selectNewsStory(context),
         child: Card(
             shape: RoundedRectangleBorder(
-              borderRadius: BorderRadius.circular(15),
+              borderRadius: BorderRadius.circular(5),
             ),
             elevation: 4,
             margin: EdgeInsets.all(10),
@@ -28,50 +29,30 @@ class NewsStoryItem extends StatelessWidget {
               Stack(children: <Widget>[
                 ClipRRect(
                     borderRadius: BorderRadius.only(
-                        topLeft: Radius.circular(15),
-                        topRight: Radius.circular(15)),
+                        topLeft: Radius.circular(5),
+                        topRight: Radius.circular(5)),
                     child: Image.network(newsStory.imageURL,
                         height: 200, width: double.infinity, fit: BoxFit.cover))
               ]),
               Padding(
-                  padding: EdgeInsets.only(left: 13, right: 13),
+                  padding: EdgeInsets.only(left: 13, right: 13, top: 8),
                   child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: <Widget>[
+                        Text(newsStory.date,
+                            style: TextStyle(
+                                fontWeight: FontWeight.w500,
+                                fontSize: 14,
+                                color: Theme.of(context).primaryColor)),
                         Padding(
-                          padding: const EdgeInsets.only(top: 10),
+                          padding: const EdgeInsets.only(top: 5),
                           child: Text(
                             newsStory.headline,
+                            maxLines: 2,
+                            overflow: TextOverflow.ellipsis,
                             style: TextStyle(
                                 fontSize: 17, fontWeight: FontWeight.w700),
                           ),
-                        ),
-                        Padding(
-                          padding: const EdgeInsets.symmetric(vertical: 4),
-                          child: Row(
-                            children: [
-                              Icon(
-                                Icons.person,
-                                size: 15,
-                                color: Theme.of(context).primaryColor,
-                              ),
-                              Text(newsStory.author + ' | ' + newsStory.date,
-                                  style: TextStyle(
-                                      fontWeight: FontWeight.w500,
-                                      fontSize: 12.5,
-                                      color: Theme.of(context).primaryColor)),
-                            ],
-                          ),
-                        ),
-                        Padding(
-                          padding: const EdgeInsets.only(bottom: 8),
-                          child: Text(newsStory.content,
-                              maxLines: 2,
-                              overflow: TextOverflow.ellipsis,
-                              style: TextStyle(
-                                  color: Colors.grey.shade600,
-                                  fontSize: 12.5,
-                                  fontWeight: FontWeight.w400)),
                         ),
                       ]))
             ])));
