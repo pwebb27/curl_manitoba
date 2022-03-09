@@ -26,14 +26,14 @@ final List<String> imgList = [
 ];
 
 Map<String, IconData> EventsProgramsAndNewsData = {
-  'CurlManitoba Learn to Curl - Thistle Curling Vlub march 29, 2022':
+  'CurlManitoba Learn to Curl | Thistle Curling Club - March 29, 2022':
       FontAwesomePro.curling,
-  'Manitoba Curling Hall of Fame Induction Dinner Tickets':
-      FontAwesomePro.calendar_day,
-  'CurlManitoba Telus Online 50/50 Raffle | Congratulations to Dean Steski':
+  'Manitoba Curling Hall of Fame & Museum Induction Dinner Tickets':
       FontAwesomePro.newspaper,
-  'CurlManitobaPositiion on Vaccine | For all CurlManitoba Provincial Championships that lead to a National championship effective immediately, mandatory COVID-19 vaccination will be required. This policy is in effect for all athletes, coaches, officials, staff, contractors, volunteers, media and fans above the age of 12. There will be no youth sport exemption at Provincial Championships.':
-      FontAwesomePro.newspaper
+  'CurlManitoba Position on Vaccine':
+      FontAwesomePro.newspaper,
+  'New U21 and U23 Events | Two new events during the 2021-2022 season':
+      FontAwesomePro.calendar_day
 };
 
 List<String> titles = [];
@@ -123,66 +123,65 @@ class _HomeFeedScreenState extends State<HomeFeedScreen> {
 
           return SingleChildScrollView(
             child: Padding(
-                padding: const EdgeInsets.only(top: 5.0, bottom: 15),
-                child: Column(
-                      mainAxisAlignment: MainAxisAlignment.start,
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Stack(alignment: Alignment.center, children: [
-                          CarouselSlider(
-                            items: itemss,
-                            options: CarouselOptions(
-                                autoPlayInterval: Duration(seconds: 5),
-                                height: 233,
-                                autoPlay: true,
-                                viewportFraction: 1,
-                                onPageChanged: (index, reason) {
-                                  setState(() {
-                                    _current = index;
-                                  });
-                                }),
-                          ),
-                          Positioned(
-                            bottom: 6,
-                            child: Row(
-                              children: itemss.asMap().entries.map((entry) {
-                                return GestureDetector(
-                                    onTap: () =>
-                                        _controller.animateToPage(entry.key),
-                                    child: Container(
-                                      width: 8,
-                                      height: 8,
-                                      margin: EdgeInsets.symmetric(
-                                          vertical: 10.0, horizontal: 4.0),
-                                      decoration: _current != entry.key
-                                          ? BoxDecoration(
-                                              borderRadius:
-                                                  BorderRadius.circular(100),
-                                              border: Border.all(
-                                                  width: 1,
-                                                  color: Colors.white),
-                                            )
-                                          : BoxDecoration(
-                                              borderRadius:
-                                                  BorderRadius.circular(100),
-                                              color: Colors.white),
-                                    ));
-                              }).toList(),
-                            ),
-                          )
-                        ]),
-                        wrapSectionInCard(
-                            'Competitions',
-                            buildCompetitionSection(context, CompetitionTitles,
-                                CompetitionEndDates, CompetitionStartDates)),
-                        wrapSectionInCard(
-                            'Latest News', buildNewsStorySegment(newsStories)),
-                        wrapSectionInCard(
-                            'Events, Programs & News',
-                            buildEventsProgramsAndNewsSection(
-                                EventsProgramsAndNewsData))
-                      ]),
-                ),
+              padding: const EdgeInsets.only(top: 5.0, bottom: 15),
+              child: Column(
+                  mainAxisAlignment: MainAxisAlignment.start,
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Stack(alignment: Alignment.center, children: [
+                      CarouselSlider(
+                        items: itemss,
+                        options: CarouselOptions(
+                            autoPlayInterval: Duration(seconds: 5),
+                            height: 233,
+                            autoPlay: true,
+                            viewportFraction: 1,
+                            onPageChanged: (index, reason) {
+                              setState(() {
+                                _current = index;
+                              });
+                            }),
+                      ),
+                      Positioned(
+                        bottom: 6,
+                        child: Row(
+                          children: itemss.asMap().entries.map((entry) {
+                            return GestureDetector(
+                                onTap: () =>
+                                    _controller.animateToPage(entry.key),
+                                child: Container(
+                                  width: 8,
+                                  height: 8,
+                                  margin: EdgeInsets.symmetric(
+                                      vertical: 10.0, horizontal: 4.0),
+                                  decoration: _current != entry.key
+                                      ? BoxDecoration(
+                                          borderRadius:
+                                              BorderRadius.circular(100),
+                                          border: Border.all(
+                                              width: 1, color: Colors.white),
+                                        )
+                                      : BoxDecoration(
+                                          borderRadius:
+                                              BorderRadius.circular(100),
+                                          color: Colors.white),
+                                ));
+                          }).toList(),
+                        ),
+                      )
+                    ]),
+                    wrapSectionInCard(
+                        'Competitions',
+                        buildCompetitionSection(context, CompetitionTitles,
+                            CompetitionEndDates, CompetitionStartDates)),
+                    wrapSectionInCard(
+                        'Latest News', buildNewsStorySegment(newsStories)),
+                    wrapSectionInCard(
+                        'Events, Programs & News',
+                        buildEventsProgramsAndNewsSection(
+                            EventsProgramsAndNewsData))
+                  ]),
+            ),
           );
         });
   }
@@ -192,10 +191,15 @@ buildEventsProgramsAndNewsSection(
     Map<String, IconData> EventsProgramsAndNewsData) {
   return Column(mainAxisAlignment: MainAxisAlignment.start, children: [
     for (MapEntry e in EventsProgramsAndNewsData.entries)
-      Row(children: [
-        Icon(e.value, size: 15, color: Colors.grey.shade700),
-        Flexible(child: Text(e.key, style: TextStyle(fontSize: 15)))
-      ])
+      Padding(
+        padding: EdgeInsets.symmetric(vertical: 5),
+        child: Row(crossAxisAlignment: CrossAxisAlignment.start, children: [
+          Padding(
+              padding: EdgeInsets.only(right: 12),
+              child: Padding(padding: EdgeInsets.only(top: 3), child: Icon(e.value, size: 15, color: Colors.grey.shade700))),
+          Flexible(child: Text(e.key, style: TextStyle(fontSize: 15, fontWeight: FontWeight.w500)))
+        ]),
+      )
   ]);
 }
 
@@ -215,7 +219,8 @@ buildCompetitionSection(BuildContext context, List<String> titles,
               )),
           child: Padding(
               padding: EdgeInsets.all(9),
-              child: Row( crossAxisAlignment: CrossAxisAlignment.start, children: [
+              child:
+                  Row(crossAxisAlignment: CrossAxisAlignment.start, children: [
                 Expanded(
                     flex: 7,
                     child: Text(
@@ -226,14 +231,16 @@ buildCompetitionSection(BuildContext context, List<String> titles,
                   padding: const EdgeInsets.only(left: 15),
                   child: Expanded(
                       flex: 3,
-                      child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
-                        Text(startDates[i] + ' - ',
-                            style:
-                                TextStyle(color: Colors.white, fontSize: 15)),
-                          Text(endDates[i],
-                              style: TextStyle(color: Colors.white, fontSize: 15)),
-                        
-                      ])),
+                      child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Text(startDates[i] + ' - ',
+                                style: TextStyle(
+                                    color: Colors.white, fontSize: 15)),
+                            Text(endDates[i],
+                                style: TextStyle(
+                                    color: Colors.white, fontSize: 15)),
+                          ])),
                 )
               ])),
         ),
@@ -272,9 +279,9 @@ Widget buildNewsStorySegment(List<Widget> newsStories) {
 
 Widget wrapSectionInCard(String sectionName, Widget section) {
   return Padding(
-      padding: EdgeInsets.symmetric(horizontal:7, vertical: 2),
+      padding: EdgeInsets.symmetric(horizontal: 7, vertical: 2),
       child: Card(
-        elevation: 3,
+          elevation: 3,
           shape: RoundedRectangleBorder(
               side: BorderSide(color: Colors.grey.shade800, width: .5),
               borderRadius: BorderRadius.circular(5)),
@@ -288,10 +295,9 @@ Widget wrapSectionInCard(String sectionName, Widget section) {
                       child: Text(
                         sectionName,
                         style: TextStyle(
-                          fontSize: 21.5,
-                          fontWeight: FontWeight.w700,
-                          fontStyle: FontStyle.italic
-                        ),
+                            fontSize: 21.5,
+                            fontWeight: FontWeight.w700,
+                            fontStyle: FontStyle.italic),
                       ),
                     ),
                     section
