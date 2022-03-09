@@ -124,9 +124,7 @@ class _HomeFeedScreenState extends State<HomeFeedScreen> {
           return SingleChildScrollView(
             child: Padding(
                 padding: const EdgeInsets.only(top: 9.0, bottom: 15),
-                child: Container(
-                  color: Colors.grey.shade300,
-                  child: Column(
+                child: Column(
                       mainAxisAlignment: MainAxisAlignment.start,
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
@@ -184,7 +182,7 @@ class _HomeFeedScreenState extends State<HomeFeedScreen> {
                             buildEventsProgramsAndNewsSection(
                                 EventsProgramsAndNewsData))
                       ]),
-                )),
+                ),
           );
         });
   }
@@ -274,10 +272,11 @@ Widget buildNewsStorySegment(List<Widget> newsStories) {
 
 Widget wrapSectionInCard(String sectionName, Widget section) {
   return Padding(
-      padding: EdgeInsets.all(7),
+      padding: EdgeInsets.symmetric(horizontal:7, vertical: 2),
       child: Card(
+        elevation: 3,
           shape: RoundedRectangleBorder(
-              side: BorderSide(color: Colors.grey.shade800, width: .15),
+              side: BorderSide(color: Colors.grey.shade800, width: .5),
               borderRadius: BorderRadius.circular(5)),
           child: Padding(
               padding: EdgeInsets.all(8),
@@ -291,6 +290,7 @@ Widget wrapSectionInCard(String sectionName, Widget section) {
                         style: TextStyle(
                           fontSize: 21.5,
                           fontWeight: FontWeight.w700,
+                          fontStyle: FontStyle.italic
                         ),
                       ),
                     ),
