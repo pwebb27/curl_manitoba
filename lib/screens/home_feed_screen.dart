@@ -208,7 +208,7 @@ buildCompetitionSection(BuildContext context, List<String> titles,
   return Column(children: <Widget>[
     for (int i = 0; i < 3; i++)
       Padding(
-        padding: EdgeInsets.symmetric(horizontal: 5, vertical: 4),
+        padding: EdgeInsets.symmetric(horizontal: 3, vertical: 4),
         child: Container(
           decoration: BoxDecoration(
               borderRadius: BorderRadius.circular(5),
@@ -283,7 +283,7 @@ Widget wrapSectionInCard(String sectionName, Widget section) {
       child: Card(
           elevation: 3,
           shape: RoundedRectangleBorder(
-              side: BorderSide(color: Colors.grey.shade800, width: .5),
+              side: BorderSide(color: Colors.grey.shade800, width: .3),
               borderRadius: BorderRadius.circular(5)),
           child: Padding(
               padding: EdgeInsets.all(8),
