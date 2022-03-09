@@ -123,7 +123,7 @@ class _HomeFeedScreenState extends State<HomeFeedScreen> {
 
           return SingleChildScrollView(
             child: Padding(
-                padding: const EdgeInsets.only(top: 9.0, bottom: 15),
+                padding: const EdgeInsets.only(top: 5.0, bottom: 15),
                 child: Column(
                       mainAxisAlignment: MainAxisAlignment.start,
                       crossAxisAlignment: CrossAxisAlignment.start,
@@ -150,10 +150,10 @@ class _HomeFeedScreenState extends State<HomeFeedScreen> {
                                     onTap: () =>
                                         _controller.animateToPage(entry.key),
                                     child: Container(
-                                      width: 9.0,
-                                      height: 9.0,
+                                      width: 8,
+                                      height: 8,
                                       margin: EdgeInsets.symmetric(
-                                          vertical: 8.0, horizontal: 4.0),
+                                          vertical: 10.0, horizontal: 4.0),
                                       decoration: _current != entry.key
                                           ? BoxDecoration(
                                               borderRadius:
