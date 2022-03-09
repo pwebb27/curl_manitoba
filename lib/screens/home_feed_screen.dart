@@ -1,4 +1,5 @@
 import 'package:curl_manitoba/models/news_story.dart';
+import 'package:curl_manitoba/widgets/font_awesome_pro_icons.dart';
 import 'package:curl_manitoba/widgets/news_story_item.dart';
 import 'package:flutter/material.dart';
 import 'package:carousel_slider/carousel_slider.dart';
@@ -23,6 +24,17 @@ final List<String> imgList = [
   'assets/images/carousel-image-3.png',
   'assets/images/carousel-image-4.png'
 ];
+
+Map<String, IconData> EventsProgramsAndNewsData = {
+  'CurlManitoba Learn to Curl - Thistle Curling Vlub march 29, 2022':
+      FontAwesomePro.curling,
+  'Manitoba Curling Hall of Fame Induction Dinner Tickets':
+      FontAwesomePro.calendar_day,
+  'CurlManitoba Telus Online 50/50 Raffle | Congratulations to Dean Steski':
+      FontAwesomePro.newspaper,
+  'CurlManitobaPositiion on Vaccine | For all CurlManitoba Provincial Championships that lead to a National championship effective immediately, mandatory COVID-19 vaccination will be required. This policy is in effect for all athletes, coaches, officials, staff, contractors, volunteers, media and fans above the age of 12. There will be no youth sport exemption at Provincial Championships.':
+      FontAwesomePro.newspaper
+};
 
 List<String> titles = [];
 List<String> dates = [];
@@ -109,138 +121,112 @@ class _HomeFeedScreenState extends State<HomeFeedScreen> {
 
           return SingleChildScrollView(
             child: Padding(
-                padding: const EdgeInsets.only(top: 9.0),
-                child: Column(
-                    mainAxisAlignment: MainAxisAlignment.start,
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Stack(alignment: Alignment.center, children: [
-                        CarouselSlider(
-                          items: itemss,
-                          options: CarouselOptions(
-                              autoPlayInterval: Duration(seconds: 5),
-                              height: 233,
-                              autoPlay: true,
-                              viewportFraction: 1,
-                              onPageChanged: (index, reason) {
-                                setState(() {
-                                  _current = index;
-                                });
-                              }),
-                        ),
-                        Positioned(
-                          bottom: 6,
-                          child: Row(
-                            children: itemss.asMap().entries.map((entry) {
-                              return GestureDetector(
-                                  onTap: () =>
-                                      _controller.animateToPage(entry.key),
-                                  child: Container(
-                                    width: 9.0,
-                                    height: 9.0,
-                                    margin: EdgeInsets.symmetric(
-                                        vertical: 8.0, horizontal: 4.0),
-                                    decoration: _current != entry.key
-                                        ? BoxDecoration(
-                                            borderRadius:
-                                                BorderRadius.circular(100),
-                                            border: Border.all(
-                                                width: 1, color: Colors.white),
-                                          )
-                                        : BoxDecoration(
-                                            borderRadius:
-                                                BorderRadius.circular(100),
-                                            color: Colors.white),
-                                  ));
-                            }).toList(),
+                padding: const EdgeInsets.only(top: 9.0, bottom: 15),
+                child: Container(
+                  color: Colors.grey.shade300,
+                  child: Column(
+                      mainAxisAlignment: MainAxisAlignment.start,
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Stack(alignment: Alignment.center, children: [
+                          CarouselSlider(
+                            items: itemss,
+                            options: CarouselOptions(
+                                autoPlayInterval: Duration(seconds: 5),
+                                height: 233,
+                                autoPlay: true,
+                                viewportFraction: 1,
+                                onPageChanged: (index, reason) {
+                                  setState(() {
+                                    _current = index;
+                                  });
+                                }),
                           ),
-                        )
-                      ]),
-                      buildTextWidget('Competitions'),
-                      for (int i = 0; i < 3; i++)
-                        buildCompetitionCard(
-                            context, CompetitionTitles[i], CompetitionDates[i]),
-                      buildTextWidget('Latest News'),
-                      buildNewsStorySegment(newsStories),
-                      CarouselSlider(
-                        items: buildNewsStories(),
-                        options: CarouselOptions(
-                            height: 305,
-                            enlargeCenterPage: true,
-                            viewportFraction: .87,
-                            enlargeStrategy: CenterPageEnlargeStrategy.height,
-                            enableInfiniteScroll: false,
-                            onPageChanged: (index, reason) {
-                              setState(() {
-                                _current = index;
-                              });
-                            }),
-                      ),
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: imgList.asMap().entries.map((entry) {
-                          return GestureDetector(
-                            onTap: () => _controller.animateToPage(entry.key),
-                            child: Container(
-                              width: 8.0,
-                              height: 8.0,
-                              margin: EdgeInsets.symmetric(
-                                  vertical: 5, horizontal: 2.0),
-                              decoration: BoxDecoration(
-                                  shape: BoxShape.circle,
-                                  color: _current == entry.key
-                                      ? Theme.of(context).primaryColor
-                                      : Colors.grey.shade500),
+                          Positioned(
+                            bottom: 6,
+                            child: Row(
+                              children: itemss.asMap().entries.map((entry) {
+                                return GestureDetector(
+                                    onTap: () =>
+                                        _controller.animateToPage(entry.key),
+                                    child: Container(
+                                      width: 9.0,
+                                      height: 9.0,
+                                      margin: EdgeInsets.symmetric(
+                                          vertical: 8.0, horizontal: 4.0),
+                                      decoration: _current != entry.key
+                                          ? BoxDecoration(
+                                              borderRadius:
+                                                  BorderRadius.circular(100),
+                                              border: Border.all(
+                                                  width: 1,
+                                                  color: Colors.white),
+                                            )
+                                          : BoxDecoration(
+                                              borderRadius:
+                                                  BorderRadius.circular(100),
+                                              color: Colors.white),
+                                    ));
+                              }).toList(),
                             ),
-                          );
-                        }).toList(),
-                      ),
-                    ])),
+                          )
+                        ]),
+                        wrapSectionInCard(
+                            'Competitions',
+                            buildCompetitionSection(
+                                context, CompetitionTitles, CompetitionDates)),
+                        wrapSectionInCard(
+                            'Latest News', buildNewsStorySegment(newsStories)),
+                        
+                        wrapSectionInCard(
+                            'Events, Programs & News',
+                            buildEventsProgramsAndNewsSection(
+                                EventsProgramsAndNewsData))
+                      ]),
+                )),
           );
         });
   }
 }
 
-buildTextWidget(String text) {
-  return Padding(
-    padding: const EdgeInsets.only(top: 16, left: 10.0),
-    child: Text(
-      text,
-      style: TextStyle(
-        fontSize: 21.5,
-        fontWeight: FontWeight.w700,
-      ),
-    ),
-  );
+buildEventsProgramsAndNewsSection(Map<String, IconData> EventsProgramsAndNewsData) {
+  return Column(mainAxisAlignment: MainAxisAlignment.start, children: [
+    for (MapEntry e in EventsProgramsAndNewsData.entries)
+      Row(children: [Icon(e.value, size: 15, color: Colors.grey.shade700), Flexible(child: Text(e.key,style: TextStyle(fontSize: 15)))])
+  ]);
 }
 
-buildCompetitionCard(BuildContext context, String title, String date) {
-  return Padding(
-    padding: EdgeInsets.symmetric(horizontal: 5, vertical: 4),
-    child: Container(
-      decoration: BoxDecoration(
-          borderRadius: BorderRadius.circular(5),
-          gradient: LinearGradient(
-            begin: Alignment.topRight,
-            end: Alignment.bottomLeft,
-            colors: [Colors.black, Theme.of(context).primaryColor],
-          )),
-      child: Padding(
-          padding: EdgeInsets.all(10),
-          child: Row(children: [
-            Expanded(
-                flex: 6,
-                child: Text(
-                  title,
-                  style: TextStyle(color: Colors.white, fontSize: 15),
-                )),
-            Expanded(
-                flex: 4,
-                child: Text(date,
-                    style: TextStyle(color: Colors.white, fontSize: 15)))
-          ])),
-    ),
-  );
+buildCompetitionSection(
+    BuildContext context, List<String> titles, List<String> dates) {
+  return Column(children: <Widget>[
+    for (int i = 0; i < 3; i++)
+      Padding(
+        padding: EdgeInsets.symmetric(horizontal: 5, vertical: 4),
+        child: Container(
+          decoration: BoxDecoration(
+              borderRadius: BorderRadius.circular(5),
+              gradient: LinearGradient(
+                begin: Alignment.topRight,
+                end: Alignment.bottomLeft,
+                colors: [Colors.black, Theme.of(context).primaryColor],
+              )),
+          child: Padding(
+              padding: EdgeInsets.all(10),
+              child: Row(children: [
+                Expanded(
+                    flex: 6,
+                    child: Text(
+                      titles[i],
+                      style: TextStyle(color: Colors.white, fontSize: 15),
+                    )),
+                Expanded(
+                    flex: 4,
+                    child: Text(dates[i],
+                        style: TextStyle(color: Colors.white, fontSize: 15)))
+              ])),
+        ),
+      ),
+  ]);
 }
 
 List<Widget> buildNewsStories() {
@@ -270,4 +256,30 @@ Widget buildNewsStorySegment(List<Widget> newsStories) {
       children: List.generate(newsStories.length, (index) {
         return newsStories[index];
       }));
+}
+
+Widget wrapSectionInCard(String sectionName, Widget section) {
+  return Padding(
+      padding: EdgeInsets.all(7),
+      child: Card(
+          shape: RoundedRectangleBorder(
+              side: BorderSide(color: Colors.grey.shade800, width: .15),
+              borderRadius: BorderRadius.circular(5)),
+          child: Padding(
+              padding: EdgeInsets.all(8),
+              child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Padding(
+                      padding: const EdgeInsets.only(top: 5, left: 10.0),
+                      child: Text(
+                        sectionName,
+                        style: TextStyle(
+                          fontSize: 21.5,
+                          fontWeight: FontWeight.w700,
+                        ),
+                      ),
+                    ),
+                    section
+                  ]))));
 }
