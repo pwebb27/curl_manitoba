@@ -49,7 +49,8 @@ List<Widget> itemss = imgList
 
 class _HomeFeedScreenState extends State<HomeFeedScreen> {
   List<String> CompetitionTitles = [];
-  List<String> CompetitionDates = [];
+  List<String> CompetitionStartDates = [];
+  List<String> CompetitionEndDates = [];
   List<Widget> newsStories = [];
 
   Future<List<dynamic>> _getDataFromWeb() async {
@@ -74,11 +75,12 @@ class _HomeFeedScreenState extends State<HomeFeedScreen> {
           jsonMap["paged_competitions"]["competitions"][i]["title"]);
       String startDate =
           jsonMap["paged_competitions"]["competitions"][i]["starts_on"];
-      startDate = DateFormat('yMMMMd').format(DateTime.parse(startDate));
+      startDate = DateFormat('LLL d').format(DateTime.parse(startDate));
       String endDate =
           jsonMap["paged_competitions"]["competitions"][i]["ends_on"];
-      endDate = DateFormat('yMMMMd').format(DateTime.parse(endDate));
-      CompetitionDates.add(startDate + ' - ' + endDate);
+      endDate = DateFormat('LLL d').format(DateTime.parse(endDate));
+      CompetitionStartDates.add(startDate);
+      CompetitionEndDates.add(endDate);
     }
 
     final body = responses[1].body;
@@ -173,11 +175,10 @@ class _HomeFeedScreenState extends State<HomeFeedScreen> {
                         ]),
                         wrapSectionInCard(
                             'Competitions',
-                            buildCompetitionSection(
-                                context, CompetitionTitles, CompetitionDates)),
+                            buildCompetitionSection(context, CompetitionTitles,
+                                CompetitionEndDates, CompetitionStartDates)),
                         wrapSectionInCard(
                             'Latest News', buildNewsStorySegment(newsStories)),
-                        
                         wrapSectionInCard(
                             'Events, Programs & News',
                             buildEventsProgramsAndNewsSection(
@@ -189,15 +190,19 @@ class _HomeFeedScreenState extends State<HomeFeedScreen> {
   }
 }
 
-buildEventsProgramsAndNewsSection(Map<String, IconData> EventsProgramsAndNewsData) {
+buildEventsProgramsAndNewsSection(
+    Map<String, IconData> EventsProgramsAndNewsData) {
   return Column(mainAxisAlignment: MainAxisAlignment.start, children: [
     for (MapEntry e in EventsProgramsAndNewsData.entries)
-      Row(children: [Icon(e.value, size: 15, color: Colors.grey.shade700), Flexible(child: Text(e.key,style: TextStyle(fontSize: 15)))])
+      Row(children: [
+        Icon(e.value, size: 15, color: Colors.grey.shade700),
+        Flexible(child: Text(e.key, style: TextStyle(fontSize: 15)))
+      ])
   ]);
 }
 
-buildCompetitionSection(
-    BuildContext context, List<String> titles, List<String> dates) {
+buildCompetitionSection(BuildContext context, List<String> titles,
+    List<String> startDates, List<String> endDates) {
   return Column(children: <Widget>[
     for (int i = 0; i < 3; i++)
       Padding(
@@ -211,18 +216,27 @@ buildCompetitionSection(
                 colors: [Colors.black, Theme.of(context).primaryColor],
               )),
           child: Padding(
-              padding: EdgeInsets.all(10),
-              child: Row(children: [
+              padding: EdgeInsets.all(9),
+              child: Row( crossAxisAlignment: CrossAxisAlignment.start, children: [
                 Expanded(
-                    flex: 6,
+                    flex: 7,
                     child: Text(
                       titles[i],
                       style: TextStyle(color: Colors.white, fontSize: 15),
                     )),
-                Expanded(
-                    flex: 4,
-                    child: Text(dates[i],
-                        style: TextStyle(color: Colors.white, fontSize: 15)))
+                Padding(
+                  padding: const EdgeInsets.only(left: 15),
+                  child: Expanded(
+                      flex: 3,
+                      child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
+                        Text(startDates[i] + ' - ',
+                            style:
+                                TextStyle(color: Colors.white, fontSize: 15)),
+                          Text(endDates[i],
+                              style: TextStyle(color: Colors.white, fontSize: 15)),
+                        
+                      ])),
+                )
               ])),
         ),
       ),
