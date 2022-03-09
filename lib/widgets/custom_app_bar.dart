@@ -27,8 +27,6 @@ class CustomAppBar extends StatelessWidget with PreferredSizeWidget {
     BuildContext context,
   ) {
     return Container(
-      color: Colors.black,
-      child: SafeArea(
         child: AppBar(
             leading: Padding(
               padding: const EdgeInsets.only(top: 8.5, left:6),
@@ -47,7 +45,7 @@ class CustomAppBar extends StatelessWidget with PreferredSizeWidget {
               padding: const EdgeInsets.only(top:9),
               child: Text(pageTitle, style: TextStyle(fontSize: 20.5, color: Colors.white, fontWeight: FontWeight.w400),),
             ),           bottom: _buildTabbar()),
-      ),
+      
     );
   }
 
