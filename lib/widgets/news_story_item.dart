@@ -21,7 +21,7 @@ class NewsStoryItem extends StatelessWidget {
         onTap: () => selectNewsStory(context),
         child: Card(
             shape: RoundedRectangleBorder(
-              borderRadius: BorderRadius.circular(10.0),
+              borderRadius: BorderRadius.circular(5.0),
             ),
             clipBehavior: Clip.antiAlias,
             child: Column(
@@ -39,13 +39,16 @@ class NewsStoryItem extends StatelessWidget {
                     padding: EdgeInsets.symmetric(horizontal: 10.0, vertical: 5),
                     child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
 
-                                          Text(
+                                          Padding(
+                                            padding: const EdgeInsets.only(bottom: 4),
+                                            child: Text(
                         newsStory.date,
-                        style: TextStyle(fontSize: 12, color: Theme.of(context).primaryColor),
+                        style: TextStyle(fontSize: 12, fontStyle: FontStyle.italic, color: Theme.of(context).primaryColor),
                       ),
+                                          ),
                       Text(
                         newsStory.headline,
-                        style: TextStyle(fontSize: 13.0),
+                        style: TextStyle(fontSize: 13.0, fontWeight: FontWeight.bold),
                       ),
   
                     ])),
