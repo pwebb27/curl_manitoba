@@ -28,23 +28,15 @@ class CustomAppBar extends StatelessWidget with PreferredSizeWidget {
   ) {
     return Container(
         child: AppBar(
-            leading: Padding(
-              padding: const EdgeInsets.only(top: 8.5, left:6),
-              child: Builder(
-                  builder: (context) => IconButton(
-                      icon: icon,
-                      onPressed: () => Scaffold.of(context).openDrawer())),
-            ),
+            leading: Builder(
+                builder: (context) => IconButton(
+                    icon: icon,
+                    onPressed: () => Scaffold.of(context).openDrawer())),
             backgroundColor: Theme.of(context).primaryColor,
-            title: (pageTitle=="")? Padding(
-                padding: EdgeInsets.only(top:10),
-                child: Image.asset('assets/images/Curl_Manitoba_Logo.png',height: 23,
-                    fit: BoxFit.cover))
+            title: (pageTitle=="")? Image.asset('assets/images/Curl_Manitoba_Logo.png',height: 24,
+                fit: BoxFit.cover)
             
-            :Padding(
-              padding: const EdgeInsets.only(top:9),
-              child: Text(pageTitle, style: TextStyle(fontSize: 20.5, color: Colors.white, fontWeight: FontWeight.w400),),
-            ),           bottom: _buildTabbar()),
+            :Text(pageTitle, style: TextStyle(fontSize: 20.5, color: Colors.white, fontWeight: FontWeight.w400),),           bottom: _buildTabbar()),
       
     );
   }
@@ -54,7 +46,7 @@ class CustomAppBar extends StatelessWidget with PreferredSizeWidget {
       return null;
     else
       return PreferredSize(
-        preferredSize: Size.fromHeight(42),
+        preferredSize: Size.fromHeight(25),
         child: Container(
             height: 42,
             color: Colors.white,
