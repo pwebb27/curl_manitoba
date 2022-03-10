@@ -1,71 +1,31 @@
+import 'package:curl_manitoba/drawer_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 import '../drawer_data.dart';
 
 class MainDrawer extends StatelessWidget {
-  Theme buildExpansionTiles(BuildContext context, int index) {
-    return Theme(
-      data: Theme.of(context).copyWith(
-        unselectedWidgetColor: Colors.grey.shade700, // here for close state
-        colorScheme: ColorScheme.light(
-          primary: Theme.of(context).primaryColor,
-        ), // here for open state in replacement of deprecated accentColor
-        dividerColor: Colors.transparent, // if you want to remove the border
-      ),
-      child: ListTileTheme(
+  bool reachedUsefulLinksSection = false;
+
+  Widget buildBasicTile(DrawerTile drawerTile) {
+    return ListTile(
         dense: true,
-        child: ExpansionTile(
-            collapsedIconColor: Colors.grey.shade700,
-            collapsedTextColor: Colors.grey.shade700,
-            leading: (EXPANSION_TILES_DATA[index].getIcon as Icon),
-            title: Text(
-              EXPANSION_TILES_DATA[index].getMenuTitle as String,
-              style: TextStyle(
-                fontFamily: 'NeuzeitOffice',
-                fontWeight: FontWeight.bold,
-                fontSize: 14,
-              ),
-            ),
-            children: <Widget>[
-              Container(
-                alignment: Alignment.topLeft,
-                padding: EdgeInsets.only(left: 20, bottom: 15),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: <ListTileTheme>[
-                    for (int i = 0;
-                        i < EXPANSION_TILES_DATA[index].getSubmenus!.length;
-                        i++)
-                      ListTileTheme(
-                        dense: true,
-                        child: ListTile(
-                            title: Text(
-                          EXPANSION_TILES_DATA[index]
-                              .getSubmenus![i]
-                              .toString(),
-                          style: TextStyle(
-                              fontFamily: 'NeuzeitOffice',
-                              fontWeight: FontWeight.bold,
-                              fontSize: 14,
-                              color: Colors.grey.shade700),
-                        )),
-                      )
-                  ],
-                ),
-              )
-            ]),
-      ),
-    );
+        leading: drawerTile.getIcon,
+        title: Text(
+          drawerTile.getTitle as String,
+          style: TextStyle(
+            fontSize: 14,
+            color: Colors.grey.shade700,
+            fontFamily: 'NeuzeitOffice',
+            fontWeight: FontWeight.bold,
+          ),
+        ));
   }
 
-  Column buildListTiles(BuildContext context) {
-    List<Widget> widgets = [];
-
-    for (int i = 0; i < LIST_TILES_DATA.length; i++) {
-      widgets.add(GestureDetector(
+  buildUsefulLinkTile(DrawerTile drawerTile) {
+    return GestureDetector(
         onTap: () async {
-          final url = LIST_TILES_DATA[i].getUrl;
+          final url = drawerTile.getUrl;
           if (await canLaunch(url as String)) {
             await launch(
               url,
@@ -73,22 +33,15 @@ class MainDrawer extends StatelessWidget {
             );
           }
         },
-        child: ListTile(
-            dense: true,
-            leading: LIST_TILES_DATA[i].getIcon,
-            title: Text(
-              LIST_TILES_DATA[i].getMenuTitle as String,
-              style: TextStyle(
-                fontSize: 14,
-                color: Colors.grey.shade700,
-                fontFamily: 'NeuzeitOffice',
-                fontWeight: FontWeight.bold,
-              ),
-            )),
-      ));
-    }
-    Column column = new Column(children: widgets);
-    return column;
+        child: buildBasicTile(drawerTile));
+  }
+
+  buildTiles() {
+    List<Widget> tiles = [];
+    for (var tile in BASIC_TILES_DATA) tiles.add(buildBasicTile(tile));
+    tiles.add(buildDivider());
+    for (var tile in USEFUL_LINKS_DATA) tiles.add(buildUsefulLinkTile(tile));
+    return Column(crossAxisAlignment: CrossAxisAlignment.start, children: tiles,);
   }
 
   @override
@@ -109,35 +62,30 @@ class MainDrawer extends StatelessWidget {
                             fit: BoxFit.contain),
                       ),
                       height: 170),
-                  Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      for (int i = 0; i < EXPANSION_TILES_DATA.length; i++)
-                        buildExpansionTiles(context, i),
-                      Divider(
-                        height: 10,
-                        thickness: 1,
-                      ),
-                      Padding(
-                        padding:
-                            const EdgeInsets.only(left: 8, bottom: 12, top: 9),
-                        child: Text("Useful Links",
-                            style: TextStyle(
-                              fontSize: 14,
-                              color: Colors.grey.shade600,
-                              fontFamily: 'NeuzeitOffice',
-                              fontWeight: FontWeight.bold,
-                            )),
-                      ),
-                      Container(
-                        child: buildListTiles(context),
-                      )
-                    ],
-                  ),
+                  buildTiles()
                 ]),
               ),
             )),
       ),
     );
+  }
+
+  Widget buildDivider() {
+    return Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
+      Divider(
+        height: 10,
+        thickness: 1,
+      ),
+      Padding(
+        padding: const EdgeInsets.only(left: 8, bottom: 12, top: 10),
+        child: Text("Useful Links",
+            style: TextStyle(
+              fontSize: 14,
+              color: Colors.grey.shade600,
+              fontFamily: 'NeuzeitOffice',
+              fontWeight: FontWeight.bold,
+            )),
+      )
+    ]);
   }
 }

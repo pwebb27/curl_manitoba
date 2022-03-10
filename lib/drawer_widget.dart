@@ -1,30 +1,17 @@
 import 'package:flutter/material.dart';
 
 
-class DrawerWidget {
-  late String menuTitle;
+class DrawerTile {
+  late String title;
   late double iconSize;
   Widget? icon;
-  List<String>? subMenus;
   String? url;
-  
 
-  ///Creates an ExpansionTile widget for the drawer
-  DrawerWidget(String menuTitle, IconData iconData, List<String> subMenus, [double iconSize = 19]) {
-    this.menuTitle = menuTitle;
-    this.subMenus = subMenus;
-    this.iconSize = iconSize;
-
-    this.icon = Icon(
-      iconData,
-      size: iconSize,
-    );
-  }
 
   ///Creates a ListTile widget for the drawer
-  DrawerWidget.m2(String menuTitle, dynamic iconData,String url, [double iconSize = 19]) {
+  DrawerTile(String title, dynamic iconData,{String url = '', double iconSize = 19}) {
     this.icon = icon;
-    this.menuTitle = menuTitle;
+    this.title = title;
     this.url = url;
 
     //icon may be an image
@@ -37,16 +24,12 @@ class DrawerWidget {
           );
   }
 
-  String? get getMenuTitle {
-    return menuTitle;
+  String? get getTitle {
+    return title;
   }
 
   Widget? get getIcon {
     return icon;
-  }
-
-  List<String>? get getSubmenus {
-    return subMenus;
   }
 
   String? get getUrl{
