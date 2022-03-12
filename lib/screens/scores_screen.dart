@@ -1,23 +1,37 @@
+import 'package:curl_manitoba/widgets/font_awesome_pro_icons.dart';
 import 'package:flutter/material.dart';
 import 'package:webview_flutter/webview_flutter.dart';
 import '../widgets/circular_progress_bar.dart';
+import '../widgets/custom_app_bar.dart';
 
 class ScoresScreen extends StatefulWidget {
-  @override
-  State<ScoresScreen> createState() => _ScoresScreenState();
-}
+  String? id;
+  ScoresScreen(this.id);
+  ScoresScreen.withoutId();
 
+  @override
+  State<ScoresScreen> createState() => _ScoresScreenState(id as String);
+}
 class _ScoresScreenState extends State<ScoresScreen> {
+  static const routeName = '/scores';
+
   WebViewController? _myController;
 
   bool _loadedPage = false;
 
+  String id;
+  _ScoresScreenState(this.id);
+
   @override
   Widget build(BuildContext context) {
-    return Stack(
-      children: <Widget>[
-        WebView(
-          initialUrl: 'https://curlmanitoba.org/about-company/scoreboard/#!/',
+    return Scaffold(
+        appBar: (id!=null)?CustomAppBar(
+            Icon(FontAwesomePro.bars), context, 'Live Scores & Results'):null,
+        body: Stack(
+          children: <Widget>[
+            WebView(
+              initialUrl: (id==null)?'https://curlmanitoba.org/about-company/scoreboard/#!/':'https://curlmanitoba.org/about-company/scoreboard/#!/competitions/' +
+                  id,
           javascriptMode: JavascriptMode.unrestricted,
           onWebViewCreated: (controller) {
             _myController = controller;
@@ -37,6 +51,6 @@ class _ScoresScreenState extends State<ScoresScreen> {
             ? CircularProgressBar()
             : Container(),
       ],
-    );
+    ));
   }
 }

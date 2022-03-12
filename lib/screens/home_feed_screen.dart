@@ -48,10 +48,12 @@ List<Widget> itemss = imgList
     .toList();
 
 class _HomeFeedScreenState extends State<HomeFeedScreen> {
-  List<String> CompetitionTitles = [];
-  List<String> CompetitionStartDates = [];
-  List<String> CompetitionEndDates = [];
+  List<String> competitionTitles = [];
+  List<String> competitionStartDates = [];
+  List<String> competitionEndDates = [];
+  List<String> competitionIDs = [];
   List<Widget> newsStories = [];
+
 
   Future<List<dynamic>> _getDataFromWeb() async {
     const competitionURL =
@@ -71,7 +73,8 @@ class _HomeFeedScreenState extends State<HomeFeedScreen> {
     Map<String, dynamic> jsonMap = json.decode(competitionsBody);
 
     for (int i = 0; i < 3; i++) {
-      CompetitionTitles.add(
+      competitionIDs.add(jsonMap["paged_competitions"]["competitions"][i]["id"].toString());
+      competitionTitles.add(
           jsonMap["paged_competitions"]["competitions"][i]["title"]);
       String startDate =
           jsonMap["paged_competitions"]["competitions"][i]["starts_on"];
@@ -79,8 +82,8 @@ class _HomeFeedScreenState extends State<HomeFeedScreen> {
       String endDate =
           jsonMap["paged_competitions"]["competitions"][i]["ends_on"];
       endDate = DateFormat('LLL d').format(DateTime.parse(endDate));
-      CompetitionStartDates.add(startDate);
-      CompetitionEndDates.add(endDate);
+      competitionStartDates.add(startDate);
+      competitionEndDates.add(endDate);
     }
 
     final body = responses[1].body;
@@ -147,7 +150,7 @@ class _HomeFeedScreenState extends State<HomeFeedScreen> {
                         child: Row(
                           children: itemss.asMap().entries.map((entry) {
                             return GestureDetector(
-                                onTap: () =>
+                                onTap: () => 
                                     _controller.animateToPage(entry.key),
                                 child: Container(
                                   width: 8,
@@ -172,8 +175,8 @@ class _HomeFeedScreenState extends State<HomeFeedScreen> {
                     ]),
                     wrapSectionInCard(
                         'Competitions',
-                        buildCompetitionSection(context, CompetitionTitles,
-                            CompetitionEndDates, CompetitionStartDates)),
+                        buildCompetitionSection(context, competitionTitles,
+                            competitionEndDates, competitionStartDates, competitionIDs)),
                     wrapSectionInCard(
                         'Latest News', buildNewsStorySegment(newsStories)),
                     wrapSectionInCard(
@@ -204,7 +207,7 @@ buildEventsProgramsAndNewsSection(
 }
 
 buildCompetitionSection(BuildContext context, List<String> titles,
-    List<String> startDates, List<String> endDates) {
+    List<String> startDates, List<String> endDates, List<String> IDs) {
   return Column(children: <Widget>[
     for (int i = 0; i < 3; i++)
       Padding(
@@ -220,29 +223,32 @@ buildCompetitionSection(BuildContext context, List<String> titles,
           child: Padding(
               padding: EdgeInsets.all(9),
               child:
-                  Row(crossAxisAlignment: CrossAxisAlignment.start, children: [
-                Expanded(
-                    flex: 7,
-                    child: Text(
-                      titles[i],
-                      style: TextStyle(color: Colors.white, fontSize: 15),
-                    )),
-                Padding(
-                  padding: const EdgeInsets.only(left: 15),
-                  child: Expanded(
-                      flex: 3,
-                      child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Text(startDates[i] + ' - ',
-                                style: TextStyle(
-                                    color: Colors.white, fontSize: 15)),
-                            Text(endDates[i],
-                                style: TextStyle(
-                                    color: Colors.white, fontSize: 15)),
-                          ])),
-                )
-              ])),
+                  GestureDetector(
+                    onTap: () => Navigator.of(context).pushNamed('/scores', arguments: IDs[i]),
+                    child: Row(crossAxisAlignment: CrossAxisAlignment.start, children: [
+                                  Expanded(
+                      flex: 7,
+                      child: Text(
+                        titles[i],
+                        style: TextStyle(color: Colors.white, fontSize: 15),
+                      )),
+                                  Padding(
+                    padding: const EdgeInsets.only(left: 15),
+                    child: Expanded(
+                        flex: 3,
+                        child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Text(startDates[i] + ' - ',
+                                  style: TextStyle(
+                                      color: Colors.white, fontSize: 15)),
+                              Text(endDates[i],
+                                  style: TextStyle(
+                                      color: Colors.white, fontSize: 15)),
+                            ])),
+                                  )
+                                ]),
+                  )),
         ),
       ),
   ]);
