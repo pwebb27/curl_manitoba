@@ -18,7 +18,7 @@ class _TabsScreenState extends State<TabsScreen> {
   final List<Widget> _pages = [
     HomeScreen(),
     eEntryScreen(),
-    ScoresScreen(),
+    ScoresScreen(''),
     CalendarScreen(),
   ];
   int _selectedPageIndex = 0;

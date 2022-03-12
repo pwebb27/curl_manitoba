@@ -14,12 +14,15 @@ class NewsFeedScreen extends StatefulWidget {
 }
 
 class _NewsFeedScreenState extends State<NewsFeedScreen> {
+  static const routeName = '/news';
+  
   List<String> titles = [];
   List<String> dates = [];
   List<String> authors = [];
   List<String> content = [];
 
   static const URL = 'https://curlmanitoba.org/news-2/news-archive/';
+  
 
   Future<dom.Document> _getDataFromWeb() async {
     final response = await http.get(Uri.parse(URL));

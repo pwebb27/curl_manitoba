@@ -5,8 +5,7 @@ import 'package:url_launcher/url_launcher.dart';
 import '../drawer_data.dart';
 
 class MainDrawer extends StatelessWidget {
-  bool reachedUsefulLinksSection = false;
-
+ 
   Widget buildBasicTile(DrawerTile drawerTile) {
     return ListTile(
         dense: true,

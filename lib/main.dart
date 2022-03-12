@@ -1,3 +1,4 @@
+import 'package:curl_manitoba/route_generator.dart';
 import 'package:curl_manitoba/screens/news_story_screen.dart';
 import 'package:curl_manitoba/screens/tabs_screen.dart';
 import 'package:flutter/material.dart';
@@ -8,25 +9,12 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      theme: ThemeData(
-        
-          primaryColor: Color.fromRGBO(111, 18, 0, 1),
-          colorScheme:
-              ColorScheme.fromSwatch().copyWith(secondary: Colors.white),
-          fontFamily: 'Roboto'
-
-          ),
-          
-      routes: {
-        '/': (ctx) => TabsScreen(),
-        NewsStoryScreen.routeName: (ctx) => NewsStoryScreen(),
-      },
-      onUnknownRoute: (settings) {
-        return;
-      },
-      onGenerateRoute: (RouteSettings routeSettings){
-        
-      },
-    );
+        theme: ThemeData(
+            primaryColor: Color.fromRGBO(111, 18, 0, 1),
+            colorScheme:
+                ColorScheme.fromSwatch().copyWith(secondary: Colors.white),
+            fontFamily: 'Roboto'),
+        initialRoute: '/',
+        onGenerateRoute: RouteGenerator.generateRoute);
   }
 }
