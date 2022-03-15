@@ -1,3 +1,5 @@
+import 'package:curl_manitoba/widgets/custom_app_bar.dart';
+import 'package:curl_manitoba/widgets/font_awesome_pro_icons.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'package:html/dom.dart' as dom;
@@ -63,20 +65,24 @@ class _NewsFeedScreenState extends State<NewsFeedScreen> {
             return CircularProgressBar();
           } else
             buildContent(snapshot.data as dom.Document);
-            return ListView.builder(
-                itemBuilder: (ctx, index) {
-                  NewsStory newsStory = NewsStory(
-                    id: index,
-                    imageURL: 'https://images.thestar.com/CBZVV_aqoiPFukcZjs74JNLtlF8=/1200x798/smart/filters:cb(2700061000)/https://www.thestar.com/content/dam/thestar/sports/curling/2018/02/04/manitobas-jennifer-jones-heads-to-scotties-tournament-of-hearts-final/jennifer_jones.jpg',
-                    headline: titles[index],
-                    author: authors[index],
-                    date: dates[index],
-                    content: content[index],
-                  );
-                  return NewsStoryItem(newsStory: newsStory,);
+            return Scaffold(
+              appBar: CustomAppBar(Icon(FontAwesomePro.bars), context, 'News'),
 
-                },
-                itemCount: 8);
+              body: ListView.builder(
+                  itemBuilder: (ctx, index) {
+                    NewsStory newsStory = NewsStory(
+                      id: index,
+                      imageURL: 'https://images.thestar.com/CBZVV_aqoiPFukcZjs74JNLtlF8=/1200x798/smart/filters:cb(2700061000)/https://www.thestar.com/content/dam/thestar/sports/curling/2018/02/04/manitobas-jennifer-jones-heads-to-scotties-tournament-of-hearts-final/jennifer_jones.jpg',
+                      headline: titles[index],
+                      author: authors[index],
+                      date: dates[index],
+                      content: content[index],
+                    );
+                    return NewsStoryItem(newsStory: newsStory,);
+            
+                  },
+                  itemCount: 8),
+            );
         });
   }
 }

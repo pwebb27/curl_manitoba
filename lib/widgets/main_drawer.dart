@@ -1,46 +1,36 @@
-import 'package:curl_manitoba/drawer_widget.dart';
+import 'package:curl_manitoba/widgets/drawer_tile.dart';
 import 'package:flutter/material.dart';
-import 'package:url_launcher/url_launcher.dart';
 
 import '../drawer_data.dart';
 
 class MainDrawer extends StatelessWidget {
- 
-  Widget buildBasicTile(DrawerTile drawerTile) {
-    return ListTile(
-        dense: true,
-        leading: drawerTile.getIcon,
-        title: Text(
-          drawerTile.getTitle as String,
-          style: TextStyle(
-            fontSize: 14,
-            color: Colors.grey.shade700,
-            fontFamily: 'NeuzeitOffice',
-            fontWeight: FontWeight.bold,
-          ),
-        ));
-  }
-
-  buildUsefulLinkTile(DrawerTile drawerTile) {
+  buildTile(DrawerTile drawerTile, BuildContext context) {
     return GestureDetector(
-        onTap: () async {
-          final url = drawerTile.getUrl;
-          if (await canLaunch(url as String)) {
-            await launch(
-              url,
-              forceSafariVC: false,
-            );
-          }
+        onTap: () {
+          drawerTile.Navigate(context);
         },
-        child: buildBasicTile(drawerTile));
+        child: ListTile(
+            leading: drawerTile.getIcon,
+            title: Text(
+              drawerTile.getTitle as String,
+              style: TextStyle(
+                fontSize: 14,
+                color: Colors.grey.shade700,
+                fontFamily: 'NeuzeitOffice',
+                fontWeight: FontWeight.bold,
+              ),
+            )));
   }
 
-  buildTiles() {
+  buildTiles(BuildContext context) {
     List<Widget> tiles = [];
-    for (var tile in BASIC_TILES_DATA) tiles.add(buildBasicTile(tile));
+    for (var tile in BASIC_TILES_DATA) tiles.add(buildTile(tile, context));
     tiles.add(buildDivider());
-    for (var tile in USEFUL_LINKS_DATA) tiles.add(buildUsefulLinkTile(tile));
-    return Column(crossAxisAlignment: CrossAxisAlignment.start, children: tiles,);
+    for (var tile in USEFUL_LINKS_DATA) tiles.add(buildTile(tile, context));
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: tiles,
+    );
   }
 
   @override
@@ -61,7 +51,7 @@ class MainDrawer extends StatelessWidget {
                             fit: BoxFit.contain),
                       ),
                       height: 170),
-                  buildTiles()
+                  buildTiles(context)
                 ]),
               ),
             )),
