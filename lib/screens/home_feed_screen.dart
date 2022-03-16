@@ -1,6 +1,6 @@
+
 import 'package:curl_manitoba/models/news_story.dart';
 import 'package:curl_manitoba/widgets/font_awesome_pro_icons.dart';
-import 'package:curl_manitoba/widgets/news_story_item.dart';
 import 'package:flutter/material.dart';
 import 'package:carousel_slider/carousel_slider.dart';
 
@@ -30,8 +30,7 @@ Map<String, IconData> EventsProgramsAndNewsData = {
       FontAwesomePro.curling,
   'Manitoba Curling Hall of Fame & Museum Induction Dinner Tickets':
       FontAwesomePro.newspaper,
-  'CurlManitoba Position on Vaccine':
-      FontAwesomePro.newspaper,
+  'CurlManitoba Position on Vaccine': FontAwesomePro.newspaper,
   'New U21 and U23 Events | Two new events during the 2021-2022 season':
       FontAwesomePro.calendar_day
 };
@@ -54,7 +53,6 @@ class _HomeFeedScreenState extends State<HomeFeedScreen> {
   List<String> competitionIDs = [];
   List<Widget> newsStories = [];
 
-
   Future<List<dynamic>> _getDataFromWeb() async {
     const competitionURL =
         'https://legacy-curlingio.global.ssl.fastly.net/api/organizations/MTZFJ5miuro/competitions.json?search=&tags=&page=1';
@@ -67,15 +65,16 @@ class _HomeFeedScreenState extends State<HomeFeedScreen> {
     return responses;
   }
 
-  void buildContent(List<dynamic> responses) {
+  void buildContent(List<dynamic> responses, BuildContext context) {
     final competitionsBody = responses[0].body;
 
     Map<String, dynamic> jsonMap = json.decode(competitionsBody);
 
     for (int i = 0; i < 3; i++) {
-      competitionIDs.add(jsonMap["paged_competitions"]["competitions"][i]["id"].toString());
-      competitionTitles.add(
-          jsonMap["paged_competitions"]["competitions"][i]["title"]);
+      competitionIDs.add(
+          jsonMap["paged_competitions"]["competitions"][i]["id"].toString());
+      competitionTitles
+          .add(jsonMap["paged_competitions"]["competitions"][i]["title"]);
       String startDate =
           jsonMap["paged_competitions"]["competitions"][i]["starts_on"];
       startDate = DateFormat('LLL d').format(DateTime.parse(startDate));
@@ -103,7 +102,7 @@ class _HomeFeedScreenState extends State<HomeFeedScreen> {
     final contentElements = document.getElementsByTagName("p");
     content = contentElements.map((element) => element.innerHtml).toList();
 
-    newsStories = buildNewsStories();
+    newsStories = buildNewsStories(context);
   }
 
   int _current = 0;
@@ -122,7 +121,7 @@ class _HomeFeedScreenState extends State<HomeFeedScreen> {
           if (snapshot.data == null) {
             return CircularProgressBar();
           } else
-            buildContent(snapshot.data as List<dynamic>);
+            buildContent(snapshot.data as List<dynamic>, context);
 
           return SingleChildScrollView(
             child: Padding(
@@ -150,7 +149,7 @@ class _HomeFeedScreenState extends State<HomeFeedScreen> {
                         child: Row(
                           children: itemss.asMap().entries.map((entry) {
                             return GestureDetector(
-                                onTap: () => 
+                                onTap: () =>
                                     _controller.animateToPage(entry.key),
                                 child: Container(
                                   width: 8,
@@ -175,8 +174,12 @@ class _HomeFeedScreenState extends State<HomeFeedScreen> {
                     ]),
                     wrapSectionInCard(
                         'Competitions',
-                        buildCompetitionSection(context, competitionTitles,
-                            competitionEndDates, competitionStartDates, competitionIDs)),
+                        buildCompetitionSection(
+                            context,
+                            competitionTitles,
+                            competitionEndDates,
+                            competitionStartDates,
+                            competitionIDs)),
                     wrapSectionInCard(
                         'Latest News', buildNewsStorySegment(newsStories)),
                     wrapSectionInCard(
@@ -199,8 +202,12 @@ buildEventsProgramsAndNewsSection(
         child: Row(crossAxisAlignment: CrossAxisAlignment.start, children: [
           Padding(
               padding: EdgeInsets.only(right: 12),
-              child: Padding(padding: EdgeInsets.only(top: 3), child: Icon(e.value, size: 15, color: Colors.grey.shade700))),
-          Flexible(child: Text(e.key, style: TextStyle(fontSize: 15, fontWeight: FontWeight.w500)))
+              child: Padding(
+                  padding: EdgeInsets.only(top: 3),
+                  child: Icon(e.value, size: 15, color: Colors.grey.shade700))),
+          Flexible(
+              child: Text(e.key,
+                  style: TextStyle(fontSize: 15, fontWeight: FontWeight.w500)))
         ]),
       )
   ]);
@@ -222,51 +229,54 @@ buildCompetitionSection(BuildContext context, List<String> titles,
               )),
           child: Padding(
               padding: EdgeInsets.all(9),
-              child:
-                  GestureDetector(
-                    onTap: () => Navigator.of(context).pushNamed('/scores', arguments: IDs[i]),
-                    child: Row(crossAxisAlignment: CrossAxisAlignment.start, children: [
-                                  Expanded(
-                      flex: 7,
-                      child: Text(
-                        titles[i],
-                        style: TextStyle(color: Colors.white, fontSize: 15),
-                      )),
-                                  Padding(
-                    padding: const EdgeInsets.only(left: 15),
-                    child: Expanded(
-                        flex: 3,
-                        child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              Text(startDates[i] + ' - ',
-                                  style: TextStyle(
-                                      color: Colors.white, fontSize: 15)),
-                              Text(endDates[i],
-                                  style: TextStyle(
-                                      color: Colors.white, fontSize: 15)),
-                            ])),
-                                  )
-                                ]),
-                  )),
+              child: GestureDetector(
+                onTap: () => Navigator.of(context)
+                    .pushNamed('/scores', arguments: IDs[i]),
+                child: Row(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Expanded(
+                          flex: 7,
+                          child: Text(
+                            titles[i],
+                            style: TextStyle(color: Colors.white, fontSize: 15),
+                          )),
+                      Padding(
+                        padding: const EdgeInsets.only(left: 15),
+                        child: Expanded(
+                            flex: 3,
+                            child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  Text(startDates[i] + ' - ',
+                                      style: TextStyle(
+                                          color: Colors.white, fontSize: 15)),
+                                  Text(endDates[i],
+                                      style: TextStyle(
+                                          color: Colors.white, fontSize: 15)),
+                                ])),
+                      )
+                    ]),
+              )),
         ),
       ),
   ]);
 }
 
-List<Widget> buildNewsStories() {
-  List<NewsStoryItem> newsStories = [];
+List<Widget> buildNewsStories(BuildContext context) {
+  List<Widget> newsStories = [];
   for (int i = 0; i < 4; i++) {
     newsStories.add(
-      NewsStoryItem(
-          newsStory: NewsStory(
+      buildNewsStoryItem(
+          NewsStory(
               id: 0,
               headline: titles[i],
               imageURL:
                   'https://images.thestar.com/CBZVV_aqoiPFukcZjs74JNLtlF8=/1200x798/smart/filters:cb(2700061000)/https://www.thestar.com/content/dam/thestar/sports/curling/2018/02/04/manitobas-jennifer-jones-heads-to-scotties-tournament-of-hearts-final/jennifer_jones.jpg',
               date: dates[i],
               author: authors[i],
-              content: content[i])),
+              content: content[i]),
+          context),
     );
   }
   return newsStories;
@@ -308,4 +318,53 @@ Widget wrapSectionInCard(String sectionName, Widget section) {
                     ),
                     section
                   ]))));
+}
+
+void selectNewsStory(BuildContext context, NewsStory newsStory) {
+  Navigator.of(context).pushNamed('/newsStory', arguments: newsStory);
+}
+
+@override
+Widget buildNewsStoryItem(NewsStory newsStory, BuildContext context) {
+  return InkWell(
+      onTap: () => selectNewsStory(context, newsStory),
+      child: Card(
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(5.0),
+          ),
+          clipBehavior: Clip.antiAlias,
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: <Widget>[
+              Expanded(
+                  child: Container(
+                decoration: BoxDecoration(
+                  image: DecorationImage(
+                      image: NetworkImage(newsStory.imageURL),
+                      fit: BoxFit.cover),
+                ),
+              )),
+              Padding(
+                  padding: EdgeInsets.symmetric(horizontal: 10.0, vertical: 5),
+                  child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Padding(
+                          padding: const EdgeInsets.only(bottom: 4),
+                          child: Text(
+                            newsStory.date,
+                            style: TextStyle(
+                                fontSize: 12,
+                                fontStyle: FontStyle.italic,
+                                color: Theme.of(context).primaryColor),
+                          ),
+                        ),
+                        Text(
+                          newsStory.headline,
+                          style: TextStyle(
+                              fontSize: 13.0, fontWeight: FontWeight.bold),
+                        ),
+                      ])),
+            ],
+          )));
 }
