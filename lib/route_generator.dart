@@ -1,3 +1,4 @@
+import 'package:curl_manitoba/screens/competitions_screen.dart';
 import 'package:curl_manitoba/screens/news_feed_screen.dart';
 import 'package:curl_manitoba/screens/news_story_screen.dart';
 import 'package:curl_manitoba/screens/scores_screen.dart';
@@ -19,6 +20,8 @@ class RouteGenerator {
         return MaterialPageRoute(builder: (_) => ScoresScreen(args as String));
       case '/newsStory':
         return MaterialPageRoute(builder: (_) => NewsStoryScreen());
+      case '/competitions':
+        return MaterialPageRoute(builder: (_) => CompetitionScreen());
 
       default:
         return _errorRoute();

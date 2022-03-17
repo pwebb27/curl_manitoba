@@ -7,7 +7,6 @@ import '../widgets/custom_app_bar.dart';
 class ScoresScreen extends StatefulWidget {
   String? id;
   ScoresScreen(this.id);
-  ScoresScreen.withoutId();
 
   @override
   State<ScoresScreen> createState() => _ScoresScreenState(id as String);
@@ -21,6 +20,9 @@ class _ScoresScreenState extends State<ScoresScreen> {
 
   String id;
   _ScoresScreenState(this.id);
+
+
+  
 
   @override
   Widget build(BuildContext context) {

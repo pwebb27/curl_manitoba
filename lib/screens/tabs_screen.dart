@@ -1,3 +1,4 @@
+import 'package:curl_manitoba/screens/competitions_screen.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:flutter/material.dart';
 
@@ -18,7 +19,7 @@ class _TabsScreenState extends State<TabsScreen> {
   final List<Widget> _pages = [
     HomeScreen(),
     eEntryScreen(),
-    ScoresScreen(''),
+    CompetitionScreen(),
     CalendarScreen(),
   ];
   int _selectedPageIndex = 0;
