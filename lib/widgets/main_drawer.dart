@@ -10,7 +10,7 @@ class MainDrawer extends StatelessWidget {
           drawerTile.Navigate(context);
         },
         child: ListTile(
-          dense: true,
+            dense: true,
             leading: drawerTile.getIcon,
             title: Text(
               drawerTile.getTitle as String,
@@ -37,29 +37,20 @@ class MainDrawer extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      color: Colors.black,
-      child: SafeArea(
-        child: Container(
-            width: 290,
-            child: Drawer(
-              child: SingleChildScrollView(
-                child: Column(children: <Widget>[
-                  Container(
-                      padding: EdgeInsets.only(bottom: 100),
-                      decoration: BoxDecoration(
-                        image: DecorationImage(
-                            image: AssetImage('assets/images/DrawerImage.PNG'),
-                            ),
-                      ),
-                      height: 173
-                      ),
-                      Padding(padding: EdgeInsets.only(top:3)),
-                  buildTiles(context)
-                ]),
-              ),
-            )),
-      ),
-    );
+        color: Colors.black,
+        child: SafeArea(
+            child: Container(
+          width: MediaQuery.of(context).size.width * .73,
+          child: Drawer(
+            child: ListView(children: <Widget>[
+              FittedBox(
+                      child: Image.asset("assets/images/DrawerImage.PNG"),
+                      fit: BoxFit.cover),
+              Padding(padding: EdgeInsets.only(top: 3)),
+              SingleChildScrollView(child: buildTiles(context))
+            ]),
+          ),
+        )));
   }
 
   Widget buildDivider() {
