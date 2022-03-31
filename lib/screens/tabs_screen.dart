@@ -53,7 +53,8 @@ class _TabsScreenState extends State<TabsScreen> {
                       : (_selectedPageIndex == 3)
                           ? 'Calendar of Events'
                           : "",
-              (_selectedPageIndex == 0) ? true : false),
+              (_selectedPageIndex == 0) ? true : false,
+              (_selectedPageIndex == 2) ? true : false),
           drawer: MainDrawer(),
           body: _pages[_selectedPageIndex],
           bottomNavigationBar: SizedBox(

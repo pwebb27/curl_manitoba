@@ -8,16 +8,22 @@ class CustomAppBar extends StatelessWidget with PreferredSizeWidget {
   late bool tabbar;
   late BuildContext context;
   late String pageTitle;
+  late bool searchBar;
 
   @override
   Size get preferredSize =>
       //Determine the size of AppBar based on whether or not a tabbar exists
-      (!tabbar) ? Size.fromHeight(50) : Size.fromHeight(92);
+      (tabbar)
+          ? Size.fromHeight(92)
+          : (searchBar)
+              ? Size.fromHeight(100)
+              : Size.fromHeight(50);
 
   CustomAppBar(Icon icon, BuildContext context, String pageTitle,
-      [bool tabbar = false]) {
+      [bool tabbar = false, bool searchBar = false]) {
     this.icon = icon;
     this.tabbar = tabbar;
+    this.searchBar = searchBar;
     this.context = context;
     this.pageTitle = pageTitle;
   }
@@ -27,26 +33,30 @@ class CustomAppBar extends StatelessWidget with PreferredSizeWidget {
     BuildContext context,
   ) {
     return Container(
-        child: AppBar(
-            leading: Builder(
-                builder: (context) => IconButton(
-                    icon: icon,
-                    onPressed: () => Scaffold.of(context).openDrawer())),
-            backgroundColor: Theme.of(context).primaryColor,
-            title: (pageTitle=="")? Image.asset('assets/images/Curl_Manitoba_Logo.png',height: 24,
-                fit: BoxFit.cover)
-            
-            :Text(pageTitle, style: TextStyle(fontSize: 20.5, color: Colors.white, fontWeight: FontWeight.w400),),           bottom: _buildTabbar()),
-      
+      child: AppBar(
+          leading: Builder(
+              builder: (context) => IconButton(
+                  icon: icon,
+                  onPressed: () => Scaffold.of(context).openDrawer())),
+          backgroundColor: Theme.of(context).primaryColor,
+          title: (pageTitle == "")
+              ? Image.asset('assets/images/Curl_Manitoba_Logo.png',
+                  height: 24, fit: BoxFit.cover)
+              : Text(
+                  pageTitle,
+                  style: TextStyle(
+                      fontSize: 20.5,
+                      color: Colors.white,
+                      fontWeight: FontWeight.w400),
+                ),
+          bottom: _buildTabbar()),
     );
   }
 
   _buildTabbar() {
-    if (!tabbar)
-      return null;
-    else
+    if (tabbar)
       return PreferredSize(
-        preferredSize: Size.fromHeight(25),
+        preferredSize: Size.fromHeight(10),
         child: Container(
             height: 42,
             color: Colors.white,
@@ -63,5 +73,22 @@ class CustomAppBar extends StatelessWidget with PreferredSizeWidget {
               ],
             )),
       );
+    if (searchBar)
+      return PreferredSize(
+        preferredSize:Size.fromHeight(10),
+        
+     
+            child: Padding(
+              padding: const EdgeInsets.only(left: 15, right: 15, bottom: 10),
+              child: Container(
+                height: 42,
+                color: Theme.of(context).primaryColor,
+                child: TextFormField( decoration: InputDecoration(enabledBorder: OutlineInputBorder(borderSide: BorderSide(color:Colors.white, width: 2) )),)
+              ),
+            ),
+          
+          );
+
+    return null;
   }
 }

@@ -10,6 +10,7 @@ class MainDrawer extends StatelessWidget {
           drawerTile.Navigate(context);
         },
         child: ListTile(
+          dense: true,
             leading: drawerTile.getIcon,
             title: Text(
               drawerTile.getTitle as String,
@@ -48,9 +49,11 @@ class MainDrawer extends StatelessWidget {
                       decoration: BoxDecoration(
                         image: DecorationImage(
                             image: AssetImage('assets/images/DrawerImage.PNG'),
-                            fit: BoxFit.contain),
+                            ),
                       ),
-                      height: 170),
+                      height: 173
+                      ),
+                      Padding(padding: EdgeInsets.only(top:3)),
                   buildTiles(context)
                 ]),
               ),
