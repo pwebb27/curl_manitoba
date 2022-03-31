@@ -86,43 +86,46 @@ class _HomeFeedScreenState extends State<HomeFeedScreen> {
       ]));
     }
 
-    return Column(children: [
-      CarouselSlider(
-        items: competitionItems,
-        
-        
-        options: CarouselOptions(
-            height: 213,
-            enableInfiniteScroll: false,
-            viewportFraction: 1,
-            onPageChanged: (index, reason) {
-              setState(() {
-                _currentCompetitionCarouselIndex = index;
-              });
-            }),
-      ),
-      Row(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: competitionItems.asMap().entries.map((entry) {
-          return GestureDetector(
-              onTap: () => _controller.animateToPage(entry.key),
-              child: Container(
-                width: 6,
-                height: 6,
-                margin: EdgeInsets.only(left: 3, right: 3),
-                decoration: _currentCompetitionCarouselIndex != entry.key
-                    ? BoxDecoration(
-                        borderRadius: BorderRadius.circular(100),
-                        border:
-                            Border.all(width: 1, color: Colors.grey.shade700),
-                      )
-                    : BoxDecoration(
-                        borderRadius: BorderRadius.circular(100),
-                        color: Colors.grey.shade700),
-              ));
-        }).toList(),
-      ),
-    ]);
+    return Padding(
+      padding: const EdgeInsets.symmetric(horizontal: 5),
+      child: Column(children: [
+        CarouselSlider(
+          items: competitionItems,
+          
+          
+          options: CarouselOptions(
+              height: 213,
+              enableInfiniteScroll: false,
+              viewportFraction: 1,
+              onPageChanged: (index, reason) {
+                setState(() {
+                  _currentCompetitionCarouselIndex = index;
+                });
+              }),
+        ),
+        Row(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: competitionItems.asMap().entries.map((entry) {
+            return GestureDetector(
+                onTap: () => _controller.animateToPage(entry.key),
+                child: Container(
+                  width: 6,
+                  height: 6,
+                  margin: EdgeInsets.only(left: 3, right: 3),
+                  decoration: _currentCompetitionCarouselIndex != entry.key
+                      ? BoxDecoration(
+                          borderRadius: BorderRadius.circular(100),
+                          border:
+                              Border.all(width: 1, color: Colors.grey.shade700),
+                        )
+                      : BoxDecoration(
+                          borderRadius: BorderRadius.circular(100),
+                          color: Colors.grey.shade700),
+                ));
+          }).toList(),
+        ),
+      ]),
+    );
   }
 
   void buildContent(List<dynamic> responses, BuildContext context) {
@@ -211,7 +214,7 @@ class _HomeFeedScreenState extends State<HomeFeedScreen> {
 
 buildEventsProgramsAndNewsSection(Map<String, Icon> EventsProgramsAndNewsData) {
   return Padding(
-    padding: const EdgeInsets.all(5.0),
+    padding: const EdgeInsets.symmetric(horizontal: 11),
     child: Column(mainAxisAlignment: MainAxisAlignment.start, children: [
       for (MapEntry e in EventsProgramsAndNewsData.entries)
         Padding(
@@ -251,19 +254,22 @@ List<Widget> buildNewsStories(BuildContext context) {
 }
 
 Widget buildNewsStorySegment(List<Widget> newsStories) {
-  return GridView.count(
-      shrinkWrap: true,
-      primary: true,
-      physics: NeverScrollableScrollPhysics(),
-      crossAxisCount: 2,
-      children: List.generate(newsStories.length, (index) {
-        return newsStories[index];
-      }));
+  return Padding(
+    padding: EdgeInsets.symmetric(horizontal: 6),
+    child: GridView.count(
+        shrinkWrap: true,
+        childAspectRatio: 4/5,
+        physics: NeverScrollableScrollPhysics(),
+        crossAxisCount: 2,
+        children: List.generate(newsStories.length, (index) {
+          return newsStories[index];
+        })),
+  );
 }
 
 Widget buildSection(String sectionName, Widget section) {
   return Padding(
-      padding: EdgeInsets.only(bottom: 10),
+      padding: EdgeInsets.only(bottom: 10, ),
       child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
         Padding(
           padding: const EdgeInsets.only(top: 11.5, left: 10.0, bottom: 2),
@@ -288,6 +294,7 @@ Widget buildNewsStoryItem(NewsStory newsStory, BuildContext context) {
   return InkWell(
       onTap: () => selectNewsStory(context, newsStory),
       child: Card(
+        margin: EdgeInsets.symmetric(horizontal: 6, vertical: 6),
           shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.circular(5.0),
           ),
