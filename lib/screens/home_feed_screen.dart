@@ -80,7 +80,7 @@ class _HomeFeedScreenState extends State<HomeFeedScreen> {
   ) {
     List<Widget> competitionItems = [];
     for (int i = 0; i < 6; i++) {
-      competitionItems.add(ListView( children: [
+      competitionItems.add(ListView(children: [
         buildCompetitionTile(competitions[i++]),
         buildCompetitionTile(competitions[i])
       ]));
@@ -91,8 +91,6 @@ class _HomeFeedScreenState extends State<HomeFeedScreen> {
       child: Column(children: [
         CarouselSlider(
           items: competitionItems,
-          
-          
           options: CarouselOptions(
               height: 213,
               enableInfiniteScroll: false,
@@ -258,7 +256,7 @@ Widget buildNewsStorySegment(List<Widget> newsStories) {
     padding: EdgeInsets.symmetric(horizontal: 6),
     child: GridView.count(
         shrinkWrap: true,
-        childAspectRatio: 4/5,
+        childAspectRatio: 13 / 16,
         physics: NeverScrollableScrollPhysics(),
         crossAxisCount: 2,
         children: List.generate(newsStories.length, (index) {
@@ -269,7 +267,9 @@ Widget buildNewsStorySegment(List<Widget> newsStories) {
 
 Widget buildSection(String sectionName, Widget section) {
   return Padding(
-      padding: EdgeInsets.only(bottom: 10, ),
+      padding: EdgeInsets.only(
+        bottom: 10,
+      ),
       child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
         Padding(
           padding: const EdgeInsets.only(top: 11.5, left: 10.0, bottom: 2),
@@ -294,8 +294,9 @@ Widget buildNewsStoryItem(NewsStory newsStory, BuildContext context) {
   return InkWell(
       onTap: () => selectNewsStory(context, newsStory),
       child: Card(
-        margin: EdgeInsets.symmetric(horizontal: 6, vertical: 6),
+          margin: EdgeInsets.all(8),
           shape: RoundedRectangleBorder(
+            side: BorderSide(color: Colors.grey.shade700, width: .3),
             borderRadius: BorderRadius.circular(5.0),
           ),
           clipBehavior: Clip.antiAlias,
@@ -312,7 +313,7 @@ Widget buildNewsStoryItem(NewsStory newsStory, BuildContext context) {
                     ),
                   )),
               Expanded(
-                flex: 5,
+                flex: 7,
                 child: Padding(
                     padding:
                         EdgeInsets.symmetric(horizontal: 10.0, vertical: 5),
@@ -324,15 +325,15 @@ Widget buildNewsStoryItem(NewsStory newsStory, BuildContext context) {
                             child: Text(
                               newsStory.date,
                               style: TextStyle(
-                                  fontSize: 11, color: Colors.grey.shade700),
+                                  fontSize: 12, color: Colors.grey.shade700),
                             ),
                           ),
                           Text(
                             newsStory.headline,
-                            maxLines: 3,
+                            maxLines: 4,
                             overflow: TextOverflow.ellipsis,
                             style: TextStyle(
-                                fontSize: 13.0, fontWeight: FontWeight.bold),
+                                fontSize: 13.5, fontWeight: FontWeight.bold),
                           ),
                         ])),
               ),

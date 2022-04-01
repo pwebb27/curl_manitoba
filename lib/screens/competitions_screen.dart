@@ -7,7 +7,6 @@ import 'package:http/http.dart' as http;
 import 'package:html/dom.dart' as dom;
 import 'package:html/parser.dart' as parser;
 import 'package:intl/intl.dart';
-import 'package:search_widget/search_widget.dart';
 
 import 'dart:convert';
 

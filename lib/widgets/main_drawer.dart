@@ -39,8 +39,7 @@ class MainDrawer extends StatelessWidget {
     return Container(
         color: Colors.black,
         child: SafeArea(
-            child: Container(
-          width: MediaQuery.of(context).size.width * .73,
+            
           child: Drawer(
             child: ListView(children: <Widget>[
               FittedBox(
@@ -50,7 +49,7 @@ class MainDrawer extends StatelessWidget {
               SingleChildScrollView(child: buildTiles(context))
             ]),
           ),
-        )));
+        ));
   }
 
   Widget buildDivider() {
