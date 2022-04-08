@@ -39,12 +39,16 @@ class MainDrawer extends StatelessWidget {
     return Container(
         color: Colors.black,
         child: SafeArea(
-            
           child: Drawer(
-            child: ListView(children: <Widget>[
-              FittedBox(
-                      child: Image.asset("assets/images/DrawerImage.PNG"),
-                      fit: BoxFit.cover),
+            child: Column(children: <Widget>[
+              DrawerHeader(
+                child: null,
+                decoration: BoxDecoration(
+                    color: Colors.blue,
+                    image: DecorationImage(
+                        image: AssetImage("assets/images/DrawerImage.PNG"),
+                        fit: BoxFit.fitWidth)),
+              ),
               Padding(padding: EdgeInsets.only(top: 3)),
               SingleChildScrollView(child: buildTiles(context))
             ]),
