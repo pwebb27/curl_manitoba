@@ -63,7 +63,6 @@ class _NewsFeedScreenState extends State<NewsFeedScreen> {
           } else
             buildContent(snapshot.data as dom.Document);
           return Scaffold(
-            appBar: CustomAppBar(Icon(FontAwesomePro.bars), context, 'News'),
             body: ListView.builder(
                 itemBuilder: (ctx, index) {
                   NewsStory newsStory = NewsStory(
