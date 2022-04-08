@@ -1,3 +1,4 @@
+import 'package:curl_manitoba/screens/news_feed_screen.dart';
 import 'package:curl_manitoba/screens/scores_screen.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:flutter/material.dart';
@@ -19,6 +20,7 @@ class _TabsScreenState extends State<TabsScreen> {
   final List<Widget> _pages = [
     HomeScreen(),
     eEntryScreen(),
+    NewsFeedScreen(),
     ScoresScreen(),
     CalendarScreen(),
   ];
@@ -49,12 +51,14 @@ class _TabsScreenState extends State<TabsScreen> {
               (_selectedPageIndex == 1)
                   ? 'Electronic Entry'
                   : (_selectedPageIndex == 2)
+                      ? 'News'
+                           : (_selectedPageIndex == 3)
                       ? 'Live Scores & Results'
-                      : (_selectedPageIndex == 3)
+                      : (_selectedPageIndex == 4)
                           ? 'Calendar of Events'
                           : "",
               (_selectedPageIndex == 0) ? true : false,
-              (_selectedPageIndex == 2) ? true : false),
+              (_selectedPageIndex == 3) ? true : false),
           drawer: MainDrawer(),
           body: _pages[_selectedPageIndex],
           bottomNavigationBar: SizedBox(
@@ -75,6 +79,8 @@ class _TabsScreenState extends State<TabsScreen> {
                       'Home', FontAwesomeIcons.home, 24.6),
                   _buildBottomNavigationBarItem(
                       'e-Entry', FontAwesomePro.memo_circle_check, 23),
+                                        _buildBottomNavigationBarItem(
+                      'News', FontAwesomePro.newspaper),
                   _buildBottomNavigationBarItem(
                     'Scores',
                     FontAwesomePro.score,
