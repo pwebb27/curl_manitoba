@@ -1,9 +1,11 @@
-import 'package:curl_manitoba/screens/competitions_screen.dart';
+import 'package:curl_manitoba/screens/scores_screen.dart';
 import 'package:curl_manitoba/screens/news_feed_screen.dart';
 import 'package:curl_manitoba/screens/news_story_screen.dart';
-import 'package:curl_manitoba/screens/scores_screen.dart';
+import 'package:curl_manitoba/screens/scores_webpage_screen.dart';
 import 'package:curl_manitoba/screens/tabs_screen.dart';
 import 'package:curl_manitoba/widgets/custom_app_bar.dart';
+import 'package:curl_manitoba/widgets/grid_view_screen.dart';
+import 'package:curl_manitoba/widgets/grid_view_tile.dart';
 import 'package:flutter/material.dart';
 import 'main.dart';
 
@@ -17,11 +19,13 @@ class RouteGenerator {
       case '/news':
         return MaterialPageRoute(builder: (_) => NewsFeedScreen());
       case '/scores':
-        return MaterialPageRoute(builder: (_) => ScoresScreen(args as String));
+        return MaterialPageRoute(builder: (_) => ScoresWebpageScreen(args as String));
       case '/newsStory':
         return MaterialPageRoute(builder: (_) => NewsStoryScreen());
-      case '/competitions':
-        return MaterialPageRoute(builder: (_) => CompetitionScreen());
+      case '/scores':
+        return MaterialPageRoute(builder: (_) => ScoresScreen());
+      case '/gridView':
+        return MaterialPageRoute(builder: (_) => GridViewScreen(args as Map<String,dynamic>));
 
       default:
         return _errorRoute();

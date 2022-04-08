@@ -1,10 +1,10 @@
 import 'package:curl_manitoba/models/news_story.dart';
-import 'package:curl_manitoba/screens/competitions_screen.dart';
+import 'package:curl_manitoba/screens/scores_screen.dart';
 import 'package:curl_manitoba/widgets/font_awesome_pro_icons.dart';
 import 'package:flutter/material.dart';
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:flutter/rendering.dart';
-import 'competitions_screen.dart';
+import 'scores_screen.dart';
 
 import 'package:http/http.dart' as http;
 import 'package:html/dom.dart' as dom;
