@@ -83,7 +83,7 @@ class _TabsScreenState extends State<TabsScreen> {
                       'News', FontAwesomePro.newspaper),
                   _buildBottomNavigationBarItem(
                     'Scores',
-                    FontAwesomePro.score,
+                    FontAwesomePro.scoreboard,
                   ),
                   _buildBottomNavigationBarItem(
                       'Calendar', FontAwesomePro.calendar_days),
