@@ -78,12 +78,12 @@ class _TabsScreenState extends State<TabsScreen> {
                   _buildBottomNavigationBarItem(
                       'Home', FontAwesomeIcons.home, 24.6),
                   _buildBottomNavigationBarItem(
-                      'e-Entry', FontAwesomePro.memo_circle_check, 23),
+                      'e-Entry', FontAwesomePro.add_user, 23),
                                         _buildBottomNavigationBarItem(
                       'News', FontAwesomePro.newspaper),
                   _buildBottomNavigationBarItem(
                     'Scores',
-                    FontAwesomePro.scoreboard,
+                    FontAwesomePro.scoreboard,27.5
                   ),
                   _buildBottomNavigationBarItem(
                       'Calendar', FontAwesomePro.calendar_days),

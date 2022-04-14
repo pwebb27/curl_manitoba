@@ -10,8 +10,8 @@ List<gridViewTile> COMPETITION_GRID_VIEW_TILES_DATA = [
   gridViewTile('Provincial Championships', FontAwesomePro.bison,'assets/images/provincial-championships.PNG',41,0),
   gridViewTile('Championship History', FontAwesomePro.wreath,'assets/images/rocks.PNG',31),
   gridViewTile('Manitoba Open', FontAwesomePro.curling,'assets/images/manitoba-open.PNG'),
-  gridViewTile('Manitoba Games 2022', FontAwesomePro.manitoba_games,'assets/images/manitoba-games.PNG', 32),
-  gridViewTile('2023 Canada Winter Games', FontAwesomePro.canada_games,'assets/images/canada-winter-games.PNG', 32),
+  gridViewTile('Manitoba Games 2022', FontAwesomePro.manitoba_games,'assets/images/manitoba-games.PNG', 34),
+  gridViewTile('2023 Canada Winter Games', FontAwesomePro.canada_games,'assets/images/canada-winter-games.PNG', 34),
   gridViewTile('Free Agents', FontAwesomePro.people_line,'assets/images/rocks.PNG'), 
   gridViewTile("O' Grady Challenge", FontAwesomePro.challenge,'assets/images/rocks.PNG',31), 
   gridViewTile('Deneen Cup', FontAwesomePro.trophy,'assets/images/rocks.PNG'), 
@@ -23,16 +23,16 @@ List<gridViewTile> DEVELOPMENT_GRID_VIEW_TILES_DATA = [
   gridViewTile('Curling Programs', FontAwesomePro.curling,'assets/images/curling-programs.PNG',28),
   gridViewTile('Coaching', FontAwesomePro.megaphone,'assets/images/coaching.PNG'),
   gridViewTile('Officiating', FontAwesomePro.whistle,'assets/images/rocks.PNG'),
-  gridViewTile('Ice Tech', FontAwesomePro.zamboni,'assets/images/ice-tech.PNG', 40),
+  gridViewTile('Ice Tech', FontAwesomePro.ice_resurfacer,'assets/images/ice-tech.PNG', 40),
   gridViewTile('LTAD', FontAwesomePro.performance,'assets/images/LTAD.PNG'),
   gridViewTile('Safe Sport', FontAwesomePro.shield_check,'assets/images/rocks.PNG'),
 ];
 
 List<gridViewTile> HIGH_PERFORMANCE_GRID_VIEW_TILES_DATA = [
   gridViewTile('High Performance Webinars', FontAwesomePro.user_headset,'assets/images/rocks.PNG'),
-  gridViewTile('Junior Development', FontAwesomePro.junior_development,'assets/images/junior-development.PNG',33),
-  gridViewTile('Junior High Performance Programs', FontAwesomePro.junior_high_performance,'assets/images/junior-high-performance-programs.PNG',33),
-  gridViewTile('Junior ID Camps', FontAwesomePro.gear_arrows,'assets/images/rocks.PNG'),
+  gridViewTile('Junior Development', FontAwesomePro.people_gear,'assets/images/junior-development.PNG',38),
+  gridViewTile('Junior High Performance Programs', FontAwesomePro.people_gauge_max,'assets/images/junior-high-performance-programs.PNG',38),
+  gridViewTile('Junior ID Camps', FontAwesomePro.whistle ,'assets/images/rocks.PNG'),
 
 
 ];List<gridViewTile> GETTING_STARTED_GRID_VIEW_TILES_DATA = [
@@ -41,7 +41,7 @@ List<gridViewTile> HIGH_PERFORMANCE_GRID_VIEW_TILES_DATA = [
   gridViewTile('Lessons', FontAwesomePro.person_chalkboard,'assets/images/lessons.PNG'),
   gridViewTile('League Openings', FontAwesomePro.calendar_clock,'assets/images/club-openings.PNG'),
   gridViewTile('Curling Tips', FontAwesomePro.lightbulb_on,'assets/images/tips.PNG'),
-  gridViewTile('Manitoba Stick Curling Association', FontAwesomePro.stick_curling,'assets/images/rocks.PNG'),
+  gridViewTile('Manitoba Stick Curling Association', FontAwesomePro.stick_curling,'assets/images/rocks.PNG',36),
 
 
 ];List<gridViewTile> ABOUT_US_TILES_DATA = [
@@ -51,7 +51,7 @@ List<gridViewTile> HIGH_PERFORMANCE_GRID_VIEW_TILES_DATA = [
   gridViewTile('Staff', FontAwesomePro.people_group,'assets/images/staff.PNG'),
   gridViewTile('Leadership and Governance', FontAwesomePro.podium,'assets/images/rocks.PNG'),
   gridViewTile('Sponsors/Partners', FontAwesomePro.handshake,'assets/images/sponsors-partners.PNG'),
-  gridViewTile('Club Information', FontAwesomePro.information_point,'assets/images/rocks.PNG'),
+  gridViewTile('Club Information', FontAwesomePro.information_point,'assets/images/club-information.PNG'),
   gridViewTile('Hall of Fame & Museum', FontAwesomePro.landmark,'assets/images/hall-of-fame.PNG'),
   gridViewTile('Honourary Life Members', FontAwesomePro.premium_badge,'assets/images/honorary-life-members.PNG',31),
   gridViewTile('Classified Ads', FontAwesomePro.job_search,'assets/images/rocks.PNG',31),

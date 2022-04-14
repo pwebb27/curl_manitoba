@@ -8,8 +8,8 @@ import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'gridview_tile_data.dart';
 
 List<DrawerTile> BASIC_TILES_DATA = [
-  DrawerTile.asPage('Competitions', FontAwesomeIcons.trophy, '/gridView', COMPETITION_GRID_VIEW_TILES_DATA ),
-  DrawerTile.asPage('Development', FontAwesomePro.gear_arrows,'/gridView', DEVELOPMENT_GRID_VIEW_TILES_DATA,  iconSize: 18),
+  DrawerTile.asPage('Competitions', FontAwesomePro.competition, '/gridView', COMPETITION_GRID_VIEW_TILES_DATA ),
+  DrawerTile.asPage('Development', FontAwesomePro.gear,'/gridView', DEVELOPMENT_GRID_VIEW_TILES_DATA,  iconSize: 18),
   DrawerTile.asPage('High Perfomance', FontAwesomePro.gauge_max,'/gridView', HIGH_PERFORMANCE_GRID_VIEW_TILES_DATA),
   DrawerTile.asPage('Getting Started', FontAwesomePro.hourglass_start,'/gridView',GETTING_STARTED_GRID_VIEW_TILES_DATA ),
   DrawerTile.asPage('About Us', FontAwesomePro.circle_info,'/gridView', ABOUT_US_TILES_DATA),
