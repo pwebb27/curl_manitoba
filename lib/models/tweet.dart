@@ -1,4 +1,3 @@
-
 import 'package:flutter/material.dart';
 import 'package:timeago/timeago.dart' as timeago;
 
@@ -25,15 +24,18 @@ class Tweet {
     timePassed = generateTimePassed(json['created_at']);
 
     text = json['retweeted_status']['full_text'];
-    generateColoredText(json['retweeted_status']['entities']['hashtags'],
-        json['retweeted_status']['entities']['user_mentions'], json['retweeted_status']['entities']['urls'], text);
+    generateColoredText(
+        json['retweeted_status']['entities']['hashtags'],
+        json['retweeted_status']['entities']['user_mentions'],
+        json['retweeted_status']['entities']['urls'],
+        text);
     spans[0] = removeUserMentions(json, spans[0]);
 
     profilePicURL = json['retweeted_status']['user']['profile_image_url'];
     userName = json['retweeted_status']['user']['name'];
     if (json['retweeted_status']['entities']['media'] != null) {
       mediaURL = json['retweeted_status']['entities']['media'][0]['media_url'];
-      spans[spans.length-1] = removeMediaURL(json, spans[spans.length-1]);
+      spans[spans.length - 1] = removeMediaURL(json, spans[spans.length - 1]);
     }
   }
 
@@ -42,8 +44,8 @@ class Tweet {
 
     profilePicURL = json['user']['profile_image_url'];
     text = json['full_text'];
-    generateColoredText(
-        json['entities']['hashtags'], json['entities']['user_mentions'], json['entities']['urls'], text);
+    generateColoredText(json['entities']['hashtags'],
+        json['entities']['user_mentions'], json['entities']['urls'], text);
 
     if (json['entities']['media'] != null) {
       mediaURL = json['entities']['media'][0]['media_url'];
@@ -61,13 +63,14 @@ class Tweet {
 
     return timeago.format(DateTime.now().subtract(difference));
   }
-  
-  TextSpan removeMediaURL(Map<String,dynamic> json, TextSpan span){
+
+  TextSpan removeMediaURL(Map<String, dynamic> json, TextSpan span) {
     String mediaURL = json['retweeted_status']['entities']['media'][0]['url'];
     String spanText = span.text as String;
 
-    spanText = spanText.replaceAll(" " + mediaURL.substring(0, mediaURL.length-1),"");
-    return TextSpan(text: spanText, style: TextStyle(color:Colors.black));
+    spanText = spanText.replaceAll(
+        " " + mediaURL.substring(0, mediaURL.length - 1), "");
+    return TextSpan(text: spanText, style: TextStyle(color: Colors.black));
   }
 
   TextSpan removeUserMentions(Map<String, dynamic> json, TextSpan span) {
@@ -132,7 +135,8 @@ class Tweet {
     return year + month + day + 'T' + hours + minutes + seconds;
   }
 
-  generateColoredText(List hashtags, List usermentions, List urls, String text) {
+  generateColoredText(
+      List hashtags, List usermentions, List urls, String text) {
     List<int> indices = [];
     if (hashtags != null) {
       for (var hashtag in hashtags) {
@@ -144,18 +148,23 @@ class Tweet {
           indices.add(usermention['indices'][0]);
           indices.add(usermention['indices'][1]);
         }
-        if(urls!=null){
-          for(var url in urls){
-            indices.add(url['indices'][0]);
-            indices.add(url['indices'][1]);
-          }
+      }
+      if (urls != null) {
+        for (var url in urls) {
+          indices.add(url['indices'][0]);
+          indices.add(url['indices'][1]);
         }
-        indices.sort((a, b) => a.compareTo(b));
-        final TextStyle normalStyle = TextStyle(color: Colors.black);
-        final TextStyle hypertextStyle = TextStyle(color: Colors.blue);
+      }
+      indices.sort((a, b) => a.compareTo(b));
+      final TextStyle normalStyle = TextStyle(color: Colors.black, fontSize: 16);
+      final TextStyle hypertextStyle = TextStyle(color: Colors.blue, fontSize: 16);
 
+      if (indices.length == 0)
+        spans.add(TextSpan(text: text, style: normalStyle));
+      else {
         spans.add(
             TextSpan(text: text.substring(0, indices[0]), style: normalStyle));
+
         int i = 0;
 
         do {
@@ -168,7 +177,7 @@ class Tweet {
                 style: normalStyle));
           } else {
             spans.add(TextSpan(
-                text: text. substring(indices[i], text.length),
+                text: text.substring(indices[i], text.length),
                 style: normalStyle));
             break;
           }
