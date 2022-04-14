@@ -212,7 +212,7 @@ class _HomeFeedScreenState extends State<HomeFeedScreen> {
 
 buildEventsProgramsAndNewsSection(Map<String, Icon> EventsProgramsAndNewsData) {
   return Padding(
-    padding: const EdgeInsets.symmetric(horizontal: 11),
+    padding: const EdgeInsets.symmetric(horizontal: 15),
     child: Column(mainAxisAlignment: MainAxisAlignment.start, children: [
       for (MapEntry e in EventsProgramsAndNewsData.entries)
         Padding(
@@ -253,7 +253,7 @@ List<Widget> buildNewsStories(BuildContext context) {
 
 Widget buildNewsStorySegment(List<Widget> newsStories) {
   return Padding(
-    padding: EdgeInsets.symmetric(horizontal: 6),
+    padding: EdgeInsets.symmetric(horizontal: 3.5),
     child: GridView.count(
         shrinkWrap: true,
         childAspectRatio: 13 / 16,
@@ -304,39 +304,34 @@ Widget buildNewsStoryItem(NewsStory newsStory, BuildContext context) {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: <Widget>[
               Expanded(
-                  flex: 7,
                   child: Container(
-                    decoration: BoxDecoration(
-                      image: DecorationImage(
-                          image: NetworkImage(newsStory.imageURL),
-                          fit: BoxFit.cover),
-                    ),
-                  )),
-              Expanded(
-                flex: 7,
-                child: Padding(
-                    padding:
-                        EdgeInsets.symmetric(horizontal: 10.0, vertical: 5),
-                    child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Padding(
-                            padding: const EdgeInsets.only(bottom: 4),
-                            child: Text(
-                              newsStory.date,
-                              style: TextStyle(
-                                  fontSize: 12, color: Colors.grey.shade700),
-                            ),
-                          ),
-                          Text(
-                            newsStory.headline,
-                            maxLines: 4,
-                            overflow: TextOverflow.ellipsis,
+                decoration: BoxDecoration(
+                  image: DecorationImage(
+                      image: NetworkImage(newsStory.imageURL),
+                      fit: BoxFit.cover),
+                ),
+              )),
+              Padding(
+                  padding: EdgeInsets.only(top:8, bottom:10, left: 9, right: 9),
+                  child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Padding(
+                          padding: const EdgeInsets.only(bottom: 7),
+                          child: Text(
+                            newsStory.date,
                             style: TextStyle(
-                                fontSize: 13.5, fontWeight: FontWeight.bold),
+                                fontSize: 12, color: Colors.grey.shade700),
                           ),
-                        ])),
-              ),
+                        ),
+                        Text(
+                          newsStory.headline + '\n\n\n',
+                          maxLines: 4,
+                          overflow: TextOverflow.ellipsis,
+                          style: TextStyle(
+                              fontSize: 13.5, fontWeight: FontWeight.bold),
+                        ),
+                      ])),
             ],
           )));
 }
