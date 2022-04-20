@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:webview_flutter/webview_flutter.dart';
 import '../widgets/circular_progress_bar.dart';
+import 'package:table_calendar/table_calendar.dart';
 
 class CalendarScreen extends StatefulWidget {
   @override
@@ -14,29 +15,9 @@ class _CalendarScreenState extends State<CalendarScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return Stack(
-      children: <Widget>[
-        WebView(
-          initialUrl: 'https://curlmanitoba.org/events/',
-          javascriptMode: JavascriptMode.unrestricted,
-          onWebViewCreated: (controller) {
-            _myController = controller;
-          },
-          onPageFinished: (url) {
-            print('Page finished loading: $url');
-
-            _myController!.runJavascript(
-                "document.getElementById('footer').style.display='none'; document.getElementsByClassName('masthead inline-header center widgets full-height full-width shadow-decoration shadow-mobile-header-decoration small-mobile-menu-icon dt-parent-menu-clickable show-sub-menu-on-hover show-device-logo show-mobile-logo masthead-mobile masthead-mobile-header')[0].style.display='none'; document.getElementsByClassName('mobile-header-space')[0].style.display='none'; document.getElementById('tribe-events').style.paddingTop = '0'; document.getElementById('main').style.paddingBottom = '0';");
-
-            setState(() {
-              _loadedPage = true;
-            });
-          },
-        ),
-        _loadedPage == false
-            ? CircularProgressBar()
-            : Container(),
-      ],
-    );
+    return TableCalendar(
+        focusedDay: DateTime.now(),
+        firstDay: DateTime(2021, 1, 1),
+        lastDay: DateTime(2022, 12, 31));
   }
 }

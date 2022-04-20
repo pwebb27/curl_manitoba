@@ -33,11 +33,12 @@ dependencies:
   flutter_svg: ^0.23.0+1
   http: ^0.13.4
   timeago: ^3.1.0
-  html: ^0.15.0
   url_launcher: ^6.0.20
   intl: ^0.17.0
   carousel_slider: ^4.0.0
   wakelock: ^0.6.1+2
+  html: ^0.15.0
+  table_calendar: ^3.0.5
   
 
  
