@@ -1,8 +1,16 @@
+import 'package:curl_manitoba/models/competition.dart';
+import 'package:curl_manitoba/widgets/fixed_column_widget.dart';
+import 'package:curl_manitoba/widgets/scrollable_column_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:webview_flutter/webview_flutter.dart';
 import '../widgets/circular_progress_bar.dart';
-
-
+import 'package:http/http.dart' as http;
+import 'package:html/dom.dart' as dom;
+import 'package:html/parser.dart' as parser;
+import 'dart:convert';
+import 'package:html/dom.dart' as html;
+import 'package:html/dom_parsing.dart';
+import 'package:html/parser.dart';
 
 class eEntryScreen extends StatefulWidget {
   @override
@@ -10,35 +18,97 @@ class eEntryScreen extends StatefulWidget {
 }
 
 class _eEntryScreenState extends State<eEntryScreen> {
-  WebViewController? _myController;
+  Map<String, dynamic> competitionsMap = {};
+  Future<Map<String, dynamic>> _getDataFromWeb() async {
+    String URL =
+        'https://curlmanitoba.org/wp-json/wp/v2/pages/1979?_fields=content';
 
-  bool _loadedPage = false;
+    final response = await http.get(Uri.parse(URL));
+    return json.decode(response.body);
+  }
+
+  Map<String, dynamic> buildContent(Map<String, dynamic> map) {
+    String htmlData = map['content']['rendered'];
+    var document = parse(htmlData);
+    List<html.Element> htmlRows =
+        document.getElementsByTagName('table')[1].getElementsByTagName('tr');
+
+    String category = '';
+    List<html.Element> htmlCells;
+    Map<String, List<Competition>> competitionsMap = {};
+
+    htmlRows.forEach((row) {
+      htmlCells = row.getElementsByTagName('td');
+
+      if (htmlCells[0].text == '' && htmlCells.length != 1) {
+        category = htmlCells[4].text;
+        competitionsMap[category] = [];
+      } else if (htmlCells[0].text != 'Type' && htmlCells[0].text != '') {
+        competitionsMap[category]!.add(Competition(
+            type: htmlCells[0].text,
+            month: htmlCells[1].text,
+            dates: htmlCells[2].text,
+            fee: '\$' +
+                ((htmlCells[3].text.replaceAll(new RegExp(r'[^0-9]'), ''))),
+            eventName: htmlCells[4].text,
+            location: htmlCells[5].text,
+            deadline: htmlCells[6].text));
+      }
+    });
+    return competitionsMap;
+  }
 
   @override
+  void initState() {
+    _getDataFromWeb();
+  }
+
+  List<Competition> competitionsData = [];
+  @override
   Widget build(BuildContext context) {
-    return Stack(
-      children: <Widget>[
-        WebView(
-          initialUrl: 'https://curlmanitoba.org/electronic-entry',
-          javascriptMode: JavascriptMode.unrestricted,
-          onWebViewCreated: (controller) {
-            _myController = controller;
-          },
-          onPageFinished: (url) {
-            print('Page finished loading: $url');
-
-            _myController!.runJavascript(
-                "document.getElementById('footer').style.display='none'; document.getElementsByClassName('masthead inline-header center widgets full-height full-width shadow-decoration shadow-mobile-header-decoration small-mobile-menu-icon dt-parent-menu-clickable show-sub-menu-on-hover show-device-logo show-mobile-logo masthead-mobile masthead-mobile-header')[0].style.display='none'; document.getElementsByClassName('mobile-header-space')[0].style.display='none'; document.getElementsByClassName('shortcode-banner-bg wf-table')[0].style.display='flex'; document.getElementsByClassName('page-title title-center solid-bg breadcrumbs-off breadcrumbs-mobile-off page-title-responsive-enabled')[0].style.display='none'; document.getElementsByClassName('masthead inline-header center widgets full-height full-width shadow-decoration shadow-mobile-header-decoration small-mobile-menu-icon dt-parent-menu-clickable show-sub-menu-on-hover show-device-logo show-mobile-logo masthead-mobile masthead-mobile-header')[0].style.display='none'; document.getElementsByClassName('mobile-header-space')[0].style.display='none'; document.getElementsByClassName('shortcode-banner-bg wf-table')[0].style.display='flex'; document.getElementsByClassName('sidebar-none sidebar-divider-vertical')[0].style.paddingTop ='15px';document.getElementsByClassName('shortcode-banner-inside wf-table text-big')[0].style.height ='auto';");
-
-            setState(() {
-              _loadedPage = true;
-            });
-          },
-        ),
-        _loadedPage == false
-            ? CircularProgressBar()
-            : Container(),
-      ],
-    );
+    return FutureBuilder(
+        future: _getDataFromWeb(),
+        builder: (context, snapshot) {
+          if (snapshot.data == null) {
+            return CircularProgressBar();
+          } else
+            competitionsMap =
+                buildContent(snapshot.data as Map<String, dynamic>);
+          return SingleChildScrollView(
+            child: Expanded(
+              child: Column(
+                
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  for (var entry in competitionsMap.entries)
+                    Column(children: [
+                      Container(
+                        width: double.infinity,
+                        alignment: Alignment.center,
+                        decoration: BoxDecoration(
+                            color: Colors.grey.shade300,
+                            border: Border.all(width: .5)),
+                        child: Padding(
+                          padding: const EdgeInsets.all(8.0),
+                          child: Text(
+                            
+                            entry.key,
+                            textAlign: TextAlign.center,
+                            style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+                          ),
+                        ),
+                      ),
+                      Row(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            FixedColumnWidget(entry.value),
+                            ScrollableColumnWidget(entry.value)
+                          ]),
+                    ])
+                ],
+              ),
+            ),
+          );
+        });
   }
 }
