@@ -8,8 +8,8 @@ List<gridViewTile> COMPETITION_GRID_VIEW_TILES_DATA = [
   gridViewTile('Qualifying Information', FontAwesomePro.badge_check, 'assets/images/qualifying-information.PNG'), 
   gridViewTile('CurlManitoba Fees', FontAwesomePro.envelope_open_dollar,'assets/images/fees.PNG'),
   gridViewTile('Provincial Championships', FontAwesomePro.bison,'assets/images/provincial-championships.PNG',41,0),
-  gridViewTile('Championship History', FontAwesomePro.wreath,'assets/images/rocks.PNG',31),
-  gridViewTile('Manitoba Open', FontAwesomePro.curling,'assets/images/manitoba-open.PNG'),
+  gridViewTile('Championship History', FontAwesomePro.wreath,'assets/images/championship-history.PNG',31),
+  gridViewTile('Manitoba Open', FontAwesomePro.manitoba_open,'assets/images/manitoba-open.PNG'),
   gridViewTile('Manitoba Games 2022', FontAwesomePro.manitoba_games,'assets/images/manitoba-games.PNG', 34),
   gridViewTile('2023 Canada Winter Games', FontAwesomePro.canada_games,'assets/images/canada-winter-games.PNG', 34),
   gridViewTile('Free Agents', FontAwesomePro.people_line,'assets/images/rocks.PNG'), 
@@ -22,17 +22,17 @@ List<gridViewTile> COMPETITION_GRID_VIEW_TILES_DATA = [
 List<gridViewTile> DEVELOPMENT_GRID_VIEW_TILES_DATA = [
   gridViewTile('Curling Programs', FontAwesomePro.curling,'assets/images/curling-programs.PNG',28),
   gridViewTile('Coaching', FontAwesomePro.megaphone,'assets/images/coaching.PNG'),
-  gridViewTile('Officiating', FontAwesomePro.whistle,'assets/images/rocks.PNG'),
+  gridViewTile('Officiating', FontAwesomePro.whistle,'assets/images/officiating.PNG'),
   gridViewTile('Ice Tech', FontAwesomePro.ice_resurfacer,'assets/images/ice-tech.PNG', 40),
   gridViewTile('LTAD', FontAwesomePro.performance,'assets/images/LTAD.PNG'),
-  gridViewTile('Safe Sport', FontAwesomePro.shield_check,'assets/images/rocks.PNG'),
+  gridViewTile('Safe Sport', FontAwesomePro.shield_check,'assets/images/safe-sport.PNG'),
 ];
 
 List<gridViewTile> HIGH_PERFORMANCE_GRID_VIEW_TILES_DATA = [
   gridViewTile('High Performance Webinars', FontAwesomePro.user_headset,'assets/images/rocks.PNG'),
-  gridViewTile('Junior Development', FontAwesomePro.people_gear,'assets/images/junior-development.PNG',38),
-  gridViewTile('Junior High Performance Programs', FontAwesomePro.people_gauge_max,'assets/images/junior-high-performance-programs.PNG',38),
-  gridViewTile('Junior ID Camps', FontAwesomePro.whistle ,'assets/images/rocks.PNG'),
+  gridViewTile('Junior Development', FontAwesomePro.people_gear,'assets/images/junior-development.PNG',40),
+  gridViewTile('Junior High Performance Programs', FontAwesomePro.people_gauge_max,'assets/images/junior-high-performance-programs.PNG',40),
+  gridViewTile('Junior ID Camps', FontAwesomePro.id_card ,'assets/images/rocks.PNG'),
 
 
 ];List<gridViewTile> GETTING_STARTED_GRID_VIEW_TILES_DATA = [
@@ -49,7 +49,7 @@ List<gridViewTile> HIGH_PERFORMANCE_GRID_VIEW_TILES_DATA = [
   gridViewTile('Contact Us', FontAwesomePro.contact,'assets/images/rocks.PNG'),
   gridViewTile('Mission & Vision', FontAwesomePro.bullseye_arrow,'assets/images/mission.PNG'),
   gridViewTile('Staff', FontAwesomePro.people_group,'assets/images/staff.PNG'),
-  gridViewTile('Leadership and Governance', FontAwesomePro.podium,'assets/images/rocks.PNG'),
+  gridViewTile('Leadership and Governance', FontAwesomePro.podium,'assets/images/governance.PNG'),
   gridViewTile('Sponsors/Partners', FontAwesomePro.handshake,'assets/images/sponsors-partners.PNG'),
   gridViewTile('Club Information', FontAwesomePro.information_point,'assets/images/club-information.PNG'),
   gridViewTile('Hall of Fame & Museum', FontAwesomePro.landmark,'assets/images/hall-of-fame.PNG'),
