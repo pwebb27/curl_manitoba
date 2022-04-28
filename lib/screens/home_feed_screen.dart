@@ -46,11 +46,6 @@ Map<String, Icon> EventsProgramsAndNewsIcons = {
   'News': Icon(FontAwesomePro.newspaper, size: 14, color: Colors.grey.shade700)
 };
 
-List<String> titles = [];
-List<String> dates = [];
-List<String> authors = [];
-List<String> content = [];
-
 List<Widget> itemss = imgList
     .map((item) => Container(
           child: Center(child: Image.asset(item)),
@@ -61,15 +56,17 @@ List<Widget> competitionItems = [];
 
 class _HomeFeedScreenState extends State<HomeFeedScreen> {
   List<dynamic> competitions = [];
-  List<Widget> newsStories = [];
+  List<NewsStory> newsStories = [];
 
   Future<List<dynamic>> _getDataFromWeb() async {
     const competitionURL =
         'https://legacy-curlingio.global.ssl.fastly.net/api/organizations/MTZFJ5miuro/competitions.json?search=&tags=&page=1';
-    const newsURL = 'https://curlmanitoba.org/news-2/news-archive/';
+    const newsURL = 'https://curlmanitoba.org/wp-json/wp/v2/posts?_fields=id,title,date,author&per_page=4';
+;
     var responses = await Future.wait([
       http.get(Uri.parse(competitionURL)),
       http.get(Uri.parse(newsURL)),
+      
     ]);
 
     return responses;
@@ -81,8 +78,8 @@ class _HomeFeedScreenState extends State<HomeFeedScreen> {
     List<Widget> competitionItems = [];
     for (int i = 0; i < 6; i++) {
       competitionItems.add(ListView(children: [
-        buildCompetitionTile(competitions[i++]),
-        buildCompetitionTile(competitions[i])
+        buildCompetitionTile(context,competitions[i++]),
+        buildCompetitionTile(context,competitions[i])
       ]));
     }
 
@@ -132,24 +129,11 @@ class _HomeFeedScreenState extends State<HomeFeedScreen> {
     Map<String, dynamic> jsonMap = json.decode(competitionsBody);
     competitions = jsonMap["paged_competitions"]["competitions"];
 
-    final body = responses[1].body;
-    dom.Document document = parser.parse(body);
+    final posts = json.decode(responses[1].body);
 
-    final titleElements = document.getElementsByClassName('entry-title');
-    titles = titleElements
-        .map((element) => element.getElementsByTagName("a")[0].innerHtml)
-        .toList();
-
-    final dateElements = document.getElementsByTagName('time');
-    dates = dateElements.map((element) => element.innerHtml).toList();
-
-    final authorElements = document.getElementsByClassName('fn');
-    authors = authorElements.map((element) => element.innerHtml).toList();
-
-    final contentElements = document.getElementsByTagName("p");
-    content = contentElements.map((element) => element.innerHtml).toList();
-
-    newsStories = buildNewsStories(context);
+    posts.forEach((post) { 
+      newsStories.add(NewsStory.fromJson(post));
+    });;
   }
 
   int _currentBannerIndex = 0;
@@ -196,7 +180,7 @@ class _HomeFeedScreenState extends State<HomeFeedScreen> {
                     Divider(
                         height: 5, thickness: 5, color: Colors.grey.shade500),
                     buildSection(
-                        'Latest News', buildNewsStorySegment(newsStories)),
+                        'Latest News', buildNewsStorySegment(newsStories, context)),
                     Divider(
                         height: 5, thickness: 5, color: Colors.grey.shade500),
                     buildSection(
@@ -232,26 +216,8 @@ buildEventsProgramsAndNewsSection(Map<String, Icon> EventsProgramsAndNewsData) {
   );
 }
 
-List<Widget> buildNewsStories(BuildContext context) {
-  List<Widget> newsStories = [];
-  for (int i = 0; i < 4; i++) {
-    newsStories.add(
-      buildNewsStoryItem(
-          NewsStory(
-              id: 0,
-              headline: titles[i],
-              imageURL:
-                  'https://images.thestar.com/CBZVV_aqoiPFukcZjs74JNLtlF8=/1200x798/smart/filters:cb(2700061000)/https://www.thestar.com/content/dam/thestar/sports/curling/2018/02/04/manitobas-jennifer-jones-heads-to-scotties-tournament-of-hearts-final/jennifer_jones.jpg',
-              date: dates[i],
-              author: authors[i],
-              content: content[i]),
-          context),
-    );
-  }
-  return newsStories;
-}
 
-Widget buildNewsStorySegment(List<Widget> newsStories) {
+Widget buildNewsStorySegment(List<NewsStory> newsStories, BuildContext context) {
   return Padding(
     padding: EdgeInsets.symmetric(horizontal: 3.5),
     child: GridView.count(
@@ -260,7 +226,7 @@ Widget buildNewsStorySegment(List<Widget> newsStories) {
         physics: NeverScrollableScrollPhysics(),
         crossAxisCount: 2,
         children: List.generate(newsStories.length, (index) {
-          return newsStories[index];
+          return buildNewsStoryItem(newsStories[index], context);
         })),
   );
 }
