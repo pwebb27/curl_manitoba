@@ -30,7 +30,6 @@ dependencies:
   flutter:
     sdk: flutter
   font_awesome_flutter: ^9.1.0
-  flutter_svg: ^0.23.0+1
   http: ^0.13.4
   timeago: ^3.1.0
   url_launcher: ^6.0.20
@@ -39,6 +38,7 @@ dependencies:
   wakelock: ^0.6.1+2
   html: ^0.15.0
   table_calendar: ^3.0.5
+  flutter_svg: ^1.0.3
   
 
  
@@ -79,6 +79,7 @@ flutter_native_splash:
 flutter:
   assets:
     - assets/images/
+    - assets/icons/
 
   # The following line ensures that the Material Icons font is
   # included with your application, so that you can use the icons in
