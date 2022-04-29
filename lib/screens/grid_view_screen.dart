@@ -62,39 +62,41 @@ class _GridViewScreenState extends State<GridViewScreen> {
   buildGridViewItems(BuildContext context, List<gridViewTile> gridViewTiles) {
     for (int i = 0; i < gridViewTiles.length; i++) {
       gridViewItems.add(
-        Container(
-          decoration: BoxDecoration(
-              borderRadius: BorderRadius.circular(5),
-              image: DecorationImage(
-                colorFilter: ColorFilter.mode(
-                    Colors.black.withOpacity(.68), BlendMode.darken),
-                image:
-                    AssetImage(gridViewTiles[i].getImagePath),
-                fit: BoxFit.cover,
-              )),
-          child: Column(
-            children: [
-              Padding(
-                padding: const EdgeInsets.only(top: 30),
-                child: Icon(gridViewTiles[i].getIconData,
-                    color: Colors.grey.shade100,
-                    size: gridViewTiles[i].getIconSize),
-              ),
-              Padding(
-                padding: EdgeInsets.only(
-                    top: gridViewTiles[i].getIconPadding,
-                    left: 12,
-                    right: 12),
-                child: Text(
-                  gridViewTiles[i].getPageName,
-                  textAlign: TextAlign.center,
-                  style: TextStyle(
-                      color: Colors.white,
-                      fontSize: 16,
-                      fontWeight: FontWeight.w400),
+        InkWell(
+          onTap: () {
+            gridViewTiles[i].Navigate(context);},
+          child: Container(
+            decoration: BoxDecoration(
+                borderRadius: BorderRadius.circular(5),
+                image: DecorationImage(
+                  colorFilter: ColorFilter.mode(
+                      Colors.black.withOpacity(.68), BlendMode.darken),
+                  image:
+                      AssetImage(gridViewTiles[i].imagePath),
+                  fit: BoxFit.cover,
+                )),
+            child: Column(
+              children: [
+                Padding(
+                  padding: const EdgeInsets.only(top: 30),
+                  child: gridViewTiles[i].icon,
                 ),
-              )
-            ],
+                Padding(
+                  padding: EdgeInsets.only(
+                      top: gridViewTiles[i].iconPadding,
+                      left: 12,
+                      right: 12),
+                  child: Text(
+                    gridViewTiles[i].pageTitle,
+                    textAlign: TextAlign.center,
+                    style: TextStyle(
+                        color: Colors.white,
+                        fontSize: 16,
+                        fontWeight: FontWeight.w400),
+                  ),
+                )
+              ],
+            ),
           ),
         ),
       );
