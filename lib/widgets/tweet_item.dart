@@ -52,6 +52,7 @@ class TweetItem extends StatelessWidget {
                           Text(tweet.userName,
                               style: TextStyle(fontWeight: FontWeight.bold)),
                           Text(tweet.timePassed)
+                          
                         ],
                       )
                     ],

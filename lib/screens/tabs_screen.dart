@@ -36,7 +36,7 @@ class _TabsScreenState extends State<TabsScreen> {
       [double iconSize = 24]) {
     return BottomNavigationBarItem(
       label: title,
-      icon: Icon(icon, size: iconSize),
+      icon: Icon( icon, size: iconSize),
     );
   }
 
