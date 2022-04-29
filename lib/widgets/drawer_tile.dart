@@ -1,51 +1,45 @@
 import 'package:curl_manitoba/widgets/grid_view_tile.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'package:flutter/material.dart';
 
 class DrawerTile {
   late String title;
-  late double iconSize;
   String? url;
   String? route;
   Widget? icon;
-  late Map<String,dynamic> drawerTileArguments;
+  late Map<String, dynamic> drawerTileArguments;
+  late double width;
+  late double height;
 
   ///Creates a ListTile widget for the drawer
-  DrawerTile.asPage(String title, IconData iconData, String route, List<gridViewTile> gridViewData
-      ,{double iconSize = 19}) {
-    this.icon = Icon(iconData, size: iconSize, color: Colors.grey.shade700);
+  DrawerTile.asPage(
+      String title, String iconName, List<gridViewTile> gridViewData,
+      {double width = 21, double height = 21}) {
+    this.width = width;
+    this.height = height;
+    this.icon = SvgPicture.asset(
+      'assets/icons/' + iconName + '.svg',
+      color: Colors.grey.shade700,
+      fit: BoxFit.fitHeight,
+    );
+
     this.title = title;
-    this.route = route;
+
     drawerTileArguments = {'title': title, 'gridViewData': gridViewData};
   }
 
-  DrawerTile.asUsefulLink(String title, dynamic iconData, String url,
-      {double iconSize = 19}) {
+  DrawerTile.asUsefulLink(String title, String iconName, String url,
+      {double width = 21, double height = 21}) {
     this.icon = icon;
     this.title = title;
     this.url = url;
-
-    //icon may be an image
-    (iconData.runtimeType == AssetImage)
-        ? this.icon = Image(image: iconData, height: 28)
-        : this.icon = Icon(iconData as IconData,
-            size: iconSize, color: Colors.grey.shade700);
-  }
-
-  String? get getTitle {
-    return title;
-  }
-
-  Widget? get getIcon {
-    return icon;
-  }
-
-  String? get routeName {
-    return routeName;
-  }
-
-  String? get getUrl {
-    return url;
+    this.height = height;
+    this.width = width;
+    this.icon = SvgPicture.asset(
+      'assets/icons/' + iconName + '.svg',
+      color: Colors.grey.shade700,
+    );
   }
 
   Navigate(BuildContext context) {
@@ -60,6 +54,7 @@ class DrawerTile {
               }
             }
           }
-        : Navigator.pushNamed(context, route as String, arguments: drawerTileArguments);
+        : Navigator.pushNamed(context, '/gridView',
+            arguments: drawerTileArguments);
   }
 }
