@@ -86,15 +86,16 @@ class _eEntryScreenState extends State<eEntryScreen> {
                         width: double.infinity,
                         alignment: Alignment.center,
                         decoration: BoxDecoration(
-                            color: Colors.grey.shade300,
-                            border: Border.all(width: .5)),
+                            color: Colors.black,
+                            border: Border(top: BorderSide(width: .3, color: Colors.grey.shade500))
+                            ),
                         child: Padding(
-                          padding: const EdgeInsets.all(8.0),
+                          padding: const EdgeInsets.all(10.0),
                           child: Text(
                             
-                            entry.key,
+                            entry.key.toUpperCase(),
                             textAlign: TextAlign.center,
-                            style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+                            style: TextStyle(color: Colors.white,fontSize: 13.5, fontWeight: FontWeight.bold),
                           ),
                         ),
                       ),
