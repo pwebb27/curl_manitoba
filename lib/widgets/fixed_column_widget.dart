@@ -11,33 +11,35 @@ class FixedColumnWidget extends StatelessWidget {
   Widget build(BuildContext context) {
     return FittedBox(
       child: DataTable(
-        dataRowHeight: 90,
-          horizontalMargin: 10,
-          columnSpacing: 10,
-          headingRowColor: MaterialStateProperty.all(Colors.green[300]),
+        headingRowHeight: 45,
+
+         
+          headingRowColor: MaterialStateProperty.all(Colors.grey.shade600),
           decoration: BoxDecoration(
             border: Border(
               right: BorderSide(
-                color: Colors.grey,
+                color: Colors.black,
                 width: 2,
               ),
             ),
           ),
           columns: [
             DataColumn(
-              label: Text('Event'),
+              label: Text('Event', style: TextStyle(color: Colors.white)),
             ),
           ],
           rows: [
             for (Competition competition in competitionsList)
               DataRow(
+
                 cells: [
                   DataCell(
+                    
                     Container(
                       width: 145,
                       child: Text(
                         competition.eventName,
-                        style: TextStyle(fontWeight: FontWeight.bold),
+                        style: TextStyle(fontWeight: FontWeight.bold,fontSize: 13.5),
                       ),
                     ),
                   )
