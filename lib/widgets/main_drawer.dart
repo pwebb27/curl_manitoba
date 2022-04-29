@@ -1,5 +1,6 @@
 import 'package:curl_manitoba/widgets/drawer_tile.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 
 import '../drawer_data.dart';
 
@@ -11,9 +12,9 @@ class MainDrawer extends StatelessWidget {
         },
         child: ListTile(
             dense: true,
-            leading: drawerTile.getIcon,
+            leading: Container(alignment: Alignment.centerLeft, height: drawerTile.height, width: drawerTile.width, child:drawerTile.icon),
             title: Text(
-              drawerTile.getTitle as String,
+              drawerTile.title as String,
               style: TextStyle(
                 fontSize: 14,
                 color: Colors.grey.shade700,
