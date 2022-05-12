@@ -1,4 +1,5 @@
 import 'package:flutter/cupertino.dart';
+import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:flutter_svg/parser.dart';
 
@@ -6,15 +7,15 @@ class gridViewTile {
   late String pageTitle;
   late SvgPicture icon;
   late String imagePath;
-  late double iconSize;
-  late double iconPadding;
+  late double iconHeight;
+  late double iconWidth;
 
-  gridViewTile(String pageTitle, String iconPath, String imagePath, [double iconSize = 30, double iconPadding = 8]) {
+  gridViewTile(String pageTitle, String iconPath, String imagePath, [double iconWidth = 30, double iconHeight = 30]) {
     this.pageTitle = pageTitle;
-    this.icon = SvgPicture.asset(iconPath);
-    this.imagePath = imagePath;
-    this.iconSize = iconSize;
-    this.iconPadding = iconPadding;
+    this.icon = SvgPicture.asset('assets/icons/' + iconPath, height: iconWidth, width: iconHeight,color: Colors.white);
+    this.imagePath = 'assets/images/' + imagePath;
+    this.iconHeight = iconHeight;
+    this.iconWidth = iconWidth;
       }
 
    Navigate(BuildContext context) {
