@@ -3,29 +3,32 @@ import 'package:curl_manitoba/widgets/font_awesome_pro_icons.dart';
 import 'package:flutter/material.dart';
 
 class GridViewContentScreen extends StatefulWidget {
-
   String pageTitle;
 
   GridViewContentScreen(this.pageTitle);
 
   @override
-  State<GridViewContentScreen> createState() => _GridViewContentScreenState(pageTitle);
+  State<GridViewContentScreen> createState() => _GridViewContentScreenState();
 }
 
 class _GridViewContentScreenState extends State<GridViewContentScreen> {
-  String pageTitle = '';
+  
+  @override
+  void initState() {
+    super.initState();
+    pageTitle = widget.pageTitle;
+  }
 
-  _GridViewContentScreenState(this.pageTitle);
-
+  late String pageTitle;
 
   @override
   Widget build(BuildContext context) {
-        return Scaffold(
+    return Scaffold(
         appBar: CustomAppBar(
           Icon(FontAwesomePro.bars),
           context,
           pageTitle,
         ),
-        body: null
-        );}
+        body: null);
+  }
 }

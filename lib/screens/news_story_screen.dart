@@ -13,24 +13,20 @@ import '../widgets/custom_app_bar.dart';
 
 class NewsStoryScreen extends StatefulWidget {
   NewsStory newsStory;
-
   NewsStoryScreen(this.newsStory);
-
   static const routeName = '/news-story';
 
   @override
-  State<NewsStoryScreen> createState() => _NewsStoryScreenState(newsStory);
+  State<NewsStoryScreen> createState() => _NewsStoryScreenState();
 }
 
 class _NewsStoryScreenState extends State<NewsStoryScreen> {
-  _NewsStoryScreenState(this.newsStory);
-  NewsStory newsStory;
+  late NewsStory newsStory;
 
   void buildContent(Map<String, dynamic> contentMap) {
     final document = parse(contentMap['content']['rendered']);
 
     newsStory.content = parse(document.body!.text).documentElement!.text;
-    
   }
 
   Future<Map<String, dynamic>> _getDataFromWeb() async {
@@ -44,6 +40,7 @@ class _NewsStoryScreenState extends State<NewsStoryScreen> {
 
   @override
   void initState() {
+    newsStory = widget.newsStory;
     _getDataFromWeb();
     super.initState();
   }
@@ -90,7 +87,7 @@ class _NewsStoryScreenState extends State<NewsStoryScreen> {
           FutureBuilder(
               future: _getDataFromWeb(),
               builder: (context, snapshot) {
-                if (snapshot.data == null) {
+                if (!snapshot.hasData) {
                   return Padding(
                     padding: const EdgeInsets.only(top: 30),
                     child: CircularProgressBar(),
