@@ -15,13 +15,12 @@ class DrawerTile {
   ///Creates a ListTile widget for the drawer
   DrawerTile.asPage(
       String title, String iconName, List<gridViewTile> gridViewData,
-      {double width = 21, double height = 21}) {
+      {double width = 20, double height = 20}) {
     this.width = width;
     this.height = height;
     this.icon = SvgPicture.asset(
       'assets/icons/' + iconName + '.svg',
       color: Colors.grey.shade700,
-      fit: BoxFit.fitHeight,
     );
 
     this.title = title;
@@ -30,7 +29,7 @@ class DrawerTile {
   }
 
   DrawerTile.asUsefulLink(String title, String iconName, String url,
-      {double width = 21, double height = 21}) {
+      {double width = 20, double height = 20}) {
     this.icon = icon;
     this.title = title;
     this.url = url;
