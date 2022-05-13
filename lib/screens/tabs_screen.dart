@@ -9,7 +9,7 @@ import '../widgets/main_drawer.dart';
 import 'calendar_screen.dart';
 import 'e_entry_screen.dart';
 import 'home_screen.dart';
-import 'scores_webpage_screen.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 
 class TabsScreen extends StatefulWidget {
   @override
@@ -32,11 +32,17 @@ class _TabsScreenState extends State<TabsScreen> {
     });
   }
 
-  _buildBottomNavigationBarItem(String title, IconData icon,
+  _buildBottomNavigationBarItem(String title, String iconName,
       [double iconSize = 24]) {
     return BottomNavigationBarItem(
       label: title,
-      icon: Icon( icon, size: iconSize),
+      activeIcon: SvgPicture.asset('assets/icons/' + iconName + '.svg',
+          height: iconSize, color: Theme.of(context).primaryColor),
+      icon: SvgPicture.asset(
+        'assets/icons/' + iconName + '.svg',
+        height: iconSize,
+        color: Colors.grey.shade700,
+      ),
     );
   }
 
@@ -52,11 +58,11 @@ class _TabsScreenState extends State<TabsScreen> {
                   ? 'Electronic Entry'
                   : (_selectedPageIndex == 2)
                       ? 'News'
-                           : (_selectedPageIndex == 3)
-                      ? 'Live Scores & Results'
-                      : (_selectedPageIndex == 4)
-                          ? 'Calendar of Events'
-                          : "",
+                      : (_selectedPageIndex == 3)
+                          ? 'Live Scores & Results'
+                          : (_selectedPageIndex == 4)
+                              ? 'Calendar of Events'
+                              : "",
               (_selectedPageIndex == 0) ? true : false,
               (_selectedPageIndex == 3) ? true : false),
           drawer: MainDrawer(),
@@ -75,18 +81,11 @@ class _TabsScreenState extends State<TabsScreen> {
                 selectedItemColor: Theme.of(context).primaryColor,
                 onTap: _selectPage,
                 items: [
-                  _buildBottomNavigationBarItem(
-                      'Home', FontAwesomeIcons.home, 24.6),
-                  _buildBottomNavigationBarItem(
-                      'e-Entry', FontAwesomePro.add_group, 23.5),
-                                        _buildBottomNavigationBarItem(
-                      'News', FontAwesomePro.newspaper,24),
-                  _buildBottomNavigationBarItem(
-                    'Scores',
-                    FontAwesomePro.scoreboard,23
-                  ),
-                  _buildBottomNavigationBarItem(
-                      'Calendar', FontAwesomePro.calendar_days),
+                  _buildBottomNavigationBarItem('Home', 'home', 24.6),
+                  _buildBottomNavigationBarItem('e-Entry', 'add-group', 23),
+                  _buildBottomNavigationBarItem('News', 'newspaper', 23),
+                  _buildBottomNavigationBarItem('Scores', 'scoreboard', 23.5),
+                  _buildBottomNavigationBarItem('Calendar', 'calendar-days'),
                 ],
               ),
             ),
