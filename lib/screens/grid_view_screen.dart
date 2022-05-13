@@ -7,30 +7,30 @@ import 'package:flutter/material.dart';
 class GridViewScreen extends StatefulWidget {
   GridViewScreen(this.gridViewArguments);
 
-  Map<String,dynamic> gridViewArguments;
-  
-
+  Map<String, dynamic> gridViewArguments;
 
   @override
-  State<GridViewScreen> createState() => _GridViewScreenState(gridViewArguments);
+  State<GridViewScreen> createState() =>
+      _GridViewScreenState();
 }
 
 class _GridViewScreenState extends State<GridViewScreen> {
   List<Widget> gridViewItems = [];
-  Map<String,dynamic> gridViewArguments;
-  
+  late Map<String, dynamic> gridViewArguments;
 
-  
-
-  _GridViewScreenState(this.gridViewArguments);
+  @override
+  void initState(){
+    super.initState();
+    gridViewArguments = widget.gridViewArguments;
+  }
 
 
   @override
-
-
-  Widget build(BuildContext context,) {
-  String Pagetitle = gridViewArguments['title'];
-  List<gridViewTile> gridViewTiles = gridViewArguments['gridViewData'];
+  Widget build(
+    BuildContext context,
+  ) {
+    String Pagetitle = gridViewArguments['title'];
+    List<gridViewTile> gridViewTiles = gridViewArguments['gridViewData'];
 
     return Scaffold(
         appBar: CustomAppBar(
@@ -38,7 +38,7 @@ class _GridViewScreenState extends State<GridViewScreen> {
           context,
           Pagetitle,
         ),
-        body: buildGridView(context,gridViewTiles));
+        body: buildGridView(context, gridViewTiles));
   }
 
   Widget buildGridView(BuildContext context, List<gridViewTile> gridViewTiles) {
@@ -64,37 +64,37 @@ class _GridViewScreenState extends State<GridViewScreen> {
       gridViewItems.add(
         InkWell(
           onTap: () {
-            gridViewTiles[i].Navigate(context);},
+            gridViewTiles[i].Navigate(context);
+          },
           child: Container(
             decoration: BoxDecoration(
                 borderRadius: BorderRadius.circular(5),
                 image: DecorationImage(
                   colorFilter: ColorFilter.mode(
                       Colors.black.withOpacity(.68), BlendMode.darken),
-                  image:
-                      AssetImage(gridViewTiles[i].imagePath),
+                  image: AssetImage(gridViewTiles[i].imagePath),
                   fit: BoxFit.cover,
                 )),
-            child: Column(
+            child: Stack(
               children: [
-                Padding(
-                  padding: const EdgeInsets.only(top: 30),
-                  child: gridViewTiles[i].icon,
-                ),
-                Padding(
-                  padding: EdgeInsets.only(
-                      top: gridViewTiles[i].iconPadding,
-                      left: 12,
-                      right: 12),
-                  child: Text(
-                    gridViewTiles[i].pageTitle,
-                    textAlign: TextAlign.center,
-                    style: TextStyle(
-                        color: Colors.white,
-                        fontSize: 16,
-                        fontWeight: FontWeight.w400),
+                Align(
+                    alignment: FractionalOffset(.5, .35),
+                    child: gridViewTiles[i].icon),
+                Align(
+                  alignment: FractionalOffset(.5, .75),
+                  child: Padding(
+                    padding: const EdgeInsets.only(left: 8.0, right: 8),
+                    child: Text(
+                      gridViewTiles[i].pageTitle + '\n',
+                      textAlign: TextAlign.center,
+                      maxLines: 2,
+                      style: TextStyle(
+                          color: Colors.white,
+                          fontSize: 16,
+                          fontWeight: FontWeight.w400),
+                    ),
                   ),
-                )
+                ),
               ],
             ),
           ),
