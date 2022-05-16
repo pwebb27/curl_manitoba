@@ -1,3 +1,5 @@
+import 'package:intl/intl.dart';
+
 class NewsStory {
   late String headline;
   late String imageURL;
@@ -10,7 +12,8 @@ class NewsStory {
     this.id = json['id'];
     this.author = getAuthorId(json['author']);
     this.headline = json['title']['rendered'];
-    this.date = json['date'];
+    this.date = DateFormat('LLL d, y')
+                              .format(DateTime.parse(json['date']));
     this.imageURL = 'https://images.thestar.com/CBZVV_aqoiPFukcZjs74JNLtlF8=/1200x798/smart/filters:cb(2700061000)/https://www.thestar.com/content/dam/thestar/sports/curling/2018/02/04/manitobas-jennifer-jones-heads-to-scotties-tournament-of-hearts-final/jennifer_jones.jpg';
   }
 
