@@ -31,9 +31,9 @@ class NewsStory {
     }
   }
 
-  static Future<Response> getNewsData() async {
-    const newsURL =
-        'https://curlmanitoba.org/wp-json/wp/v2/posts?_fields=id,title,date,author&per_page=4';
+  static Future<Response> getNewsData(int perPage) async {
+    final newsURL =
+        'https://curlmanitoba.org/wp-json/wp/v2/posts?_fields=id,title,date,author&per_page=${perPage.toString()}';
     var response = await http.get(Uri.parse(newsURL));
     return response;
   }
