@@ -1,22 +1,27 @@
-import 'widgets/drawer_tile.dart';
-import 'gridview_tile_data.dart';
+import 'models/drawer_tile.dart';
 
 
-List<DrawerTile> BASIC_TILES_DATA = [
-  DrawerTile.asPage('Competitions', 'medals', COMPETITION_GRID_VIEW_TILES_DATA, height: 24.5 ),
-  DrawerTile.asPage('Development', 'gear-arrow',DEVELOPMENT_GRID_VIEW_TILES_DATA,  width: 21.5, height: 21.5),
-  DrawerTile.asPage('High Perfomance', 'gauge-max',HIGH_PERFORMANCE_GRID_VIEW_TILES_DATA),
-  DrawerTile.asPage('Getting Started', 'hourglass-start',GETTING_STARTED_GRID_VIEW_TILES_DATA ),
-  DrawerTile.asPage('About Us', 'circle-info',ABOUT_US_TILES_DATA),
+List<DrawerTile> PAGE_TILES_DATA = [
+  DrawerTile('Competitions', 'medals', height: 24.5 ),
+  DrawerTile('Development', 'gear-arrow',  width: 21.5, height: 21.5),
+  DrawerTile('High Perfomance', 'gauge-max',),
+  DrawerTile('Getting Started', 'hourglass-start', ),
+  DrawerTile('About Us', 'circle-info',),
 ];
 
-List<DrawerTile> USEFUL_LINKS_DATA = [
-  DrawerTile.asUsefulLink('Curling I/O', 'curling-canada',
+List<ExternalLinkDrawerTile> USEFUL_LINKS_DATA = [
+  ExternalLinkDrawerTile('Curling I/O', 'curling-canada',
       'https://www.curling.ca', height: 27.5),
-  DrawerTile.asUsefulLink('CurlManitoba Twitter', 'twitter',
+  ExternalLinkDrawerTile('CFL Endowment Fund', 'loan',
+      'https://curlingforlife.com/',width: 21.5, height: 21.5),
+];
+
+List<ExternalLinkDrawerTile> SOCIAL_MEDIA_LINKS_DATA = [
+  ExternalLinkDrawerTile('CurlManitoba Twitter', 'twitter',
       'https://twitter.com/curlmanitoba',width: 21.5, height: 21.5),
-  DrawerTile.asUsefulLink('CurlManitoba Instagram', 'instagram',
+  ExternalLinkDrawerTile('CurlManitoba Instagram', 'instagram',
       'https://www.instagram.com/curlmanitoba/?hl=en', width: 22, height: 22),
-  DrawerTile.asUsefulLink('CurlManitoba Facebook', 'facebook',
+  ExternalLinkDrawerTile('CurlManitoba Facebook', 'facebook',
       'https://www.facebook.com/CurlManitoba',width: 22, height: 22),
 ];
+
