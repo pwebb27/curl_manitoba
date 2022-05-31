@@ -1,0 +1,74 @@
+import 'package:flutter/cupertino.dart';
+import 'package:http/http.dart' as http;
+import 'dart:convert';
+
+class scoresCompetition {
+  late String name;
+  late String id;
+  late DateTime startDate;
+  late DateTime endDate;
+  late String venue;
+  late Image sponsorImage;
+
+  scoresCompetition.fromJson(Map<String, dynamic> json) {
+    name = json['title'];
+    venue = getVenueFromJson(json);
+    startDate = DateTime.parse(json['starts_on']);
+    endDate = DateTime.parse(json['ends_on']);
+    sponsorImage = Image.network(
+      json["logo"],
+      height: 30,
+    );
+    id = json["id"].toString();
+  }
+
+  String getVenueFromJson(Map competition) {
+    if (competition["venue"] != null && competition["venue"] != "")
+      return competition["venue"];
+
+    String indexOfString = 'played at the ';
+
+    if ((competition["notes"] as String).lastIndexOf(indexOfString) != -1)
+      return (competition["notes"] as String).substring(
+          (competition["notes"] as String).lastIndexOf(indexOfString) +
+              indexOfString.length,
+          (competition["notes"] as String).length);
+
+    indexOfString = 'played at ';
+
+    if ((competition["notes"] as String).lastIndexOf(indexOfString) != -1)
+      return (competition["notes"] as String).substring(
+          (competition["notes"] as String).lastIndexOf(indexOfString) +
+              indexOfString.length,
+          (competition["notes"] as String).length);
+
+    indexOfString = 'hosted by ';
+
+    if ((competition["notes"] as String).lastIndexOf(indexOfString) != -1)
+      return (competition["notes"] as String).substring(
+          (competition["notes"] as String).lastIndexOf(indexOfString) +
+              indexOfString.length,
+          (competition["notes"] as String).length);
+
+    return 'Location TBA';
+  }
+
+  static Future<http.Response> getCompetitionData([String tag = '', int pageNumber = 1]) async {
+    final competitionURL =
+        'https://legacy-curlingio.global.ssl.fastly.net/api/organizations/MTZFJ5miuro/competitions.json?search=&tags=$tag&page=$pageNumber';
+    var response = await http.get(Uri.parse(competitionURL));
+    return response;
+  }
+
+  static List<scoresCompetition> parseCompetitionData(
+      http.Response competitionsResponse) {
+    Map<String, dynamic> jsonMap = json.decode(competitionsResponse.body);
+    List<dynamic> competitionsData =
+        jsonMap["paged_competitions"]["competitions"];
+    List<scoresCompetition> competitions = [];
+    for (var competition in competitionsData) {
+      competitions.add(scoresCompetition.fromJson(competition));
+    }
+    return competitions;
+  }
+}
