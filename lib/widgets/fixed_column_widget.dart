@@ -1,9 +1,9 @@
-import 'package:curl_manitoba/models/competition.dart';
+import 'package:curl_manitoba/models/e_entry_competition.dart';
+import 'package:curl_manitoba/models/scores_competition.dart';
 import 'package:flutter/material.dart';
 
 class FixedColumnWidget extends StatelessWidget {
-  List<Competition> competitionsList;
-
+  List<eEntryCompetition> competitionsList;
 
   FixedColumnWidget(this.competitionsList);
 
@@ -11,9 +11,8 @@ class FixedColumnWidget extends StatelessWidget {
   Widget build(BuildContext context) {
     return FittedBox(
       child: DataTable(
-        headingRowHeight: 45,
-
-         
+          headingRowHeight: 45,
+          dataRowHeight: 90,
           headingRowColor: MaterialStateProperty.all(Colors.grey.shade600),
           decoration: BoxDecoration(
             border: Border(
@@ -29,17 +28,16 @@ class FixedColumnWidget extends StatelessWidget {
             ),
           ],
           rows: [
-            for (Competition competition in competitionsList)
+            for (var competition in competitionsList)
               DataRow(
-
                 cells: [
                   DataCell(
-                    
                     Container(
                       width: 145,
                       child: Text(
-                        competition.eventName,
-                        style: TextStyle(fontWeight: FontWeight.bold,fontSize: 13.5),
+                        competition.name,
+                        style: TextStyle(
+                            fontWeight: FontWeight.bold, fontSize: 13.5),
                       ),
                     ),
                   )

@@ -1,8 +1,9 @@
-import 'package:curl_manitoba/models/competition.dart';
+import 'package:curl_manitoba/models/e_entry_competition.dart';
+import 'package:curl_manitoba/models/scores_competition.dart';
 import 'package:flutter/material.dart';
 
 class ScrollableColumnWidget extends StatelessWidget {
-  List<Competition> competitionsList;
+  List<eEntryCompetition> competitionsList;
 
   ScrollableColumnWidget(this.competitionsList);
 
@@ -35,11 +36,11 @@ class ScrollableColumnWidget extends StatelessWidget {
                 DataColumn(label: Text('Deadline', style: TextStyle(color: Colors.white))),
               ],
               rows: [
-                for (Competition competition in competitionsList)
+                for (eEntryCompetition competition in competitionsList)
                   DataRow(cells: [
                   DataCell(Text(competition.type,)),
                   DataCell(Text(competition.month)),
-                  DataCell(Text(competition.dates)),
+                  DataCell(Text(competition.dateRange)),
                   DataCell(Text(competition.fee)),
                   DataCell(Text(competition.location)),
                   DataCell(Text(competition.deadline))
