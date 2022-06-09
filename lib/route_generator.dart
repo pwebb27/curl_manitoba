@@ -21,7 +21,7 @@ class RouteGenerator {
       case '/newsStory':
         return MaterialPageRoute(builder: (_) => NewsStoryScreen(args as NewsStory));
       case '/gridView':
-        return MaterialPageRoute(builder: (_) => GridViewScreen(args as Map<String,dynamic>));
+        return MaterialPageRoute(builder: (_) => GridViewScreen(args as String));
       case '/gridViewContent':
         return MaterialPageRoute(builder: (_) => GridViewContentScreen(args as String));
 
