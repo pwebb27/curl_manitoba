@@ -4,7 +4,7 @@ import 'models/drawer_tile.dart';
 List<DrawerTile> PAGE_TILES_DATA = [
   DrawerTile('Competitions', 'medals', height: 24.5 ),
   DrawerTile('Development', 'gear-arrow',  width: 21.5, height: 21.5),
-  DrawerTile('High Perfomance', 'gauge-max',),
+  DrawerTile('High Performance', 'gauge-max',),
   DrawerTile('Getting Started', 'hourglass-start', ),
   DrawerTile('About Us', 'circle-info',),
 ];
