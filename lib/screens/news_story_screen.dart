@@ -48,7 +48,7 @@ class _NewsStoryScreenState extends State<NewsStoryScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        appBar: CustomAppBar(Icon(Icons.arrow_back, size: 25), context, ""),
+        appBar: CustomAppBar(context, ""),
         body: SingleChildScrollView(
             child: Column(children: <Widget>[
           Container(

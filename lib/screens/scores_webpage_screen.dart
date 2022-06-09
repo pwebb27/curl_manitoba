@@ -28,7 +28,7 @@ class _ScoresWebpageScreenState extends State<ScoresWebpageScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
         appBar: (id!=null)?CustomAppBar(
-            Icon(FontAwesomePro.bars), context, 'Live Scores & Results'):null,
+             context, 'Live Scores & Results'):null,
         body: Stack(
           children: <Widget>[
             WebView(

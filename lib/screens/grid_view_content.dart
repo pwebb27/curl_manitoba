@@ -25,7 +25,7 @@ class _GridViewContentScreenState extends State<GridViewContentScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
         appBar: CustomAppBar(
-          Icon(FontAwesomePro.bars),
+         
           context,
           pageTitle,
         ),
