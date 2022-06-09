@@ -1,13 +1,10 @@
 import 'package:curl_manitoba/models/calendar_event.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
-import 'package:webview_flutter/webview_flutter.dart';
 import '../widgets/circular_progress_bar.dart';
 import 'package:table_calendar/table_calendar.dart';
 
 import 'package:http/http.dart' as http;
-
-import 'dart:convert';
 
 class CalendarScreen extends StatefulWidget {
   @override
@@ -15,65 +12,35 @@ class CalendarScreen extends StatefulWidget {
 }
 
 class _CalendarScreenState extends State<CalendarScreen> {
-  late Future<Map<String, dynamic>> dataFuture;
-  WebViewController? _myController;
-  List<CalendarEvent> calendarEvents = [];
+  late Future<http.Response> calendarDataFuture;
+  late Map<DateTime, List<CalendarEvent>> calendarEvents;
 
-  bool _loadedPage = false;
-  DateTime selectedDay = DateUtils.dateOnly(DateTime.now());
-  DateTime focusedDay = DateUtils.dateOnly(DateTime.now());
-  List<CalendarEvent> selectedEvents = [];
-  late Map<DateTime, List<CalendarEvent>> events;
-
-  Future<Map<String, dynamic>> _getDataFromWeb() async {
-    String URL =
-        'http://curlmanitoba.org/wp-json/tribe/events/v1/events?per_page=999&start_date=2022-03-01&end_date=2022-05-31';
-
-    final response = await http.get(Uri.parse(URL));
-    return json.decode(response.body);
-  }
+  late DateTime selectedDay;
+  late DateTime focusedDay;
+  late List<CalendarEvent> selectedEvents;
 
   @override
   void initState() {
     super.initState();
-    dataFuture = _getDataFromWeb();
-    dataFuture.then((value) => buildContent(value));
-    events = {};
-    // dataFuture.then((value) => buildContent(value));
+    selectedEvents = [];
+    selectedDay = DateUtils.dateOnly(DateTime.now());
+    focusedDay = DateUtils.dateOnly(DateTime.now());
+    calendarDataFuture = CalendarEvent.getCalendarData();
+    calendarDataFuture.then(
+        (value) => calendarEvents = CalendarEvent.parseCalendarData(value));
   }
 
   List<CalendarEvent> _getEventsFromDay(DateTime date) {
-    return events[DateUtils.dateOnly(date)] ?? [];
-  }
-
-  buildContent(Map<String, dynamic> json) {
-    for (var event in json['events']) {
-      calendarEvents.add(CalendarEvent.fromJson(event));
-    }
-    for (CalendarEvent event in calendarEvents) {
-      //https://stackoverflow.com/questions/61362685/return-all-dates-between-two-dates-as-a-list-in-flutter-date-range-picker
-
-      List<DateTime> days = [];
-      for (int i = 0;
-          i <= event.endDate.difference(event.startDate).inDays;
-          i++) {
-        days.add(event.startDate.add(Duration(days: i)));
-      }
-      for (DateTime day in days) {
-        if (!events.containsKey(day)) events[day] = [];
-        events[day]!.add(event);
-      }
-    }
+    return calendarEvents[DateUtils.dateOnly(date)] ?? [];
   }
 
   @override
   Widget build(BuildContext context) {
     return FutureBuilder(
-        future: dataFuture,
+        future: calendarDataFuture,
         builder: (context, snapshot) {
-          if (!snapshot.hasData) {
+          if (snapshot.connectionState == ConnectionState.waiting)
             return Center(child: CircularProgressBar());
-          }
           return SingleChildScrollView(
             child:
                 Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
@@ -84,11 +51,15 @@ class _CalendarScreenState extends State<CalendarScreen> {
                             color: Colors.black,
                             shape: BoxShape.rectangle,
                           ),
-                          child:
-                              Padding(
-                                padding: const EdgeInsets.all(1.0),
-                                child: Text(events[DateUtils.dateOnly(day)]!.length.toString(), style: TextStyle(color: Colors.white, fontSize: 12)),
-                              ),
+                          child: Padding(
+                            padding: const EdgeInsets.all(1.0),
+                            child: Text(
+                                calendarEvents[DateUtils.dateOnly(day)]!
+                                    .length
+                                    .toString(),
+                                style: TextStyle(
+                                    color: Colors.white, fontSize: 12)),
+                          ),
                         ))),
                 focusedDay: selectedDay,
                 firstDay: DateTime(2021, 1, 1),
@@ -101,7 +72,6 @@ class _CalendarScreenState extends State<CalendarScreen> {
                   return _getEventsFromDay(day);
                 },
                 calendarStyle: CalendarStyle(
-                    
                     markersMaxCount: 1,
                     todayDecoration: BoxDecoration(
                         color: Color.fromRGBO(169, 113, 102, 1),
@@ -127,19 +97,23 @@ class _CalendarScreenState extends State<CalendarScreen> {
                         TextStyle(fontSize: 19, fontWeight: FontWeight.w700)),
               ),
               ...selectedEvents.map((event) => ExpansionTile(
-                      title: Text(event.eventName, style: TextStyle(fontSize: 16, fontWeight: FontWeight.w500)),
+                      title: Text(event.eventName,
+                          style: TextStyle(
+                              fontSize: 16, fontWeight: FontWeight.w500)),
                       expandedAlignment: Alignment.centerLeft,
                       subtitle: Text(
                           DateFormat('LLL d, y').format(event.startDate) +
                               ' - ' +
-                              DateFormat('LLL d, y').format(event.endDate),style: TextStyle(fontSize: 13.5, color: Colors.grey.shade700)) ,
+                              DateFormat('LLL d, y').format(event.endDate),
+                          style: TextStyle(
+                              fontSize: 13.5, color: Colors.grey.shade700)),
                       children: [
                         Column(
                           children: [
-                            (event.venue != null)
+                            (event.venue != '')
                                 ? Text('Venue: ' + event.venue)
                                 : Text(''),
-                            (event.details != null)
+                            (event.details != '')
                                 ? Text('Details: ' + event.details)
                                 : Text('')
                           ],
