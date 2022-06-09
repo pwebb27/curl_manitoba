@@ -1,4 +1,7 @@
+import 'package:curl_manitoba/models/news_story.dart';
 import 'package:flutter/material.dart';
+import 'package:http/http.dart' as http;
+import 'dart:convert';
 
 class CalendarEvent {
   late String eventName;
@@ -16,9 +19,40 @@ class CalendarEvent {
   }
 
   getVenue(dynamic venue) {
-    if (venue.isEmpty)
-      return null;
-    else
-      return venue['venue'];
+    if (venue.isEmpty) return '';
+    return venue['venue'];
+  }
+
+  static Future<http.Response> getCalendarData() async {
+    const calendarURL =
+        'http://curlmanitoba.org/wp-json/tribe/events/v1/events?per_page=999&start_date=2022-03-01&end_date=2022-05-31';
+    var response = await http.get(Uri.parse(calendarURL));
+    return response;
+  }
+
+  static Map<DateTime, List<CalendarEvent>> parseCalendarData(
+      http.Response newsStoriesResponse) {
+    Map<String, dynamic> calendarMap = json.decode(newsStoriesResponse.body);
+    List<CalendarEvent> calendarEvents = [];
+    Map<DateTime, List<CalendarEvent>> events = {};
+    for (var event in calendarMap['events']) {
+      calendarEvents.add(CalendarEvent.fromJson(event));
+    }
+    for (CalendarEvent event in calendarEvents) {
+      //https://stackoverflow.com/questions/61362685/return-all-dates-between-two-dates-as-a-list-in-flutter-date-range-picker
+
+      List<DateTime> days = [];
+      for (int i = 0;
+          i <= event.endDate.difference(event.startDate).inDays;
+          i++) {
+        days.add(event.startDate.add(Duration(days: i)));
+      }
+      for (DateTime day in days) {
+        if (!events.containsKey(day)) events[day] = [];
+        events[day]!.add(event);
+      }
+    }
+
+    return events;
   }
 }
