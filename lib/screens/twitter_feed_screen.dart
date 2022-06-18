@@ -7,7 +7,6 @@ import '../widgets/circular_progress_bar.dart';
 import 'package:flutter/material.dart';
 import 'dart:convert';
 
-
 class TwitterFeedScreen extends StatefulWidget {
   @override
   TwitterFeedScreenState createState() {
@@ -43,15 +42,21 @@ class TwitterFeedScreenState extends State<TwitterFeedScreen> {
     return FutureBuilder(
         future: _getAPIData(),
         builder: (context, snapshot) {
-          if (snapshot.data == null) {
-            return CircularProgressBar();
-          } else
-            buildContent(snapshot.data as List<dynamic>);
-          return ListView.builder(
-              itemBuilder: (ctx, index) {
-                return TweetItem(feed.tweets[index]);
-              },
-              itemCount: feed.tweets.length);
+          if (snapshot.connectionState == ConnectionState.waiting)
+            return SliverFillRemaining(
+                child: Center(child: CircularProgressBar()));
+          buildContent(snapshot.data as List<dynamic>);
+          return CustomScrollView(slivers: [
+                        
+                        SliverList(
+                          delegate:
+                              SliverChildBuilderDelegate(((context, index) {
+                            return TweetItem(feed.tweets[index]);
+                          }), childCount: feed.tweets.length),
+                        )
+                      ]);
         });
   }
 }
+
+
