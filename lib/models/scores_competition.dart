@@ -8,17 +8,14 @@ class scoresCompetition {
   late DateTime startDate;
   late DateTime endDate;
   late String venue;
-  late Image sponsorImage;
+  late String sponsorImageUrl;
 
   scoresCompetition.fromJson(Map<String, dynamic> json) {
     name = json['title'];
     venue = getVenueFromJson(json);
     startDate = DateTime.parse(json['starts_on']);
     endDate = DateTime.parse(json['ends_on']);
-    sponsorImage = Image.network(
-      json["logo"],
-      height: 30,
-    );
+    sponsorImageUrl = json["logo"];
     id = json["id"].toString();
   }
 
@@ -53,7 +50,8 @@ class scoresCompetition {
     return 'Location TBA';
   }
 
-  static Future<http.Response> getCompetitionData([String tag = '', int pageNumber = 1]) async {
+  static Future<http.Response> getCompetitionData(
+      [String tag = '', int pageNumber = 1]) async {
     final competitionURL =
         'https://legacy-curlingio.global.ssl.fastly.net/api/organizations/MTZFJ5miuro/competitions.json?search=&tags=$tag&page=$pageNumber';
     var response = await http.get(Uri.parse(competitionURL));
