@@ -51,8 +51,7 @@ class _TabsScreenState extends State<TabsScreen> {
     return DefaultTabController(
         length: 2,
         child: Scaffold(
-          appBar: CustomAppBar(
-              Icon(FontAwesomePro.bars, size: 24),
+          appBar: (_selectedPageIndex!=0)? CustomAppBar(
               context,
               (_selectedPageIndex == 1)
                   ? 'Electronic Entry'
@@ -63,8 +62,8 @@ class _TabsScreenState extends State<TabsScreen> {
                           : (_selectedPageIndex == 4)
                               ? 'Calendar of Events'
                               : "",
-              (_selectedPageIndex == 0) ? true : false,
-              (_selectedPageIndex == 3) ? true : false),
+              
+              (_selectedPageIndex == 3) ? true : false):null,
           drawer: MainDrawer(),
           body: _pages[_selectedPageIndex],
           bottomNavigationBar: SizedBox(
