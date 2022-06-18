@@ -1,4 +1,6 @@
 import 'package:curl_manitoba/models/news_story.dart';
+import 'package:curl_manitoba/models/scores_competition.dart';
+import 'package:curl_manitoba/screens/competition_screen.dart';
 import 'package:curl_manitoba/screens/grid_view_content.dart';
 import 'package:curl_manitoba/screens/news_feed_screen.dart';
 import 'package:curl_manitoba/screens/news_story_screen.dart';
@@ -24,6 +26,8 @@ class RouteGenerator {
         return MaterialPageRoute(builder: (_) => GridViewScreen(args as String));
       case '/gridViewContent':
         return MaterialPageRoute(builder: (_) => GridViewContentScreen(args as String));
+      case '/competition':
+        return MaterialPageRoute(builder: (_) => CompetitionScreen(args as scoresCompetition));
 
       default:
         return _errorRoute();
