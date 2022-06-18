@@ -13,8 +13,8 @@ class CompetitionTile extends StatelessWidget {
       padding: const EdgeInsets.only(left:5,right:5,bottom:0),
       child: InkWell(
           onTap: () {
-            Navigator.pushNamed(context, '/scoresWebPage',
-                arguments: competition.id);
+            Navigator.pushNamed(context, '/competition',
+                arguments: competition);
           },
           child: Card(
             shape: RoundedRectangleBorder(
@@ -71,7 +71,10 @@ class CompetitionTile extends StatelessWidget {
                                             color: Colors.grey.shade700)))
                               ])
                             ]),
-                        competition.sponsorImage
+                        Image.network(
+      competition.sponsorImageUrl,
+      height: 30,
+    )
                       ]),
                 )
               ]),
