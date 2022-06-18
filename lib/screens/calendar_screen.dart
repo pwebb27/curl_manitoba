@@ -44,49 +44,53 @@ class _CalendarScreenState extends State<CalendarScreen> {
           return SingleChildScrollView(
             child:
                 Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
-              TableCalendar(
-                calendarBuilders: CalendarBuilders(
-                    singleMarkerBuilder: ((context, day, event) => Container(
-                          decoration: BoxDecoration(
-                            color: Colors.black,
-                            shape: BoxShape.rectangle,
-                          ),
-                          child: Padding(
-                            padding: const EdgeInsets.all(1.0),
-                            child: Text(
-                                calendarEvents[DateUtils.dateOnly(day)]!
-                                    .length
-                                    .toString(),
-                                style: TextStyle(
-                                    color: Colors.white, fontSize: 12)),
-                          ),
-                        ))),
-                focusedDay: selectedDay,
-                firstDay: DateTime(2021, 1, 1),
-                lastDay: DateTime(2022, 12, 31),
-                headerStyle: HeaderStyle(formatButtonVisible: false),
-                selectedDayPredicate: (DateTime date) {
-                  return isSameDay(selectedDay, date);
-                },
-                eventLoader: (day) {
-                  return _getEventsFromDay(day);
-                },
-                calendarStyle: CalendarStyle(
-                    markersMaxCount: 1,
-                    todayDecoration: BoxDecoration(
-                        color: Color.fromRGBO(169, 113, 102, 1),
-                        shape: BoxShape.circle),
-                    selectedDecoration: BoxDecoration(
-                        color: Theme.of(context).primaryColor,
-                        shape: BoxShape.circle)),
-                onDaySelected: (DateTime selectDay, DateTime focusDay) {
-                  setState(() {
-                    selectedDay = selectDay;
-                    focusedDay = focusDay;
-                    selectedEvents =
-                        _getEventsFromDay(DateUtils.dateOnly(selectedDay));
-                  });
-                },
+              SizedBox(
+                height: 370,
+                child: TableCalendar(
+                  shouldFillViewport: true,
+                  calendarBuilders: CalendarBuilders(
+                      singleMarkerBuilder: ((context, day, event) => Container(
+                            decoration: BoxDecoration(
+                              color: Colors.black,
+                              shape: BoxShape.rectangle,
+                            ),
+                            child: Padding(
+                              padding: const EdgeInsets.all(1.0),
+                              child: Text(
+                                  calendarEvents[DateUtils.dateOnly(day)]!
+                                      .length
+                                      .toString(),
+                                  style: TextStyle(
+                                      color: Colors.white, fontSize: 12)),
+                            ),
+                          ))),
+                  focusedDay: selectedDay,
+                  firstDay: DateTime(2021, 1, 1),
+                  lastDay: DateTime(2022, 12, 31),
+                  headerStyle: HeaderStyle(formatButtonVisible: false),
+                  selectedDayPredicate: (DateTime date) {
+                    return isSameDay(selectedDay, date);
+                  },
+                  eventLoader: (day) {
+                    return _getEventsFromDay(day);
+                  },
+                  calendarStyle: CalendarStyle(
+                      markersMaxCount: 1,
+                      todayDecoration: BoxDecoration(
+                          color: Color.fromRGBO(169, 113, 102, 1),
+                          shape: BoxShape.circle),
+                      selectedDecoration: BoxDecoration(
+                          color: Theme.of(context).primaryColor,
+                          shape: BoxShape.circle)),
+                  onDaySelected: (DateTime selectDay, DateTime focusDay) {
+                    setState(() {
+                      selectedDay = selectDay;
+                      focusedDay = focusDay;
+                      selectedEvents =
+                          _getEventsFromDay(DateUtils.dateOnly(selectedDay));
+                    });
+                  },
+                ),
               ),
               Divider(thickness: 1, height: 40),
               Padding(
