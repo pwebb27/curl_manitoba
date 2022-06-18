@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:url_launcher/url_launcher.dart';
+import 'package:flutter/gestures.dart';
 
 import '../models/news_story.dart';
 import '../widgets/circular_progress_bar.dart';
@@ -36,16 +38,27 @@ class _NewsFeedScreenState extends State<NewsFeedScreen> {
             physics: ScrollPhysics(),
             child: Column(children: [
               Padding(
-                padding: const EdgeInsets.only(top: 8, left: 8, right: 8),
-                child:
-                    Row(mainAxisAlignment: MainAxisAlignment.center, children: [
-                  Text('Sign up for our ', style: TextStyle(fontSize: 16)),
-                  GestureDetector(
-                    child: Text('newsletter',
-                        style: TextStyle(fontSize: 15, color: Colors.blue)),
-                  )
-                ]),
-              ),
+                  padding: const EdgeInsets.only(top: 8, left: 8, right: 8),
+                  child: new RichText(
+                    text: new TextSpan(children: [
+                      new TextSpan(
+                        text: 'Sign up for our ',
+                        style: new TextStyle(
+                            color: Colors.grey.shade800, fontSize: 17),
+                      ),
+                      new TextSpan(
+                        text: 'newsletter',
+                        style: new TextStyle(color: Colors.blue, fontSize: 17),
+                        recognizer: new TapGestureRecognizer()
+                          ..onTap = () {
+                            showDialog(
+                                context: context,
+                                builder: (context) => PopUp());
+                          },
+                      ),
+                    ]),
+                    textAlign: TextAlign.center,
+                  )),
               ListView.builder(
                   physics: NeverScrollableScrollPhysics(),
                   shrinkWrap: true,
@@ -58,19 +71,48 @@ class _NewsFeedScreenState extends State<NewsFeedScreen> {
                   itemCount: newsStories.length),
               Padding(
                 padding: const EdgeInsets.symmetric(vertical: 8.0),
-                child: SvgPicture.asset('assets/icons/folder.svg', height: 30),
+                child: Row(children: <Widget>[
+                  Expanded(child: Divider(thickness: 2)),
+                  Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 15.0),
+                    child: SvgPicture.asset(
+                      'assets/icons/magnifying-glass-plus.svg',
+                      height: 42,
+                      color: Colors.blue,
+                    ),
+                  ),
+                  Expanded(child: Divider(thickness: 2)),
+                ]),
               ),
-              Text('Looking for more news?',
+              Text('Looking for older stories?',
                   style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
               Padding(
-                padding: const EdgeInsets.only(
-                    bottom: 13, top: 5, left: 8, right: 8.0),
-                child: Text(
-                  'Visit the new archive for a history of published articles',
-                  textAlign: TextAlign.center,
-                  style: TextStyle(fontSize: 15),
-                ),
-              )
+                  padding: const EdgeInsets.only(
+                      bottom: 13, top: 5, left: 8, right: 8.0),
+                  child: new RichText(
+                    text: new TextSpan(children: [
+                      new TextSpan(
+                        text: 'Visit the ',
+                        style: new TextStyle(
+                            color: Colors.grey.shade800, fontSize: 17),
+                      ),
+                      new TextSpan(
+                        text: 'news archive',
+                        style: new TextStyle(color: Colors.blue, fontSize: 17),
+                        recognizer: new TapGestureRecognizer()
+                          ..onTap = () {
+                            launch(
+                                'https://curlmanitoba.org/news-2/news-archive/');
+                          },
+                      ),
+                      new TextSpan(
+                        text: ' for a history of published articles',
+                        style: new TextStyle(
+                            color: Colors.grey.shade800, fontSize: 17),
+                      ),
+                    ]),
+                    textAlign: TextAlign.center,
+                  ))
             ]),
           ));
         });
