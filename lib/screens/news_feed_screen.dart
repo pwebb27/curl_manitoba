@@ -127,3 +127,88 @@ buildNewsStoryItem(BuildContext context, NewsStory newsStory) {
         )),
   );
 }
+
+class PopUp extends StatelessWidget {
+  const PopUp({Key? key}) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return AlertDialog(
+      shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.all(Radius.circular(8.0))),
+      insetPadding: EdgeInsets.symmetric(horizontal: 20, vertical: 93),
+      content: Column(
+        children: <Widget>[
+          Align(
+            alignment: Alignment.topRight,
+            child: InkResponse(
+              onTap: () {
+                Navigator.of(context).pop();
+              },
+              child: SvgPicture.asset('assets/icons/xmark.svg', color: Colors.grey.shade800,height: 23,)
+            ),
+          ),
+          Text('Join our newsletter',
+              textAlign: TextAlign.center,
+              style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold)),
+          Padding(
+            padding: const EdgeInsets.only(top: 8.0),
+            child: Padding(
+              padding: const EdgeInsets.only(bottom: 8.0),
+              child: Text(
+                'CurlManitoba sends out an e-newsletter twice monthly during the curling season and monthly in the off season to help keep curlers, coaches, clubs and fans informed about programs, services and events happening within CurlManitoba.',
+                style: TextStyle(fontSize: 14),
+                textAlign: TextAlign.center,
+              ),
+            ),
+          ),
+          Form(
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              children: <Widget>[
+                NewsletterFormField('First name'),
+                NewsletterFormField('Last name'),
+                NewsletterFormField('Email address'),
+                Padding(
+                  padding: const EdgeInsets.only(bottom: 8.0, top: 5),
+                  child: ElevatedButton(onPressed: () {}, child: Text('Subscribe', style: TextStyle(fontSize: 18),)),
+                )
+              ],
+            ),
+          ),
+          Text(
+            'Your privacy is very important to CurlManitoba. Your information will not be shared and is only accessible to CurlManitoba.\n\nIf you have an event or story you would like to share, or would like to provide feedback for the newsletter, please email us at mca@curlmanitoba.org',
+            textAlign: TextAlign.center,
+            style: TextStyle(fontSize: 14),
+          ),
+        ],
+      ),
+    );
+  }
+}
+
+class NewsletterFormField extends StatelessWidget {
+  String hintText;
+
+  NewsletterFormField(this.hintText);
+  @override
+  Widget build(BuildContext context) {
+    return Padding(
+      padding: EdgeInsets.all(8.0),
+      child: Container(
+          decoration: BoxDecoration(
+             border: Border.all(width: 1),
+              borderRadius: BorderRadius.all(Radius.circular(5))),
+          height: 42,
+          alignment: Alignment.center,
+          child: Padding(padding: EdgeInsets.all(8), child:TextFormField(
+            textAlignVertical: TextAlignVertical.center,
+            decoration: InputDecoration(
+              border: InputBorder.none,
+                alignLabelWithHint: true,
+                isCollapsed: true,
+                hintText: hintText),
+          )),
+     ) );
+  }
+}
