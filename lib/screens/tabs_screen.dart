@@ -1,6 +1,5 @@
 import 'package:curl_manitoba/screens/news_feed_screen.dart';
 import 'package:curl_manitoba/screens/scores_screen.dart';
-import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:flutter/material.dart';
 
 import '../widgets/custom_app_bar.dart';
@@ -80,11 +79,11 @@ class _TabsScreenState extends State<TabsScreen> {
                 selectedItemColor: Theme.of(context).primaryColor,
                 onTap: _selectPage,
                 items: [
-                  _buildBottomNavigationBarItem('Home', 'home', 24.6),
-                  _buildBottomNavigationBarItem('e-Entry', 'add-group', 23),
+                  _buildBottomNavigationBarItem('Home', 'home', 23.5),
+                  _buildBottomNavigationBarItem('e-Entry', 'add-group', 24),
                   _buildBottomNavigationBarItem('News', 'newspaper', 23),
-                  _buildBottomNavigationBarItem('Scores', 'scoreboard', 23.5),
-                  _buildBottomNavigationBarItem('Calendar', 'calendar-days'),
+                  _buildBottomNavigationBarItem('Scores', 'scoreboard', 23),
+                  _buildBottomNavigationBarItem('Calendar', 'calendar-days', 25),
                 ],
               ),
             ),
