@@ -1,208 +1,169 @@
-import 'package:curl_manitoba/models/news_story.dart';
-import 'package:curl_manitoba/widgets/font_awesome_pro_icons.dart';
+import 'package:curl_manitoba/models/scores_competition.dart';
+import 'package:curl_manitoba/widgets/competition_tile.dart';
 import 'package:flutter/material.dart';
-import 'package:carousel_slider/carousel_slider.dart';
 
 import 'package:http/http.dart' as http;
-import 'package:html/dom.dart' as dom;
-import 'package:html/parser.dart' as parser;
-import 'package:intl/intl.dart';
-
-import 'dart:convert';
 
 import '../widgets/circular_progress_bar.dart';
 
 class ScoresScreen extends StatefulWidget {
-  const ScoresScreen({Key? key}) : super(key: key);
-
   @override
   _ScoresScreenState createState() => _ScoresScreenState();
 }
 
-List<String> competitionTags = [
+const List<String> _competitionTags = [
   'Under 18',
   'Mens',
   'Womens',
   'Mixed',
   'Mixed Doubles',
-  'U 21 Junior',
+  'U21 Junior',
   'Curling Club',
   'Seniors',
   'Masters',
   'Youth',
 ];
-List<dynamic> competitions = [];
-
-Future<List<dynamic>> _getDataFromWeb() async {
-  const competitionURL =
-      'https://legacy-curlingio.global.ssl.fastly.net/api/organizations/MTZFJ5miuro/competitions.json?search=&tags=&page=1';
-  const newsURL = 'https://curlmanitoba.org/news-2/news-archive/';
-  var responses = await Future.wait([
-    http.get(Uri.parse(competitionURL)),
-    http.get(Uri.parse(newsURL)),
-  ]);
-
-  buildContent(responses);
-  return responses;
-}
-
-buildCompetitionTile(BuildContext context,Map competition) {
-  return InkWell(
-    onTap:(){ Navigator.pushNamed(context, '/scoresWebPage', arguments: competition["id"].toString());},
-    child: Card(
-      shape: RoundedRectangleBorder(
-        side: BorderSide(color: Colors.grey.shade700, width: .3),
-        borderRadius: BorderRadius.circular(10),
-      ),
-      elevation: 1.5,
-      child: Padding(
-        padding: EdgeInsets.symmetric(vertical: 10, horizontal: 10),
-        child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
-          Text(competition["title"] + '\n', maxLines: 2,
-              style: TextStyle(fontWeight: FontWeight.bold, fontSize: 15)),
-          Padding(
-            padding: const EdgeInsets.only(top: 7),
-            child:
-                Row(mainAxisAlignment: MainAxisAlignment.spaceBetween, children: [
-              Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
-                Row(children: [
-                  Padding(
-                    padding: const EdgeInsets.only(bottom: 1.5),
-                    child: Icon(FontAwesomePro.calendar_range,
-                        size: 10, color: Colors.grey.shade700),
-                  ),
-                  Padding(
-                    padding: const EdgeInsets.only(left: 5),
-                    child: Text(
-                      DateFormat('LLL d, y').format(
-                            DateTime.parse(competition['starts_on']),
-                          ) +
-                          ' - ' +
-                          DateFormat('LLL d, y')
-                              .format(DateTime.parse(competition['ends_on'])),
-                      style: TextStyle(fontSize: 12, color: Colors.grey.shade700),
-                    ),
-                  ),
-                ]),
-                Row(children: [
-                  Padding(
-                    padding: const EdgeInsets.only(bottom: 1.5),
-                    child: Icon(FontAwesomePro.location_dot,
-                        size: 10, color: Colors.grey.shade700),
-                  ),
-                  Padding(
-                      padding: const EdgeInsets.only(left: 5),
-                      child: Text(getVenue(competition),
-                          style: TextStyle(
-                              fontSize: 12, color: Colors.grey.shade700)))
-                ])
-              ]),
-              Image.network(
-                competition["logo"],
-                height: 30,
-              ),
-            ]),
-          ),
-        ]),
-      ),
-    ),
-  );
-}
-
-String getVenue(Map competition) {
-  if (competition["venue"] != null && competition["venue"] != "")
-    return competition["venue"];
-
-  String indexOfString = 'played at the ';
-
-  if ((competition["notes"] as String).lastIndexOf(indexOfString) != -1)
-    return (competition["notes"] as String).substring(
-        (competition["notes"] as String).lastIndexOf(indexOfString) +
-            indexOfString.length,
-        (competition["notes"] as String).length);
-
-  indexOfString = 'played at ';
-
-  if ((competition["notes"] as String).lastIndexOf(indexOfString) != -1)
-    return (competition["notes"] as String).substring(
-        (competition["notes"] as String).lastIndexOf(indexOfString) +
-            indexOfString.length,
-        (competition["notes"] as String).length);
-
-  indexOfString = 'hosted by ';
-
-  if ((competition["notes"] as String).lastIndexOf(indexOfString) != -1)
-    return (competition["notes"] as String).substring(
-        (competition["notes"] as String).lastIndexOf(indexOfString) +
-            indexOfString.length,
-        (competition["notes"] as String).length);
-
-  return 'Location TBA';
-}
-
-void buildContent(List<dynamic> responses) {
-  final competitionsBody = responses[0].body;
-
-  Map<String, dynamic> jsonMap = json.decode(competitionsBody);
-  competitions = jsonMap["paged_competitions"]["competitions"];
-}
+late List<dynamic> loadedCompetitions;
 
 class _ScoresScreenState extends State<ScoresScreen> {
+  final ScrollController _scrollController = ScrollController();
+  late Future<http.Response> competitionDataFuture;
+  late int page;
+  bool hasMore = true;
+  bool isLoading = false;
+  late List<scoresCompetition> newCompetitions;
+
   static const routeName = '/competitions';
-  bool selected = false;
+  late int defaultChoiceIndex;
 
   filterCompetitions() {}
 
   @override
   void initState() {
-    _getDataFromWeb();
+    defaultChoiceIndex = -1;
+    loadedCompetitions = [];
+    page = 1;
+    competitionDataFuture = scoresCompetition.getCompetitionData('', page);
+    competitionDataFuture.then((value) {
+      newCompetitions = scoresCompetition.parseCompetitionData(value);
+      loadedCompetitions.addAll(newCompetitions);
+    });
+
+    _scrollController.addListener(() {
+      if (_scrollController.position.pixels >=
+          _scrollController.position.maxScrollExtent) {
+        fetch();
+      }
+    });
+
+    super.initState();
+  }
+
+  @override
+  void dispose() {
+    super.dispose();
+    _scrollController.dispose();
+  }
+
+  Future<void> fetch() async {
+    List<scoresCompetition> newCompetitions = [];
+    if (isLoading) return;
+    isLoading = true;
+    http.Response response =
+        await scoresCompetition.getCompetitionData('', page);
+
+    newCompetitions = scoresCompetition.parseCompetitionData(response);
+
+    setState(() {
+      page++;
+      isLoading = false;
+      if (newCompetitions.length < 10) hasMore = false;
+
+      loadedCompetitions.addAll(newCompetitions);
+    });
   }
 
   @override
   Widget build(BuildContext context) {
-    return Column(children: [
-      Padding(
-          padding:
-              const EdgeInsets.only(top: 17, bottom: 12, left: 11, right: 11),
-          child: Wrap(
-              runSpacing: 10,
-              alignment: WrapAlignment.center,
-              spacing: 15,
-              children: [
-                for (String tag in competitionTags)
-                  ChoiceChip(
-                      selected: false,
-                      selectedColor: Theme.of(context).primaryColor,
-                      materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
-                      label: Text(tag),
-                      onSelected: (bool value) {
-                        selected = value;
-                      }),
-              ])),
-      Divider(thickness: 1, height: 1),
+    return CustomScrollView(controller: _scrollController, slivers: [
+      SliverAppBar(
+        backgroundColor: Theme.of(context).scaffoldBackgroundColor,
+        automaticallyImplyLeading: false,
+        expandedHeight: 145,
+        floating: true,
+        actionsIconTheme: IconThemeData(opacity: 0.0),
+              flexibleSpace: Stack(
+                children: <Widget>[
+                  FlexibleSpaceBar(background: Positioned.fill(
+                      child: buildWrap(),
+                  
+              )),],
+              ),),
       FutureBuilder(
-          future: _getDataFromWeb(),
+          future: competitionDataFuture,
           builder: (context, snapshot) {
-            if (snapshot.data == null) {
-              return Center(child: CircularProgressBar());
-            } else
-              buildContent(snapshot.data as List<dynamic>);
-            return Expanded(
-              child: SingleChildScrollView(
-                physics: ScrollPhysics(),
-                child: Padding(
-                  padding: const EdgeInsets.only(top: 7, left: 5, right: 5),
-                  child: ListView.builder(
-                      physics: NeverScrollableScrollPhysics(),
-                      shrinkWrap: true,
-                      itemBuilder: (ctx, index) {
-                        return buildCompetitionTile(context,competitions[index]);
-                      },
-                      itemCount: 8),
+            if (snapshot.connectionState == ConnectionState.waiting)
+              return SliverFillRemaining(
+                  child: Center(child: CircularProgressBar()));
+
+            return SliverList(
+                delegate: SliverChildBuilderDelegate(
+              ((context, index) {
+                if (index < loadedCompetitions.length)
+                  return CompetitionTile(loadedCompetitions[index]);
+                else
+                  return Padding(
+                      padding: EdgeInsets.symmetric(vertical: 32),
+                      child: hasMore
+                          ? Center(child: CircularProgressBar())
+                          : Text('No more data to load'));
+              }),
+              childCount: loadedCompetitions.length + 1,
+            ));
+          })
+    ]);
+  }
+
+  Widget buildWrap() {
+    return StatefulBuilder(
+        builder: (context, setState) => Column(children: [
+              Material(
+                elevation: 1,
+                child: Container(
+                  height: 145,
+                  width: double.infinity,
+                  color: Theme.of(context).scaffoldBackgroundColor,
+                  child: Padding(
+                      padding: const EdgeInsets.only(
+                          top: 17, bottom: 15, left: 11, right: 11),
+                      child: Wrap(
+                          runSpacing: 10,
+                          alignment: WrapAlignment.center,
+                          spacing: 15,
+                          children: _competitionTags
+                              .asMap()
+                              .entries
+                              .map((entry) => ChoiceChip(
+                                  selected: defaultChoiceIndex == entry.key,
+                                  selectedColor: Colors.grey.shade500,
+                                  materialTapTargetSize:
+                                      MaterialTapTargetSize.shrinkWrap,
+                                  label: Text(entry.value),
+                                  onSelected: (bool isSelected) {
+                                    setState(() {
+                                      defaultChoiceIndex =
+                                          (isSelected ? entry.key : null)!;
+                                      competitionDataFuture = scoresCompetition
+                                          .getCompetitionData(entry.value
+                                              .replaceAll(' ', '%20'));
+                                      competitionDataFuture.then((value) =>
+                                          loadedCompetitions = scoresCompetition
+                                              .parseCompetitionData(value));
+                                    });
+                                  }))
+                              .toList())),
                 ),
               ),
-            );
-          }),
-    ]);
+            ]));
   }
 }
