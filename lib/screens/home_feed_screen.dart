@@ -178,20 +178,96 @@ class _HomeFeedScreenState extends State<HomeFeedScreen> {
                     buildSection('Latest Competitions',
                         buildCompetitionSection(competitions)),
                     Divider(
-                        height: 5, thickness: 5, color: Colors.grey.shade500),
+                                      height: 5,
+                                      thickness: 5,
+                                      color: Colors.grey.shade500),
                     buildSection(
-                        'Latest News', buildNewsStorySegment(newsStories, context)),
+                                      'Latest News',
+                                      buildNewsStorySegment(
+                                          newsStories, context)),
                     Divider(
-                        height: 5, thickness: 5, color: Colors.grey.shade500),
+                                      height: 5,
+                                      thickness: 5,
+                                      color: Colors.grey.shade500),
+                                  buildSection(
+                                      'Upcoming Events', buildEventsSection()),
+                                  Divider(
+                                      height: 5,
+                                      thickness: 5,
+                                      color: Colors.grey.shade500),
                     buildSection(
                         'Events, Programs & News',
                         buildEventsProgramsAndNewsSection(
-                            EventsProgramsAndNewsData))
+                                          EventsProgramsAndNewsData)),
                   ]),
-            ),
+                          ]))),
+                    ])),
           );
         });
   }
+}
+
+buildEventsSection() {
+  return ListView.builder(
+    padding: EdgeInsets.zero,
+      shrinkWrap: true,
+      physics: NeverScrollableScrollPhysics(),
+      itemCount: 4,
+      itemBuilder: ((context, index) => buildEvent()));
+}
+
+buildEvent() {
+  return Padding(
+    padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 5),
+    child: Column(children: [
+      ExpansionTile(
+        tilePadding: EdgeInsets.only(left: 5),
+        leading: Container(
+          height: 60,
+          width: 60,
+          decoration: BoxDecoration(
+              border: Border.all(width: 1),
+              borderRadius: BorderRadius.circular(3)),
+          child: Container(
+              child: Column(children: [
+            Container(
+              alignment: Alignment.center,
+              width: double.infinity,
+              child: Padding(
+                padding: const EdgeInsets.all(2),
+                child: Text('MAR',
+                    style:
+                        TextStyle(fontSize: 11.5, fontWeight: FontWeight.w500)),
+              ),
+              color: Colors.grey,
+            ),
+            Column(children: [
+              Padding(
+                padding: const EdgeInsets.all(0),
+                child: Text(
+                  '22',
+                  style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+                ),
+              ),
+              Text('Wed', style: TextStyle(fontSize: 8))
+            ])
+          ])),
+        ),
+        title: Text(
+          'Souris 22nd Annual 3rd times a charm “mini” Survivor Bonspiel',
+          style: TextStyle(fontWeight: FontWeight.bold),
+        ),
+        subtitle: Text('April 28, 2022 - April 29, 2022'),
+        children: [
+          Padding(
+            padding: const EdgeInsets.all(8.0),
+            child: Text(
+                'Entry Fee: Mens & Ladies & Masters Mens (minimum combined age: 240) - 160.00 Mens/Ladies - Curl evenings and weekend starting Wednesday/ThursdayMasters Mens - Curl Monday and Tuesday Register and pay online at souriscurling.com All games will be in the curling club this year Mail entries to: Survivor Bonspiel, Box 771, Souris, MB R0K 2C0 Cheques payable to: Souris Curling Club Survivor Have questions? Mens - 204-483-3669 OR Ladies - Karen at 204-483-3534 Only entries that are accompanied by a cheque or online payment guarantee a spot OR souriscurling@mymts.net'),
+          )
+        ],
+      ),
+    ]),
+  );
 }
 
 buildEventsProgramsAndNewsSection(Map<String, Icon> EventsProgramsAndNewsData) {
