@@ -152,16 +152,19 @@ class _HomeFeedScreenState extends State<HomeFeedScreen> {
         builder: (context, snapshot) {
           if (snapshot.data == null) {
             return CircularProgressBar();
-          } else
-            buildContent(snapshot.data as List<dynamic>, context);
-
-          return SingleChildScrollView(
-            child: Padding(
+          return SafeArea(
+            top: false,
+            bottom: false,
+            child: Builder(
+                builder: (context) => CustomScrollView(slivers: [
+                      SliverPadding(
               padding: const EdgeInsets.only(top: 2),
-              child: Column(
+                          sliver: SliverList(
+                              delegate: SliverChildListDelegate([
+                            Column(
                   mainAxisAlignment: MainAxisAlignment.start,
                   crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
+                                children: <Widget>[
                     CarouselSlider(
                       items: itemss,
                       options: CarouselOptions(
@@ -285,34 +288,31 @@ buildEventsProgramsAndNewsSection(Map<String, Icon> EventsProgramsAndNewsData) {
             Flexible(
                 child: Text(e.key,
                     style:
-                        TextStyle(fontSize: 14, fontWeight: FontWeight.w500)))
+                        TextStyle(fontSize: 15.5, fontWeight: FontWeight.w500)))
           ]),
         )
     ]),
   );
 }
 
-
-Widget buildNewsStorySegment(List<NewsStory> newsStories, BuildContext context) {
+Widget buildNewsStorySegment(
+    List<NewsStory> newsStories, BuildContext context) {
   return Padding(
     padding: EdgeInsets.symmetric(horizontal: 3.5),
     child: GridView.count(
+      padding: EdgeInsets.zero,
         shrinkWrap: true,
         childAspectRatio: 13 / 16,
         physics: NeverScrollableScrollPhysics(),
         crossAxisCount: 2,
-        children: List.generate(newsStories.length, (index) {
+        children: List.generate(4, (index) {
           return buildNewsStoryItem(newsStories[index], context);
         })),
   );
 }
 
 Widget buildSection(String sectionName, Widget section) {
-  return Padding(
-      padding: EdgeInsets.only(
-        bottom: 10,
-      ),
-      child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
+  return Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
         Padding(
           padding: const EdgeInsets.only(top: 11.5, left: 10.0, bottom: 2),
           child: Text(
@@ -324,7 +324,7 @@ Widget buildSection(String sectionName, Widget section) {
           ),
         ),
         section
-      ]));
+  ]);
 }
 
 void selectNewsStory(BuildContext context, NewsStory newsStory) {
@@ -354,7 +354,8 @@ Widget buildNewsStoryItem(NewsStory newsStory, BuildContext context) {
                 ),
               )),
               Padding(
-                  padding: EdgeInsets.only(top:8, bottom:10, left: 9, right: 9),
+                  padding:
+                      EdgeInsets.only(top: 8, bottom: 10, left: 9, right: 9),
                   child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
