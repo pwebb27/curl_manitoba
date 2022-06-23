@@ -1,17 +1,12 @@
+import 'package:curl_manitoba/models/calendar_event.dart';
 import 'package:curl_manitoba/models/news_story.dart';
-import 'package:curl_manitoba/screens/scores_screen.dart';
+import 'package:curl_manitoba/models/scores_competition.dart';
+import 'package:curl_manitoba/widgets/competition_tile.dart';
 import 'package:curl_manitoba/widgets/font_awesome_pro_icons.dart';
 import 'package:flutter/material.dart';
 import 'package:carousel_slider/carousel_slider.dart';
-import 'package:flutter/rendering.dart';
-import 'scores_screen.dart';
 
 import 'package:http/http.dart' as http;
-import 'package:html/dom.dart' as dom;
-import 'package:html/parser.dart' as parser;
-import 'package:intl/intl.dart';
-
-import 'dart:convert';
 
 import '../widgets/circular_progress_bar.dart';
 
@@ -55,36 +50,35 @@ List<Widget> itemss = imgList
 List<Widget> competitionItems = [];
 
 class _HomeFeedScreenState extends State<HomeFeedScreen> {
-  List<dynamic> competitions = [];
-  List<NewsStory> newsStories = [];
+  late List<scoresCompetition> competitions;
+  late List<NewsStory> newsStories;
+  late Map<DateTime, List<CalendarEvent>> calendarEvents;
 
-  Future<List<dynamic>> _getDataFromWeb() async {
-    const competitionURL =
-        'https://legacy-curlingio.global.ssl.fastly.net/api/organizations/MTZFJ5miuro/competitions.json?search=&tags=&page=1';
-    const newsURL = 'https://curlmanitoba.org/wp-json/wp/v2/posts?_fields=id,title,date,author&per_page=4';
-;
+  late Future<List<http.Response>> homeFeedFuture;
+
+  Future<List<http.Response>> _getDataFromWeb() async {
     var responses = await Future.wait([
-      http.get(Uri.parse(competitionURL)),
-      http.get(Uri.parse(newsURL)),
-      
+      scoresCompetition.getCompetitionData(),
+      NewsStory.getNewsData(6),
+      CalendarEvent.getCalendarData(),
     ]);
 
     return responses;
   }
 
   buildCompetitionSection(
-    List<dynamic> competitions,
+    List<scoresCompetition> competitions,
   ) {
     List<Widget> competitionItems = [];
     for (int i = 0; i < 6; i++) {
-      competitionItems.add(ListView(children: [
-        buildCompetitionTile(context,competitions[i++]),
-        buildCompetitionTile(context,competitions[i])
+      competitionItems.add(ListView(physics: NeverScrollableScrollPhysics(), padding: EdgeInsets.zero, children: [
+        CompetitionTile(competitions[i++]),
+        CompetitionTile(competitions[i])
       ]));
     }
 
     return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 5),
+      padding: const EdgeInsets.only(left: 5, right: 5, bottom: 5),
       child: Column(children: [
         CarouselSlider(
           items: competitionItems,
@@ -123,72 +117,65 @@ class _HomeFeedScreenState extends State<HomeFeedScreen> {
     );
   }
 
-  void buildContent(List<dynamic> responses, BuildContext context) {
-    final competitionsBody = responses[0].body;
-
-    Map<String, dynamic> jsonMap = json.decode(competitionsBody);
-    competitions = jsonMap["paged_competitions"]["competitions"];
-
-    final posts = json.decode(responses[1].body);
-
-    posts.forEach((post) { 
-      newsStories.add(NewsStory.fromJson(post));
-    });;
-  }
-
   int _currentBannerIndex = 0;
   int _currentCompetitionCarouselIndex = 0;
   final CarouselController _controller = CarouselController();
 
   @override
   void initState() {
-    _getDataFromWeb();
+    homeFeedFuture = _getDataFromWeb();
+    homeFeedFuture.then((responses) {
+      competitions = scoresCompetition.parseCompetitionData(responses[0]);
+      newsStories = NewsStory.parseNewsData(responses[1]);
+      calendarEvents = CalendarEvent.parseCalendarData(responses[2]);
+    });
   }
 
   @override
   Widget build(BuildContext context) {
     return FutureBuilder(
-        future: _getDataFromWeb(),
+        future: homeFeedFuture,
         builder: (context, snapshot) {
-          if (snapshot.data == null) {
+          if (!snapshot.hasData) {
             return CircularProgressBar();
+          }
           return SafeArea(
             top: false,
             bottom: false,
             child: Builder(
                 builder: (context) => CustomScrollView(slivers: [
                       SliverPadding(
-              padding: const EdgeInsets.only(top: 2),
+                          padding: const EdgeInsets.only(top: 2),
                           sliver: SliverList(
                               delegate: SliverChildListDelegate([
                             Column(
-                  mainAxisAlignment: MainAxisAlignment.start,
-                  crossAxisAlignment: CrossAxisAlignment.start,
+                                mainAxisAlignment: MainAxisAlignment.start,
+                                crossAxisAlignment: CrossAxisAlignment.start,
                                 children: <Widget>[
-                    CarouselSlider(
-                      items: itemss,
-                      options: CarouselOptions(
-                          autoPlayInterval: Duration(seconds: 5),
-                          height: 194,
-                          autoPlay: true,
-                          viewportFraction: 1,
-                          onPageChanged: (index, reason) {
-                            setState(() {
-                              _currentBannerIndex = index;
-                            });
-                          }),
-                    ),
-                    buildSection('Latest Competitions',
-                        buildCompetitionSection(competitions)),
-                    Divider(
+                                  CarouselSlider(
+                                    items: itemss,
+                                    options: CarouselOptions(
+                                        autoPlayInterval: Duration(seconds: 5),
+                                        height: 194,
+                                        autoPlay: true,
+                                        viewportFraction: 1,
+                                        onPageChanged: (index, reason) {
+                                          setState(() {
+                                            _currentBannerIndex = index;
+                                          });
+                                        }),
+                                  ),
+                                  buildSection('Latest Competitions',
+                                      buildCompetitionSection(competitions)),
+                                  Divider(
                                       height: 5,
                                       thickness: 5,
                                       color: Colors.grey.shade500),
-                    buildSection(
+                                  buildSection(
                                       'Latest News',
                                       buildNewsStorySegment(
                                           newsStories, context)),
-                    Divider(
+                                  Divider(
                                       height: 5,
                                       thickness: 5,
                                       color: Colors.grey.shade500),
@@ -198,11 +185,11 @@ class _HomeFeedScreenState extends State<HomeFeedScreen> {
                                       height: 5,
                                       thickness: 5,
                                       color: Colors.grey.shade500),
-                    buildSection(
-                        'Events, Programs & News',
-                        buildEventsProgramsAndNewsSection(
+                                  buildSection(
+                                      'Events, Programs & News',
+                                      buildEventsProgramsAndNewsSection(
                                           EventsProgramsAndNewsData)),
-                  ]),
+                                ]),
                           ]))),
                     ])),
           );
@@ -313,17 +300,17 @@ Widget buildNewsStorySegment(
 
 Widget buildSection(String sectionName, Widget section) {
   return Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
-        Padding(
-          padding: const EdgeInsets.only(top: 11.5, left: 10.0, bottom: 2),
-          child: Text(
-            sectionName,
-            style: TextStyle(
-              fontSize: 19.5,
-              fontWeight: FontWeight.w700,
-            ),
-          ),
+    Padding(
+      padding: const EdgeInsets.only(top: 11.5, left: 10.0, bottom: 2),
+      child: Text(
+        sectionName,
+        style: TextStyle(
+          fontSize: 19.5,
+          fontWeight: FontWeight.w700,
         ),
-        section
+      ),
+    ),
+    section
   ]);
 }
 
