@@ -1,4 +1,6 @@
+import 'package:curl_manitoba/models/scores_competition.dart';
 import 'package:curl_manitoba/screens/home_feed_screen.dart';
+import 'package:curl_manitoba/screens/scores_screen.dart';
 import 'package:curl_manitoba/widgets/font_awesome_pro_icons.dart';
 import 'package:flutter/material.dart';
 
@@ -6,6 +8,9 @@ import '../screens/news_feed_screen.dart';
 import '../screens/twitter_feed_screen.dart';
 
 class HomeScreen extends StatefulWidget with PreferredSizeWidget {
+  List<scoresCompetition> loadedCompetitions;
+  HomeScreen(this.loadedCompetitions);
+
   @override
   _HomeScreenState createState() => _HomeScreenState();
   @override
@@ -14,9 +19,14 @@ class HomeScreen extends StatefulWidget with PreferredSizeWidget {
 
 class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
   late final TabController _tabController;
+late List<scoresCompetition> loadedCompetitions;
+
 
   void initState() {
+    loadedCompetitions = widget.loadedCompetitions;
+    
     super.initState();
+  
     _tabController = TabController(length: 2, vsync: this);
   }
 
@@ -26,36 +36,33 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
         body: Stack(children: <Widget>[
       NestedScrollView(
         floatHeaderSlivers: true,
-        
         headerSliverBuilder: ((context, innerBoxIsScrolled) => [
               SliverAppBar(
                 pinned: false,
                 bottom: PreferredSize(
-                      preferredSize: Size.fromHeight(38),
-                      child: Container(
-                          height: 39,
-                          color: Colors.white,
-                          child: TabBar(
-                            indicatorWeight: 3.5,
-                            labelColor: Theme.of(context).primaryColor,
-                            unselectedLabelColor: Colors.grey.shade700,
-                            unselectedLabelStyle:
-                                TextStyle(fontWeight: FontWeight.w600),
-                            labelStyle: TextStyle(
-                                fontWeight: FontWeight.w700, fontSize: 12),
-                            indicatorColor: Color.fromRGBO(111, 17, 0, 1),
-                            tabs: <Widget>[
-                              Tab(child: Text('HOME')),
-                              Tab(child: Text('SOCIAL MEDIA')),
-                            ],
-                          )),
-                    ),
-                  ),
-                
-              
+                  preferredSize: Size.fromHeight(38),
+                  child: Container(
+                      height: 39,
+                      color: Colors.white,
+                      child: TabBar(
+                        indicatorWeight: 3.5,
+                        labelColor: Theme.of(context).primaryColor,
+                        unselectedLabelColor: Colors.grey.shade700,
+                        unselectedLabelStyle:
+                            TextStyle(fontWeight: FontWeight.w600),
+                        labelStyle: TextStyle(
+                            fontWeight: FontWeight.w700, fontSize: 12),
+                        indicatorColor: Color.fromRGBO(111, 17, 0, 1),
+                        tabs: <Widget>[
+                          Tab(child: Text('HOME')),
+                          Tab(child: Text('SOCIAL MEDIA')),
+                        ],
+                      )),
+                ),
+              ),
             ]),
         body: TabBarView(
-          children: [HomeFeedScreen(), TwitterFeedScreen()],
+          children: [HomeFeedScreen(loadedCompetitions), TwitterFeedScreen()],
         ),
       ),
       Positioned(

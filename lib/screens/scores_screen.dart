@@ -7,6 +7,9 @@ import 'package:http/http.dart' as http;
 import '../widgets/circular_progress_bar.dart';
 
 class ScoresScreen extends StatefulWidget {
+  List<scoresCompetition> loadedCompetitions;
+  ScoresScreen(this.loadedCompetitions);
+
   @override
   _ScoresScreenState createState() => _ScoresScreenState();
 }
@@ -23,9 +26,10 @@ const List<String> _competitionTags = [
   'Masters',
   'Youth',
 ];
-late List<dynamic> loadedCompetitions;
 
 class _ScoresScreenState extends State<ScoresScreen> {
+late List<dynamic> loadedCompetitions;
+
   final ScrollController _scrollController = ScrollController();
   late Future<http.Response> competitionDataFuture;
   late int page;
@@ -41,13 +45,9 @@ class _ScoresScreenState extends State<ScoresScreen> {
   @override
   void initState() {
     defaultChoiceIndex = -1;
-    loadedCompetitions = [];
+    loadedCompetitions = widget.loadedCompetitions;
     page = 1;
     competitionDataFuture = scoresCompetition.getCompetitionData('', page);
-    competitionDataFuture.then((value) {
-      newCompetitions = scoresCompetition.parseCompetitionData(value);
-      loadedCompetitions.addAll(newCompetitions);
-    });
 
     _scrollController.addListener(() {
       if (_scrollController.position.pixels >=
@@ -92,35 +92,29 @@ class _ScoresScreenState extends State<ScoresScreen> {
         expandedHeight: 145,
         floating: true,
         actionsIconTheme: IconThemeData(opacity: 0.0),
-              flexibleSpace: Stack(
-                children: <Widget>[
-                  FlexibleSpaceBar(background: Positioned.fill(
-                      child: buildWrap(),
-                  
-              )),],
-              ),),
-      FutureBuilder(
-          future: competitionDataFuture,
-          builder: (context, snapshot) {
-            if (snapshot.connectionState == ConnectionState.waiting)
-              return SliverFillRemaining(
-                  child: Center(child: CircularProgressBar()));
-
-            return SliverList(
-                delegate: SliverChildBuilderDelegate(
-              ((context, index) {
-                if (index < loadedCompetitions.length)
-                  return CompetitionTile(loadedCompetitions[index]);
-                else
-                  return Padding(
-                      padding: EdgeInsets.symmetric(vertical: 32),
-                      child: hasMore
-                          ? Center(child: CircularProgressBar())
-                          : Text('No more data to load'));
-              }),
-              childCount: loadedCompetitions.length + 1,
-            ));
-          })
+        flexibleSpace: Stack(
+          children: <Widget>[
+            FlexibleSpaceBar(
+                background: Positioned.fill(
+              child: buildWrap(),
+            )),
+          ],
+        ),
+      ),
+      SliverList(
+          delegate: SliverChildBuilderDelegate(
+        ((context, index) {
+          if (index < loadedCompetitions.length)
+            return CompetitionTile(loadedCompetitions[index]);
+          else
+            return Padding(
+                padding: EdgeInsets.symmetric(vertical: 32),
+                child: hasMore
+                    ? Center(child: CircularProgressBar())
+                    : Text('No more data to load'));
+        }),
+        childCount: loadedCompetitions.length + 1,
+      ))
     ]);
   }
 

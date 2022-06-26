@@ -11,11 +11,14 @@ import 'package:http/http.dart' as http;
 import '../widgets/circular_progress_bar.dart';
 
 class HomeFeedScreen extends StatefulWidget {
+  List<scoresCompetition> loadedCompetitions;
+  HomeFeedScreen(this.loadedCompetitions);
+
   @override
   State<HomeFeedScreen> createState() => _HomeFeedScreenState();
 }
 
-final List<String> imgList = [
+const List<String> imgList = [
   'assets/images/carousel-image-1.png',
   'assets/images/carousel-image-2.png',
   'assets/images/carousel-image-3.png',
@@ -50,7 +53,7 @@ List<Widget> itemss = imgList
 List<Widget> competitionItems = [];
 
 class _HomeFeedScreenState extends State<HomeFeedScreen> {
-  late List<scoresCompetition> competitions;
+  late List<scoresCompetition> loadedCompetitions;
   late List<NewsStory> newsStories;
   late Map<DateTime, List<CalendarEvent>> calendarEvents;
 
@@ -58,7 +61,6 @@ class _HomeFeedScreenState extends State<HomeFeedScreen> {
 
   Future<List<http.Response>> _getDataFromWeb() async {
     var responses = await Future.wait([
-      scoresCompetition.getCompetitionData(),
       NewsStory.getNewsData(6),
       CalendarEvent.getCalendarData(),
     ]);
@@ -71,10 +73,13 @@ class _HomeFeedScreenState extends State<HomeFeedScreen> {
   ) {
     List<Widget> competitionItems = [];
     for (int i = 0; i < 6; i++) {
-      competitionItems.add(ListView(physics: NeverScrollableScrollPhysics(), padding: EdgeInsets.zero, children: [
-        CompetitionTile(competitions[i++]),
-        CompetitionTile(competitions[i])
-      ]));
+      competitionItems.add(ListView(
+          physics: NeverScrollableScrollPhysics(),
+          padding: EdgeInsets.zero,
+          children: [
+            CompetitionTile(competitions[i++]),
+            CompetitionTile(competitions[i])
+          ]));
     }
 
     return Padding(
@@ -123,12 +128,14 @@ class _HomeFeedScreenState extends State<HomeFeedScreen> {
 
   @override
   void initState() {
+    loadedCompetitions = widget.loadedCompetitions;
     homeFeedFuture = _getDataFromWeb();
+
     homeFeedFuture.then((responses) {
-      competitions = scoresCompetition.parseCompetitionData(responses[0]);
-      newsStories = NewsStory.parseNewsData(responses[1]);
-      calendarEvents = CalendarEvent.parseCalendarData(responses[2]);
+      newsStories = NewsStory.parseNewsData(responses[0]);
+      calendarEvents = CalendarEvent.parseCalendarData(responses[1]);
     });
+    super.initState();
   }
 
   @override
@@ -165,8 +172,10 @@ class _HomeFeedScreenState extends State<HomeFeedScreen> {
                                           });
                                         }),
                                   ),
-                                  buildSection('Latest Competitions',
-                                      buildCompetitionSection(competitions)),
+                                  buildSection(
+                                      'Latest Competitions',
+                                      buildCompetitionSection(
+                                          loadedCompetitions)),
                                   Divider(
                                       height: 5,
                                       thickness: 5,
@@ -199,7 +208,7 @@ class _HomeFeedScreenState extends State<HomeFeedScreen> {
 
 buildEventsSection() {
   return ListView.builder(
-    padding: EdgeInsets.zero,
+      padding: EdgeInsets.zero,
       shrinkWrap: true,
       physics: NeverScrollableScrollPhysics(),
       itemCount: 4,
@@ -287,7 +296,7 @@ Widget buildNewsStorySegment(
   return Padding(
     padding: EdgeInsets.symmetric(horizontal: 3.5),
     child: GridView.count(
-      padding: EdgeInsets.zero,
+        padding: EdgeInsets.zero,
         shrinkWrap: true,
         childAspectRatio: 13 / 16,
         physics: NeverScrollableScrollPhysics(),

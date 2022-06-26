@@ -1,7 +1,9 @@
+import 'package:curl_manitoba/models/scores_competition.dart';
 import 'package:curl_manitoba/screens/news_feed_screen.dart';
 import 'package:curl_manitoba/screens/scores_screen.dart';
+import 'package:curl_manitoba/widgets/circular_progress_bar.dart';
 import 'package:flutter/material.dart';
-
+import 'package:http/http.dart' as http;
 import '../widgets/custom_app_bar.dart';
 import '../widgets/font_awesome_pro_icons.dart';
 import '../widgets/main_drawer.dart';
@@ -16,19 +18,32 @@ class TabsScreen extends StatefulWidget {
 }
 
 class _TabsScreenState extends State<TabsScreen> {
-  final List<Widget> _pages = [
-    HomeScreen(),
-    eEntryScreen(),
-    NewsFeedScreen(),
-    ScoresScreen(),
-    CalendarScreen(),
-  ];
+  late Future<http.Response> competitionDataFuture;
+  late List<scoresCompetition> loadedCompetitions;
+  late final List<Widget> _pages;
+
   int _selectedPageIndex = 0;
 
   void _selectPage(int index) {
     setState(() {
       _selectedPageIndex = index;
     });
+  }
+
+  void initState() {
+    competitionDataFuture = scoresCompetition.getCompetitionData();
+    competitionDataFuture.then((data) {
+      loadedCompetitions = scoresCompetition.parseCompetitionData(data);
+      _pages = [
+        HomeScreen(loadedCompetitions),
+        eEntryScreen(),
+        NewsFeedScreen(),
+        ScoresScreen(loadedCompetitions),
+        CalendarScreen(),
+      ];
+    });
+
+    super.initState();
   }
 
   _buildBottomNavigationBarItem(String title, String iconName,
@@ -47,10 +62,17 @@ class _TabsScreenState extends State<TabsScreen> {
 
   @override
   Widget build(BuildContext context) {
+    return FutureBuilder(
+        future: competitionDataFuture,
+        builder: (context, snapshot) {
+          if (snapshot.connectionState == ConnectionState.waiting)
+            return Scaffold(body: CircularProgressBar());
+
     return DefaultTabController(
         length: 2,
         child: Scaffold(
-          appBar: (_selectedPageIndex!=0)? CustomAppBar(
+                appBar: (_selectedPageIndex != 0)
+                    ? CustomAppBar(
               context,
               (_selectedPageIndex == 1)
                   ? 'Electronic Entry'
@@ -61,8 +83,8 @@ class _TabsScreenState extends State<TabsScreen> {
                           : (_selectedPageIndex == 4)
                               ? 'Calendar of Events'
                               : "",
-              
-              (_selectedPageIndex == 3) ? true : false):null,
+                        (_selectedPageIndex == 3) ? true : false)
+                    : null,
           drawer: MainDrawer(),
           body: _pages[_selectedPageIndex],
           bottomNavigationBar: SizedBox(
@@ -70,7 +92,8 @@ class _TabsScreenState extends State<TabsScreen> {
             child: Container(
               decoration: BoxDecoration(
                   border: Border(
-                      top: BorderSide(color: Colors.grey.shade700, width: .4))),
+                            top: BorderSide(
+                                color: Colors.grey.shade700, width: .4))),
               child: BottomNavigationBar(
                 elevation: 10,
                 currentIndex: _selectedPageIndex,
