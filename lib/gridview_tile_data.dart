@@ -28,7 +28,7 @@ List<gridViewTile> DEVELOPMENT_GRID_VIEW_TILES_DATA = [
 ];
 
 List<gridViewTile> HIGH_PERFORMANCE_GRID_VIEW_TILES_DATA = [
-  gridViewTile('HP Webinars', 'user-headset.svg','rocks.PNG'),
+  gridViewTile('HP Webinars', 'user-headset.svg','hp-webinars.PNG'),
   gridViewTile('Junior Development', 'people-gear.svg','junior-development.PNG',35, 35),
   gridViewTile('Junior HP Programs', 'people-gauge-max.svg','junior-high-performance-programs.PNG',35,35),
   gridViewTile('Junior ID Camps', 'id-card.svg' ,'rocks.PNG'),
