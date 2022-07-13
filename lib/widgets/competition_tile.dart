@@ -58,11 +58,10 @@ class CompetitionTile extends StatelessWidget {
                                 ),
                               ]),
                               Row(children: [
-                                Padding(
-                                  padding: const EdgeInsets.only(bottom: 1.5),
-                                  child: Icon(FontAwesomePro.location_dot,
-                                      size: 10, color: Colors.grey.shade700),
-                                ),
+                                    SvgPicture.asset(
+                                        'assets/icons/landmark.svg',
+                                        height: 10,
+                                        color: Colors.grey.shade700),
                                 Padding(
                                     padding: const EdgeInsets.only(left: 5),
                                     child: Text(competition.venue,
