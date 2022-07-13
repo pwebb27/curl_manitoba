@@ -1,0 +1,248 @@
+import 'package:curl_manitoba/models/draw.dart';
+import 'package:curl_manitoba/models/game.dart';
+import 'package:curl_manitoba/models/game_results.dart';
+import 'package:curl_manitoba/models/scores_competition.dart';
+import 'package:curl_manitoba/widgets/circular_progress_bar.dart';
+import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
+
+class ScoreboardScreen extends StatefulWidget {
+  ScoreboardScreen(this.competition);
+  scoresCompetition competition;
+  @override
+  State<ScoreboardScreen> createState() => _ScoreboardScreenState();
+}
+
+class _ScoreboardScreenState extends State<ScoreboardScreen> {
+  late scoresCompetition competition;
+  late List<Game> games;
+  List<Draw>? draws;
+  late List<Future<void>> futures;
+  Future<void>? resultsFuture;
+
+  late Future<List<dynamic>> competitionGamesFuture;
+  late List<DropdownMenuItem> items;
+  Draw? value;
+  static const List<String> headers = [
+    'LSFE',
+    '1',
+    '2',
+    '3',
+    '4',
+    '5',
+    '6',
+    '7',
+    '8',
+    'Total'
+  ];
+
+  @override
+  void initState() {
+    super.initState();
+    futures = [];
+
+    competition = widget.competition;
+    competitionGamesFuture = Game.getGamesData(competition.id);
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Padding(
+      padding: const EdgeInsets.only(left: 12.0,right:12,top:12),
+      child: FutureBuilder(
+          future: competitionGamesFuture,
+          builder: (context, snapshot) {
+            if (snapshot.connectionState == ConnectionState.waiting)
+              return CircularProgressBar();
+            games = Game.parseGamesData(
+                snapshot.data as List<dynamic>, competition);
+            draws = Draw.createDraws(games);
+
+            value = draws![0];
+            return StatefulBuilder(builder: (context, setState) {
+              buildResultsFutures(value);
+              resultsFuture = Future.wait(futures);
+              return SingleChildScrollView(
+                child: Column(children: [
+                  buildDropDownMenu(setState),
+                  buildScoresTables(value)
+                ]),
+              );
+            });
+          }),
+    );
+  }
+
+  buildDropDownMenu(Function setState) {
+    return Padding(
+      padding: const EdgeInsets.only(bottom: 25.0),
+      child: Container(
+          height: 50,
+          padding: EdgeInsets.symmetric(horizontal: 8, vertical: 8),
+          decoration: BoxDecoration(
+              borderRadius: BorderRadius.circular(10),
+              border: Border.all(width: 2, color: Colors.grey.shade500)),
+          child: DropdownButtonHideUnderline(
+            child: DropdownButton<Draw>(
+              isExpanded: true,
+              value: value,
+              onChanged: (value) => setState(() {
+                this.value = value;
+              }),
+              items: draws!
+                  .map(
+                    (draw) => DropdownMenuItem(
+                        value: draw,
+                        child: Text('Draw ' +
+                            draw.drawNumber +
+                            ': ' +
+                            DateFormat('jm').format(draw.startTime) +
+                            ' on ' +
+                            DateFormat('MMMd').format(draw.startTime))),
+                  )
+                  .toList(),
+            ),
+          )),
+    );
+  }
+
+  Future<void> buildResultsFutures(Draw? draw) async {
+    for (Game game in draw!.games) {
+      futures.add(game.team1Results.fetchGameResults());
+      futures.add(game.team2Results.fetchGameResults());
+    }
+  }
+
+  buildScoresTables(Draw? draw) {
+    return FutureBuilder(
+        future: resultsFuture,
+        builder: (context, snapshot) {
+          if (snapshot.connectionState == ConnectionState.waiting)
+            return CircularProgressBar();
+
+          return ListView.builder(
+              shrinkWrap: true,
+              physics: ScrollPhysics(),
+              itemCount: draw!.games.length,
+              itemBuilder: (context, index) => Padding(
+                    padding: const EdgeInsets.only(bottom: 40.0),
+                    child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Padding(
+                                  padding: const EdgeInsets.only(
+                                      bottom: 8.0, left: 12),
+                                  child: Text(
+                                      'Sheet ' + draw.games[index].sheet,
+                                      style: TextStyle(
+                                          fontSize: 15,
+                                          fontWeight: FontWeight.bold)),
+                                ),
+                                Row(
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.start,
+                                    children: [
+                                      buildFixedColumn(),
+                                      buildScrollableColumn(draw.games[index])
+                                    ]),
+                              ])
+                        ]),
+                  ));
+        });
+  }
+
+  buildDataRow(GameResults results) {
+    List<dynamic> teamScores = [
+      results.firstHammer == true ? '*' : '',
+      ...results.endScores!.values,
+    ];
+    while (teamScores.length != 9) teamScores.add('x');
+    teamScores.add(results.total as String);
+    return DataRow(cells: [
+      for (String s in teamScores)
+        DataCell(Text(
+          s,
+          style: TextStyle(fontSize: 15),
+          textAlign: TextAlign.center,
+        ))
+    ]);
+  }
+
+  buildFixedColumn() {
+    return Container(
+      width: 140,
+      child: DataTable(
+          headingRowHeight: 40,
+          dataRowHeight: 40,
+          headingRowColor: MaterialStateProperty.all(Colors.grey.shade200),
+          decoration: BoxDecoration(
+            border: Border(
+              right: BorderSide(
+                color: Colors.black,
+                width: 2,
+              ),
+            ),
+          ),
+          columns: [
+            DataColumn(
+              label: Text('Teams',
+                  style: TextStyle(fontWeight: FontWeight.bold, fontSize: 15)),
+            ),
+          ],
+          rows: [
+            DataRow(cells: [buildFixedColumnCell('test')]),
+            DataRow(cells: [buildFixedColumnCell('test')])
+          ]),
+    );
+  }
+
+  buildFixedColumnCell(String text) {
+    return DataCell(Container(
+        width: 145,
+        child: Text(
+          'test',
+          style: TextStyle(fontWeight: FontWeight.bold, fontSize: 15),
+        )));
+  }
+
+  buildScrollableColumn(Game game) {
+    return Expanded(
+      child: SingleChildScrollView(
+        scrollDirection: Axis.horizontal,
+        child: DataTable(
+          headingRowHeight: 40,
+          dataRowHeight: 40,
+          headingRowColor: MaterialStateProperty.all(Colors.grey.shade400),
+          columnSpacing: 15,
+          decoration: BoxDecoration(
+            border: Border(
+              right: BorderSide(
+                color: Colors.black,
+                width: 0.5,
+              ),
+            ),
+          ),
+          columns: [
+            for (String header in headers)
+              DataColumn(
+                  label: Text(
+                header,
+                style: TextStyle(
+                  color: Colors.white,
+                  fontSize: 15,
+                ),
+                textAlign: TextAlign.center,
+              )),
+          ],
+          rows: [
+            buildDataRow(game.team1Results),
+            buildDataRow(game.team1Results)
+          ],
+        ),
+      ),
+    );
+  }
+}
