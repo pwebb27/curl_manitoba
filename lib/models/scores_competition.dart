@@ -1,6 +1,7 @@
-import 'package:flutter/cupertino.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
+
+import 'package:intl/intl.dart';
 
 class scoresCompetition {
   late String name;
@@ -68,5 +69,24 @@ class scoresCompetition {
       competitions.add(scoresCompetition.fromJson(competition));
     }
     return competitions;
+  }
+
+
+
+  String formatDateRange() {
+    String dateRange = '';
+    if (startDate.year != endDate.year)
+      dateRange = DateFormat('LLL d, y').format(startDate) +
+          ' - ' +
+          DateFormat('LLL d, y').format(endDate);
+    else if (startDate.month != endDate.month)
+      dateRange = DateFormat('LLL d').format(startDate) +
+          ' - ' +
+          DateFormat('LLL d, y').format(endDate);
+    else
+      dateRange = DateFormat('LLL d').format(startDate) +
+          ' - ' +
+          DateFormat('d, y').format(endDate);
+    return dateRange;
   }
 }
