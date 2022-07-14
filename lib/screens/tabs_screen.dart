@@ -1,15 +1,15 @@
 import 'package:curl_manitoba/models/news_story.dart';
 import 'package:curl_manitoba/models/scores_competition.dart';
-import 'package:curl_manitoba/screens/news_screen.dart';
-import 'package:curl_manitoba/screens/scores_screen.dart';
+import 'package:curl_manitoba/screens/mainTabs/news_screen.dart';
+import 'package:curl_manitoba/screens/mainTabs/scores_screen.dart';
 import 'package:curl_manitoba/widgets/circular_progress_bar.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import '../widgets/custom_app_bar.dart';
 import '../widgets/main_drawer.dart';
-import 'calendar_screen.dart';
-import 'e_entry_screen.dart';
-import 'home_screen.dart';
+import 'mainTabs/calendar_screen.dart';
+import 'mainTabs/e_entry_screen.dart';
+import 'mainTabs/home_screen.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 
 class TabsScreen extends StatefulWidget {
@@ -18,6 +18,7 @@ class TabsScreen extends StatefulWidget {
 }
 
 class _TabsScreenState extends State<TabsScreen> {
+  late PageController _pageController;
   late List<Future<http.Response>> tabsScreenFutures;
   late List<scoresCompetition> loadedCompetitions;
   late List<NewsStory> loadedNews;
@@ -25,7 +26,7 @@ class _TabsScreenState extends State<TabsScreen> {
   late String test;
   Future<void>? resultsFuture;
 
-  int _selectedPageIndex = 0;
+  late int _selectedPageIndex;
 
   void _selectPage(int index) {
     setState(() {
@@ -34,6 +35,7 @@ class _TabsScreenState extends State<TabsScreen> {
   }
 
   void initState() {
+    _selectedPageIndex = 0;
     tabsScreenFutures = [
       scoresCompetition.getCompetitionData(),
       NewsStory.getNewsData(8)
@@ -48,9 +50,17 @@ class _TabsScreenState extends State<TabsScreen> {
         ScoresScreen(loadedCompetitions),
         CalendarScreen(),
       ];
+      _pageController = PageController(initialPage: _selectedPageIndex);
     });
 
     super.initState();
+  }
+
+  @override
+  void dispose() {
+    _pageController.dispose();
+
+    super.dispose();
   }
 
   _buildBottomNavigationBarItem(String title, String iconName,
@@ -70,7 +80,7 @@ class _TabsScreenState extends State<TabsScreen> {
   @override
   Widget build(BuildContext context) {
     return FutureBuilder(
-        future:resultsFuture,
+        future: resultsFuture,
         builder: (context, snapshot) {
           if (snapshot.connectionState == ConnectionState.waiting)
             return Scaffold(body: CircularProgressBar());
@@ -93,7 +103,11 @@ class _TabsScreenState extends State<TabsScreen> {
                         (_selectedPageIndex == 3) ? true : false)
                     : null,
                 drawer: MainDrawer(),
-                body: _pages[_selectedPageIndex],
+                body: PageView(
+                  controller: _pageController,
+                  physics: NeverScrollableScrollPhysics(),
+                  children: _pages,
+                ),
                 bottomNavigationBar: SizedBox(
                   height: 60,
                   child: Container(
@@ -107,7 +121,12 @@ class _TabsScreenState extends State<TabsScreen> {
                       type: BottomNavigationBarType.fixed,
                       unselectedItemColor: Colors.grey.shade700,
                       selectedItemColor: Theme.of(context).primaryColor,
-                      onTap: _selectPage,
+                      onTap: (selectedPageIndex) {
+                        setState(() {
+                          _selectedPageIndex = selectedPageIndex;
+                          _pageController.jumpToPage(selectedPageIndex);
+                        });
+                      },
                       items: [
                         _buildBottomNavigationBarItem('Home', 'home', 23.5),
                         _buildBottomNavigationBarItem(
