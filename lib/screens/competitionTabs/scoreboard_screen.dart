@@ -3,6 +3,7 @@ import 'package:curl_manitoba/models/game.dart';
 import 'package:curl_manitoba/models/game_results.dart';
 import 'package:curl_manitoba/models/scores_competition.dart';
 import 'package:curl_manitoba/widgets/circular_progress_bar.dart';
+import 'package:curl_manitoba/widgets/custom_expansion_tile.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 
@@ -48,7 +49,7 @@ class _ScoreboardScreenState extends State<ScoreboardScreen> {
   @override
   Widget build(BuildContext context) {
     return Padding(
-      padding: const EdgeInsets.only(left: 12.0,right:12,top:12),
+      padding: const EdgeInsets.only(left: 12.0, right: 12, top: 12),
       child: FutureBuilder(
           future: competitionGamesFuture,
           builder: (context, snapshot) {
@@ -65,7 +66,7 @@ class _ScoreboardScreenState extends State<ScoreboardScreen> {
               return SingleChildScrollView(
                 child: Column(children: [
                   buildDropDownMenu(setState),
-                  buildScoresTables(value)
+                  buildScoresTables(value),
                 ]),
               );
             });
@@ -138,7 +139,7 @@ class _ScoreboardScreenState extends State<ScoreboardScreen> {
                                   child: Text(
                                       'Sheet ' + draw.games[index].sheet,
                                       style: TextStyle(
-                                          fontSize: 15,
+                                          fontSize: 18,
                                           fontWeight: FontWeight.bold)),
                                 ),
                                 Row(
@@ -146,12 +147,31 @@ class _ScoreboardScreenState extends State<ScoreboardScreen> {
                                         CrossAxisAlignment.start,
                                     children: [
                                       buildFixedColumn(),
-                                      buildScrollableColumn(draw.games[index])
+                                      buildScrollableColumn(draw.games[index]),
+                                      
                                     ]),
+                                    buildBoxscore(draw.games[index])
                               ])
                         ]),
                   ));
         });
+  }
+
+  buildBoxscore(Game game) {
+    return CustomExpansionTile(
+        tilePadding: EdgeInsets.only(left: 100),
+        title: Padding(
+          padding: const EdgeInsets.symmetric(vertical:12.0),
+          child: Text(
+            'Boxscore',
+            style: TextStyle(fontSize: 15),
+          ),
+        ),
+        children: [
+          Row(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [buildFixedColumn(), buildScrollableColumn(game)]),
+        ]);
   }
 
   buildDataRow(GameResults results) {
@@ -175,6 +195,7 @@ class _ScoreboardScreenState extends State<ScoreboardScreen> {
     return Container(
       width: 140,
       child: DataTable(
+          border: TableBorder.symmetric(outside: BorderSide(width: .2)),
           headingRowHeight: 40,
           dataRowHeight: 40,
           headingRowColor: MaterialStateProperty.all(Colors.grey.shade200),
@@ -213,6 +234,7 @@ class _ScoreboardScreenState extends State<ScoreboardScreen> {
       child: SingleChildScrollView(
         scrollDirection: Axis.horizontal,
         child: DataTable(
+          border: TableBorder.symmetric(outside: BorderSide(width: .2)),
           headingRowHeight: 40,
           dataRowHeight: 40,
           headingRowColor: MaterialStateProperty.all(Colors.grey.shade400),
