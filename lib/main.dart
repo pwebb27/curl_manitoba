@@ -1,5 +1,5 @@
 import 'package:curl_manitoba/route_generator.dart';
-import 'package:curl_manitoba/screens/news_story_screen.dart';
+import 'package:curl_manitoba/screens/news_article_screen.dart';
 import 'package:curl_manitoba/screens/tabs_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:wakelock/wakelock.dart';

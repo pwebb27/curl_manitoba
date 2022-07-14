@@ -4,7 +4,7 @@ import 'package:flutter/material.dart';
 
 import 'package:http/http.dart' as http;
 
-import '../widgets/circular_progress_bar.dart';
+import '../../widgets/circular_progress_bar.dart';
 
 class ScoresScreen extends StatefulWidget {
   List<scoresCompetition> loadedCompetitions;
@@ -27,7 +27,9 @@ const List<String> _competitionTags = [
   'Youth',
 ];
 
-class _ScoresScreenState extends State<ScoresScreen> {
+class _ScoresScreenState extends State<ScoresScreen> with AutomaticKeepAliveClientMixin {
+    bool get wantKeepAlive => true;
+
 late List<dynamic> loadedCompetitions;
 
   final ScrollController _scrollController = ScrollController();
@@ -85,21 +87,22 @@ late List<dynamic> loadedCompetitions;
 
   @override
   Widget build(BuildContext context) {
+    super.build(context);
     return CustomScrollView(controller: _scrollController, slivers: [
       SliverAppBar(
         backgroundColor: Theme.of(context).scaffoldBackgroundColor,
         automaticallyImplyLeading: false,
         expandedHeight: 145,
         floating: true,
+        
         actionsIconTheme: IconThemeData(opacity: 0.0),
-        flexibleSpace: Stack(
-          children: <Widget>[
+        flexibleSpace: 
             FlexibleSpaceBar(
-                background: Positioned.fill(
-              child: buildWrap(),
-            )),
-          ],
-        ),
+                background:
+              buildWrap(),
+            ),
+          
+        
       ),
       SliverList(
           delegate: SliverChildBuilderDelegate(

@@ -4,10 +4,11 @@ import 'package:flutter_svg/flutter_svg.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'package:flutter/gestures.dart';
 
-import '../models/news_story.dart';
-import '../widgets/circular_progress_bar.dart';
+import '../../models/news_story.dart';
+import '../../widgets/circular_progress_bar.dart';
 
 class NewsFeedScreen extends StatefulWidget {
+  
   NewsFeedScreen(this.loadedNews);
   late List<NewsStory> loadedNews;
 
@@ -15,7 +16,9 @@ class NewsFeedScreen extends StatefulWidget {
   State<NewsFeedScreen> createState() => _NewsFeedScreenState();
 }
 
-class _NewsFeedScreenState extends State<NewsFeedScreen> {
+class _NewsFeedScreenState extends State<NewsFeedScreen> with AutomaticKeepAliveClientMixin{
+    bool get wantKeepAlive => true;
+
   static const routeName = '/news';
   late Future<http.Response> fetchRemainingNews;
   late List<NewsStory> preloadedNews;
@@ -30,6 +33,7 @@ class _NewsFeedScreenState extends State<NewsFeedScreen> {
 
   @override
   Widget build(BuildContext context) {
+    super.build(context);
     return Scaffold(
         body: SingleChildScrollView(
       physics: ScrollPhysics(),

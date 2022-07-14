@@ -1,7 +1,8 @@
+
 import 'package:curl_manitoba/models/calendar_event.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
-import '../widgets/circular_progress_bar.dart';
+import '../../widgets/circular_progress_bar.dart';
 import 'package:table_calendar/table_calendar.dart';
 
 import 'package:http/http.dart' as http;
@@ -11,7 +12,9 @@ class CalendarScreen extends StatefulWidget {
   State<CalendarScreen> createState() => _CalendarScreenState();
 }
 
-class _CalendarScreenState extends State<CalendarScreen> {
+class _CalendarScreenState extends State<CalendarScreen> with AutomaticKeepAliveClientMixin {
+    bool get wantKeepAlive => true;
+
   late Future<http.Response> calendarDataFuture;
   late Map<DateTime, List<CalendarEvent>> calendarEvents;
 
@@ -36,6 +39,7 @@ class _CalendarScreenState extends State<CalendarScreen> {
 
   @override
   Widget build(BuildContext context) {
+    super.build(context);
     return FutureBuilder(
         future: calendarDataFuture,
         builder: (context, snapshot) {

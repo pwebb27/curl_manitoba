@@ -32,13 +32,13 @@ class CustomAppBar extends StatelessWidget with PreferredSizeWidget {
                     icon: Icon(FontAwesomePro.bars, size: 24),
                     onPressed: () => Scaffold.of(context).openDrawer())),
             backgroundColor: Theme.of(context).primaryColor,
-            title:Text(
-                    pageTitle,
-                    style: TextStyle(
-                        fontSize: 20.5,
-                        color: Colors.white,
-                        fontWeight: FontWeight.w400),
-                  ),
+            title: pageTitle!=''?Text(
+              pageTitle,
+              style: TextStyle(
+                  fontSize: 20.5,
+                  color: Colors.white,
+                  fontWeight: FontWeight.w400),
+            ):buildAppBarImage(),
             bottom: searchBar ? buildSearchBar() : null));
   }
 
@@ -64,5 +64,12 @@ class CustomAppBar extends StatelessWidget with PreferredSizeWidget {
       ),
     );
   }
-}
 
+  buildAppBarImage() {
+    return Padding(
+      padding: const EdgeInsets.only(top: 1.5),
+      child: Image.asset('assets/images/Curl_Manitoba_Logo.png',
+          height: 24, fit: BoxFit.cover),
+    );
+  }
+}

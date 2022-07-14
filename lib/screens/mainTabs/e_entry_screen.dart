@@ -2,7 +2,7 @@ import 'package:curl_manitoba/models/e_entry_competition.dart';
 import 'package:curl_manitoba/widgets/fixed_column_widget.dart';
 import 'package:curl_manitoba/widgets/scrollable_column_widget.dart';
 import 'package:flutter/material.dart';
-import '../widgets/circular_progress_bar.dart';
+import '../../widgets/circular_progress_bar.dart';
 import 'package:http/http.dart' as http;
 
 class eEntryScreen extends StatefulWidget {
@@ -10,7 +10,9 @@ class eEntryScreen extends StatefulWidget {
   State<eEntryScreen> createState() => _eEntryScreenState();
 }
 
-class _eEntryScreenState extends State<eEntryScreen> {
+class _eEntryScreenState extends State<eEntryScreen> with AutomaticKeepAliveClientMixin{
+    bool get wantKeepAlive => true;
+
   late Map<String, dynamic> competitionsMap;
   late Future<http.Response> eEntryDataFuture;
 
@@ -24,6 +26,7 @@ class _eEntryScreenState extends State<eEntryScreen> {
 
   @override
   Widget build(BuildContext context) {
+    super.build(context);
     return FutureBuilder(
         future: eEntryDataFuture,
         builder: (context, snapshot) {
