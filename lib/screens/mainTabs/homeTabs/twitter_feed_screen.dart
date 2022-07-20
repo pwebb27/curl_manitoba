@@ -1,8 +1,8 @@
 import 'package:curl_manitoba/widgets/tweet_item.dart';
-import '../models/twitter_feed.dart';
-import '../models/tweet.dart';
-import '../models/twitter_api.dart';
-import '../widgets/circular_progress_bar.dart';
+import '../../../models/twitter_feed.dart';
+import '../../../models/tweet.dart';
+import '../../../models/twitter_api.dart';
+import '../../../widgets/circular_progress_bar.dart';
 
 import 'package:flutter/material.dart';
 import 'dart:convert';

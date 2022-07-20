@@ -8,11 +8,12 @@ import 'package:carousel_slider/carousel_slider.dart';
 
 import 'package:http/http.dart' as http;
 
-import '../widgets/circular_progress_bar.dart';
+import '../../../widgets/circular_progress_bar.dart';
 
 class HomeFeedScreen extends StatefulWidget {
   List<scoresCompetition> loadedCompetitions;
-  HomeFeedScreen(this.loadedCompetitions);
+  List<NewsStory> loadedNews;
+  HomeFeedScreen(this.loadedCompetitions, this.loadedNews);
 
   @override
   State<HomeFeedScreen> createState() => _HomeFeedScreenState();
@@ -54,14 +55,13 @@ List<Widget> competitionItems = [];
 
 class _HomeFeedScreenState extends State<HomeFeedScreen> {
   late List<scoresCompetition> loadedCompetitions;
-  late List<NewsStory> newsStories;
+  late List<NewsStory> loadedNews;
   late Map<DateTime, List<CalendarEvent>> calendarEvents;
 
   late Future<List<http.Response>> homeFeedFuture;
 
   Future<List<http.Response>> _getDataFromWeb() async {
     var responses = await Future.wait([
-      NewsStory.getNewsData(6),
       CalendarEvent.getCalendarData(),
     ]);
 
@@ -129,11 +129,11 @@ class _HomeFeedScreenState extends State<HomeFeedScreen> {
   @override
   void initState() {
     loadedCompetitions = widget.loadedCompetitions;
+    loadedNews = widget.loadedNews;
     homeFeedFuture = _getDataFromWeb();
 
     homeFeedFuture.then((responses) {
-      newsStories = NewsStory.parseNewsData(responses[0]);
-      calendarEvents = CalendarEvent.parseCalendarData(responses[1]);
+      calendarEvents = CalendarEvent.parseCalendarData(responses[0]);
     });
     super.initState();
   }
@@ -150,57 +150,48 @@ class _HomeFeedScreenState extends State<HomeFeedScreen> {
             top: false,
             bottom: false,
             child: Builder(
-                builder: (context) => CustomScrollView(slivers: [
-                      SliverPadding(
-                          padding: const EdgeInsets.only(top: 2),
-                          sliver: SliverList(
-                              delegate: SliverChildListDelegate([
-                            Column(
-                                mainAxisAlignment: MainAxisAlignment.start,
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: <Widget>[
-                                  CarouselSlider(
-                                    items: itemss,
-                                    options: CarouselOptions(
-                                        autoPlayInterval: Duration(seconds: 5),
-                                        height: 194,
-                                        autoPlay: true,
-                                        viewportFraction: 1,
-                                        onPageChanged: (index, reason) {
-                                          setState(() {
-                                            _currentBannerIndex = index;
-                                          });
-                                        }),
-                                  ),
-                                  buildSection(
-                                      'Latest Competitions',
-                                      buildCompetitionSection(
-                                          loadedCompetitions)),
-                                  Divider(
-                                      height: 5,
-                                      thickness: 5,
-                                      color: Colors.grey.shade500),
-                                  buildSection(
-                                      'Latest News',
-                                      buildNewsStorySegment(
-                                          newsStories, context)),
-                                  Divider(
-                                      height: 5,
-                                      thickness: 5,
-                                      color: Colors.grey.shade500),
-                                  buildSection(
-                                      'Upcoming Events', buildEventsSection()),
-                                  Divider(
-                                      height: 5,
-                                      thickness: 5,
-                                      color: Colors.grey.shade500),
-                                  buildSection(
-                                      'Events, Programs & News',
-                                      buildEventsProgramsAndNewsSection(
-                                          EventsProgramsAndNewsData)),
-                                ]),
-                          ]))),
-                    ])),
+                builder: (context) => SingleChildScrollView(
+                      child: Column(
+                          mainAxisAlignment: MainAxisAlignment.start,
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: <Widget>[
+                            CarouselSlider(
+                              items: itemss,
+                              options: CarouselOptions(
+                                  autoPlayInterval: Duration(seconds: 5),
+                                  height: 194,
+                                  autoPlay: true,
+                                  viewportFraction: 1,
+                                  onPageChanged: (index, reason) {
+                                    setState(() {
+                                      _currentBannerIndex = index;
+                                    });
+                                  }),
+                            ),
+                            buildSection('Latest Competitions',
+                                buildCompetitionSection(loadedCompetitions)),
+                            Divider(
+                                height: 5,
+                                thickness: 5,
+                                color: Colors.grey.shade500),
+                            buildSection('Latest News',
+                                buildNewsStorySegment(loadedNews, context)),
+                            Divider(
+                                height: 5,
+                                thickness: 5,
+                                color: Colors.grey.shade500),
+                            buildSection(
+                                'Upcoming Events', buildEventsSection()),
+                            Divider(
+                                height: 5,
+                                thickness: 5,
+                                color: Colors.grey.shade500),
+                            buildSection(
+                                'Events, Programs & News',
+                                buildEventsProgramsAndNewsSection(
+                                    EventsProgramsAndNewsData)),
+                          ]),
+                    )),
           );
         });
   }

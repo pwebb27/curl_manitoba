@@ -9,7 +9,7 @@ import 'package:http/http.dart' as http;
 import 'package:html/parser.dart';
 import 'package:intl/intl.dart';
 
-import '../widgets/custom_app_bar.dart';
+import '../../../widgets/custom_app_bar.dart';
 
 class NewsStoryScreen extends StatefulWidget {
   NewsStory newsStory;

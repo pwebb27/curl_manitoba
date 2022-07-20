@@ -4,8 +4,8 @@ import 'package:flutter_svg/flutter_svg.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'package:flutter/gestures.dart';
 
-import '../../models/news_story.dart';
-import '../../widgets/circular_progress_bar.dart';
+import '../../../models/news_story.dart';
+import '../../../widgets/circular_progress_bar.dart';
 
 class NewsFeedScreen extends StatefulWidget {
   

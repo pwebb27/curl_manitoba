@@ -1,7 +1,7 @@
 import 'package:curl_manitoba/models/scores_competition.dart';
 import 'package:curl_manitoba/models/team.dart';
-import 'package:curl_manitoba/screens/competition_screen.dart';
-import 'package:curl_manitoba/screens/team_screen.dart';
+import 'package:curl_manitoba/screens/competition_tabs_screen.dart';
+import 'package:curl_manitoba/screens/competitionTabs/teams/team_screen.dart';
 import 'package:curl_manitoba/widgets/circular_progress_bar.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';

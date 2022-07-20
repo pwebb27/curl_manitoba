@@ -1,6 +1,6 @@
 import 'package:curl_manitoba/models/news_story.dart';
 import 'package:curl_manitoba/models/scores_competition.dart';
-import 'package:curl_manitoba/screens/mainTabs/news_screen.dart';
+import 'package:curl_manitoba/screens/mainTabs/news/news_screen.dart';
 import 'package:curl_manitoba/screens/mainTabs/scores_screen.dart';
 import 'package:curl_manitoba/widgets/circular_progress_bar.dart';
 import 'package:flutter/material.dart';
