@@ -5,11 +5,11 @@ import 'package:curl_manitoba/screens/mainTabs/scores_screen.dart';
 import 'package:curl_manitoba/widgets/circular_progress_bar.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
-import '../widgets/custom_app_bar.dart';
-import '../widgets/main_drawer.dart';
-import 'mainTabs/calendar_screen.dart';
-import 'mainTabs/e_entry_screen.dart';
-import 'mainTabs/home_screen.dart';
+import '../../widgets/custom_app_bar.dart';
+import '../../widgets/main_drawer.dart';
+import '../mainTabs/calendar_screen.dart';
+import '../mainTabs/e_entry_screen.dart';
+import '../mainTabs/home_screen.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 
 class TabsScreen extends StatefulWidget {
