@@ -7,11 +7,13 @@ class ReportsScreen extends StatefulWidget {
   scoresCompetition competition;
   ReportsScreen(this.competition);
 
+
   @override
   State<ReportsScreen> createState() => _ReportsScreenState();
 }
 
-class _ReportsScreenState extends State<ReportsScreen> {
+class _ReportsScreenState extends State<ReportsScreen> with AutomaticKeepAliveClientMixin {
+  bool get wantKeepAlive => true;
   late scoresCompetition competition;
 
   void initState(){
@@ -19,6 +21,7 @@ class _ReportsScreenState extends State<ReportsScreen> {
   }
   @override
   Widget build(BuildContext context) {
+    super.build(context);
     return Center(child: Text('Reports'),);
     
   }

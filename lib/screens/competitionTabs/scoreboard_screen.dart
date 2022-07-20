@@ -14,7 +14,8 @@ class ScoreboardScreen extends StatefulWidget {
   State<ScoreboardScreen> createState() => _ScoreboardScreenState();
 }
 
-class _ScoreboardScreenState extends State<ScoreboardScreen> {
+class _ScoreboardScreenState extends State<ScoreboardScreen> with AutomaticKeepAliveClientMixin{
+  bool get wantKeepAlive => true;
   late scoresCompetition competition;
   late List<Game> games;
   List<Draw>? draws;
@@ -48,6 +49,7 @@ class _ScoreboardScreenState extends State<ScoreboardScreen> {
 
   @override
   Widget build(BuildContext context) {
+    super.build(context);
     return Padding(
       padding: const EdgeInsets.only(left: 12.0, right: 12, top: 12),
       child: FutureBuilder(

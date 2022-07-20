@@ -14,7 +14,9 @@ class TeamsScreen extends StatefulWidget {
   State<TeamsScreen> createState() => _TeamsScreenState();
 }
 
-class _TeamsScreenState extends State<TeamsScreen> {
+class _TeamsScreenState extends State<TeamsScreen>
+    with AutomaticKeepAliveClientMixin {
+  bool get wantKeepAlive => true;
   late scoresCompetition competition;
   late Future<http.Response> teamsFuture;
   late List<Team> teams;

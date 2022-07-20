@@ -10,7 +10,8 @@ StandingsAndDrawsScreen(this.competition);
   State<StandingsAndDrawsScreen> createState() => _StandingsAndDrawsScreenState();
 }
 
-class _StandingsAndDrawsScreenState extends State<StandingsAndDrawsScreen> {
+class _StandingsAndDrawsScreenState extends State<StandingsAndDrawsScreen> with AutomaticKeepAliveClientMixin{
+  bool get wantKeepAlive => true;
   late scoresCompetition competition;
   @override
 
@@ -20,6 +21,7 @@ class _StandingsAndDrawsScreenState extends State<StandingsAndDrawsScreen> {
   }
   @override
   Widget build(BuildContext context) {
+    super.build(context);
     return Center(child: Text('Standings'),);
     
   }
