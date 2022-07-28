@@ -51,13 +51,7 @@ class scoresCompetition {
     return 'Location TBA';
   }
 
-  static Future<http.Response> getCompetitionData(
-      [String tag = '', int pageNumber = 1]) async {
-    final competitionURL =
-        'https://legacy-curlingio.global.ssl.fastly.net/api/organizations/MTZFJ5miuro/competitions.json?search=&tags=$tag&page=$pageNumber';
-    var response = await http.get(Uri.parse(competitionURL));
-    return response;
-  }
+
 
   static List<scoresCompetition> parseCompetitionData(
       http.Response competitionsResponse) {
