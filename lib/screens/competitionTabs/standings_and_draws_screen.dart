@@ -1,4 +1,4 @@
-import 'package:curl_manitoba/models/scores_competition.dart';
+import 'package:curl_manitoba/models/scoresCompetitionModels/scores_competition.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/src/foundation/key.dart';
 import 'package:flutter/src/widgets/framework.dart';

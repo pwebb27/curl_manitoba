@@ -1,4 +1,4 @@
-import 'package:curl_manitoba/models/game.dart';
+import 'package:curl_manitoba/models/scoresCompetitionModels/game.dart';
 
 class Draw {
   String drawNumber;

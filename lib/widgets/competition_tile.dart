@@ -1,4 +1,4 @@
-import 'package:curl_manitoba/models/scores_competition.dart';
+import 'package:curl_manitoba/models/scoresCompetitionModels/scores_competition.dart';
 import 'package:curl_manitoba/widgets/font_awesome_pro_icons.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';

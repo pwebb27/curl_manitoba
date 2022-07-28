@@ -1,4 +1,4 @@
-import 'package:curl_manitoba/models/scores_competition.dart';
+import 'package:curl_manitoba/models/scoresCompetitionModels/scores_competition.dart';
 import 'package:curl_manitoba/screens/competitionTabs/reports_screen.dart';
 import 'package:curl_manitoba/screens/competitionTabs/scoreboard_screen.dart';
 import 'package:curl_manitoba/screens/competitionTabs/standings_and_draws_screen.dart';

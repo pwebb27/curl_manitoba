@@ -1,13 +1,13 @@
 import 'package:curl_manitoba/models/news_story.dart';
-import 'package:curl_manitoba/models/scores_competition.dart';
-import 'package:curl_manitoba/screens/home_feed_screen.dart';
+import 'package:curl_manitoba/models/scoresCompetitionModels/scores_competition.dart';
+import 'package:curl_manitoba/screens/mainTabs/homeTabs/home_feed_screen.dart';
 import 'package:curl_manitoba/screens/mainTabs/scores_screen.dart';
 import 'package:curl_manitoba/widgets/custom_app_bar.dart';
 import 'package:curl_manitoba/widgets/font_awesome_pro_icons.dart';
 import 'package:flutter/material.dart';
 
-import 'news_screen.dart';
-import '../twitter_feed_screen.dart';
+import 'news/news_screen.dart';
+import 'homeTabs/twitter_feed_screen.dart';
 
 class HomeScreen extends StatefulWidget with PreferredSizeWidget {
   List<NewsStory> loadedNews;
