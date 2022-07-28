@@ -1,11 +1,14 @@
+import 'package:curl_manitoba/models/apis/curling_io_api.dart';
 import 'package:curl_manitoba/models/draw.dart';
-import 'package:curl_manitoba/models/game.dart';
-import 'package:curl_manitoba/models/game_results.dart';
-import 'package:curl_manitoba/models/scores_competition.dart';
+import 'package:curl_manitoba/models/scoresCompetitionModels/game.dart';
+import 'package:curl_manitoba/models/scoresCompetitionModels/game_results.dart';
+import 'package:curl_manitoba/models/scoresCompetitionModels/scores_competition.dart';
 import 'package:curl_manitoba/widgets/circular_progress_bar.dart';
 import 'package:curl_manitoba/widgets/custom_expansion_tile.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
+import 'package:http/http.dart' as http;
+import 'package:async/async.dart';
 
 class ScoreboardScreen extends StatefulWidget {
   ScoreboardScreen(this.competition);
@@ -14,15 +17,15 @@ class ScoreboardScreen extends StatefulWidget {
   State<ScoreboardScreen> createState() => _ScoreboardScreenState();
 }
 
-class _ScoreboardScreenState extends State<ScoreboardScreen> with AutomaticKeepAliveClientMixin{
+class _ScoreboardScreenState extends State<ScoreboardScreen>
+    with AutomaticKeepAliveClientMixin {
   bool get wantKeepAlive => true;
   late scoresCompetition competition;
   late List<Game> games;
   List<Draw>? draws;
-  late List<Future<void>> futures;
-  Future<void>? resultsFuture;
+  late FutureGroup<void> _futureGroup;
 
-  late Future<List<dynamic>> competitionGamesFuture;
+  late Future<http.Response> competitionGamesFuture;
   late List<DropdownMenuItem> items;
   Draw? value;
   static const List<String> headers = [
@@ -41,10 +44,10 @@ class _ScoreboardScreenState extends State<ScoreboardScreen> with AutomaticKeepA
   @override
   void initState() {
     super.initState();
-    futures = [];
+    _futureGroup = FutureGroup();
 
     competition = widget.competition;
-    competitionGamesFuture = Game.getGamesData(competition.id);
+    competitionGamesFuture = CurlingIOAPI().fetchGames(competition.id);
   }
 
   @override
@@ -58,13 +61,17 @@ class _ScoreboardScreenState extends State<ScoreboardScreen> with AutomaticKeepA
             if (snapshot.connectionState == ConnectionState.waiting)
               return CircularProgressBar();
             games = Game.parseGamesData(
-                snapshot.data as List<dynamic>, competition);
+                snapshot.data as http.Response, competition);
             draws = Draw.createDraws(games);
 
             value = draws![0];
             return StatefulBuilder(builder: (context, setState) {
-              buildResultsFutures(value);
-              resultsFuture = Future.wait(futures);
+              for (Game game in value!.games) {
+                _futureGroup.add(game.getTeamOneResults());
+                _futureGroup.add(game.getTeamTwoResults());
+              }
+              _futureGroup.close();
+
               return SingleChildScrollView(
                 child: Column(children: [
                   buildDropDownMenu(setState),
@@ -109,20 +116,12 @@ class _ScoreboardScreenState extends State<ScoreboardScreen> with AutomaticKeepA
     );
   }
 
-  Future<void> buildResultsFutures(Draw? draw) async {
-    for (Game game in draw!.games) {
-      futures.add(game.team1Results.fetchGameResults());
-      futures.add(game.team2Results.fetchGameResults());
-    }
-  }
-
   buildScoresTables(Draw? draw) {
     return FutureBuilder(
-        future: resultsFuture,
+        future: _futureGroup.future,
         builder: (context, snapshot) {
           if (snapshot.connectionState == ConnectionState.waiting)
-            return CircularProgressBar();
-
+            return CircularProgressBar();          
           return ListView.builder(
               shrinkWrap: true,
               physics: ScrollPhysics(),
@@ -150,9 +149,8 @@ class _ScoreboardScreenState extends State<ScoreboardScreen> with AutomaticKeepA
                                     children: [
                                       buildFixedColumn(),
                                       buildScrollableColumn(draw.games[index]),
-                                      
                                     ]),
-                                    buildBoxscore(draw.games[index])
+                                buildBoxscore(draw.games[index])
                               ])
                         ]),
                   ));
@@ -163,7 +161,7 @@ class _ScoreboardScreenState extends State<ScoreboardScreen> with AutomaticKeepA
     return CustomExpansionTile(
         tilePadding: EdgeInsets.only(left: 100),
         title: Padding(
-          padding: const EdgeInsets.symmetric(vertical:12.0),
+          padding: const EdgeInsets.symmetric(vertical: 12.0),
           child: Text(
             'Boxscore',
             style: TextStyle(fontSize: 15),
@@ -262,8 +260,8 @@ class _ScoreboardScreenState extends State<ScoreboardScreen> with AutomaticKeepA
               )),
           ],
           rows: [
-            buildDataRow(game.team1Results),
-            buildDataRow(game.team1Results)
+            buildDataRow(game.resultsMap.values.first),
+            buildDataRow(game.resultsMap.values.last)
           ],
         ),
       ),

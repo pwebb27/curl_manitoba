@@ -1,4 +1,5 @@
-import 'package:curl_manitoba/models/scores_competition.dart';
+import 'package:curl_manitoba/models/apis/curling_io_api.dart';
+import 'package:curl_manitoba/models/scoresCompetitionModels/scores_competition.dart';
 import 'package:curl_manitoba/widgets/competition_tile.dart';
 import 'package:flutter/material.dart';
 
@@ -49,7 +50,7 @@ late List<dynamic> loadedCompetitions;
     defaultChoiceIndex = -1;
     loadedCompetitions = widget.loadedCompetitions;
     page = 1;
-    competitionDataFuture = scoresCompetition.getCompetitionData('', page);
+    competitionDataFuture = CurlingIOAPI().fetchCompetitions('', page);
 
     _scrollController.addListener(() {
       if (_scrollController.position.pixels >=
@@ -72,7 +73,7 @@ late List<dynamic> loadedCompetitions;
     if (isLoading) return;
     isLoading = true;
     http.Response response =
-        await scoresCompetition.getCompetitionData('', page);
+        await CurlingIOAPI().fetchCompetitions('', page);
 
     newCompetitions = scoresCompetition.parseCompetitionData(response);
 
@@ -150,8 +151,7 @@ late List<dynamic> loadedCompetitions;
                                     setState(() {
                                       defaultChoiceIndex =
                                           (isSelected ? entry.key : null)!;
-                                      competitionDataFuture = scoresCompetition
-                                          .getCompetitionData(entry.value
+                                      competitionDataFuture = CurlingIOAPI().fetchCompetitions(entry.value
                                               .replaceAll(' ', '%20'));
                                       competitionDataFuture.then((value) =>
                                           loadedCompetitions = scoresCompetition

@@ -1,4 +1,4 @@
-import 'package:curl_manitoba/models/team.dart';
+import 'package:curl_manitoba/models/scoresCompetitionModels/team.dart';
 import 'package:flutter/src/foundation/key.dart';
 import 'package:flutter/src/widgets/framework.dart';
 import 'package:flutter/material.dart';
@@ -28,17 +28,17 @@ class _TeamDataScreenState extends State<TeamDataScreen> {
         Padding(
           padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 10.0),
           child: Text(
-            team.name,
+            team.name!,
             style: TextStyle(
               fontWeight: FontWeight.bold,
-              fontSize: 19,
+              fontSize: 17,
             ),
           ),
         ),
         ListView.builder(
           shrinkWrap: true,
           physics: NeverScrollableScrollPhysics(),
-          itemCount: team.players.length,
+          itemCount: team.players!.length,
           itemBuilder: ((context, index) => ListTileTheme(
               dense: true,
               child: Theme(
@@ -50,40 +50,40 @@ class _TeamDataScreenState extends State<TeamDataScreen> {
                         showDialog(
                             context: context,
                             builder: (context) =>
-                                ImageDialog(team.players[index].profilePicUrl));
+                                ImageDialog(team.players![index].profilePicUrl));
                       },
                       child: CircleAvatar(
                         backgroundImage:
-                            NetworkImage(team.players[index].profilePicUrl),
+                            NetworkImage(team.players![index].profilePicUrl),
                       )),
                   subtitle: Text(
-                    team.players[index].position,
+                    team.players![index].position,
                     style: TextStyle(fontSize: 14),
                   ),
                   title: Text(
-                    team.players[index].name,
+                    team.players![index].name,
                     style: TextStyle(fontSize: 16),
                   ),
                   children: [
                     Padding(
                       padding: const EdgeInsets.only(bottom: 5.0),
                       child: Text(
-                          'City: ' + (team.players[index].city as String),
+                          'City: ' + (team.players![index].city!),
                           style: TextStyle(fontSize: 16)),
                     ),
-                    (team.players[index].delivery != null)
+                    (team.players![index].delivery != null)
                         ? Padding(
                             padding: const EdgeInsets.only(bottom: 5.0),
                             child: Text(
                                 'Delivery: ' +
-                                    (team.players[index].delivery as String),
+                                    (team.players![index].delivery!),
                                 style: TextStyle(fontSize: 16)))
                         : SizedBox.shrink(),
-                    (team.players[index].club != null)
+                    (team.players![index].club != null)
                         ? Padding(
                             padding: const EdgeInsets.only(bottom: 5.0),
                             child: Text(
-                              'Club: ' + (team.players[index].club as String),
+                              'Club: ' + (team.players![index].club!),
                               style: TextStyle(fontSize: 16),
                             ))
                         : SizedBox.shrink()

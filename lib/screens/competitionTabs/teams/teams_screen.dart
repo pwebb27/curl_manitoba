@@ -1,6 +1,7 @@
-import 'package:curl_manitoba/models/scores_competition.dart';
-import 'package:curl_manitoba/models/team.dart';
-import 'package:curl_manitoba/screens/competition_tabs_screen.dart';
+import 'package:curl_manitoba/models/apis/curling_io_api.dart';
+import 'package:curl_manitoba/models/scoresCompetitionModels/scores_competition.dart';
+import 'package:curl_manitoba/models/scoresCompetitionModels/team.dart';
+import 'package:curl_manitoba/screens/tabsScreens/competition_tabs_screen.dart';
 import 'package:curl_manitoba/screens/competitionTabs/teams/team_screen.dart';
 import 'package:curl_manitoba/widgets/circular_progress_bar.dart';
 import 'package:flutter/cupertino.dart';
@@ -28,7 +29,7 @@ class _TeamsScreenState extends State<TeamsScreen>
 
     competition = widget.competition;
     print(competition.id);
-    teamsFuture = Team.fetchTeamsData(competition.id);
+    teamsFuture = CurlingIOAPI().fetchTeams(competition.id);
 
     super.initState();
   }
@@ -53,7 +54,7 @@ class _TeamsScreenState extends State<TeamsScreen>
                             builder: (_) => TeamDataScreen(teams[index]),
                           ));
                         },
-                        title: Text(teams[index].name),
+                        title: Text(teams[index].name as String),
                         trailing: Icon(Icons.arrow_right),
                       ),
                     ),

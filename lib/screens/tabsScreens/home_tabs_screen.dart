@@ -1,5 +1,6 @@
+import 'package:curl_manitoba/models/apis/curling_io_api.dart';
 import 'package:curl_manitoba/models/news_story.dart';
-import 'package:curl_manitoba/models/scores_competition.dart';
+import 'package:curl_manitoba/models/scoresCompetitionModels/scores_competition.dart';
 import 'package:curl_manitoba/screens/mainTabs/news/news_screen.dart';
 import 'package:curl_manitoba/screens/mainTabs/scores_screen.dart';
 import 'package:curl_manitoba/widgets/circular_progress_bar.dart';
@@ -37,7 +38,7 @@ class _TabsScreenState extends State<TabsScreen> {
   void initState() {
     _selectedPageIndex = 0;
     tabsScreenFutures = [
-      scoresCompetition.getCompetitionData(),
+      CurlingIOAPI().fetchCompetitions(),
       NewsStory.getNewsData(8)
     ];
     resultsFuture = Future.wait(tabsScreenFutures).then((data) {
