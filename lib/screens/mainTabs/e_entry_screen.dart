@@ -10,8 +10,9 @@ class eEntryScreen extends StatefulWidget {
   State<eEntryScreen> createState() => _eEntryScreenState();
 }
 
-class _eEntryScreenState extends State<eEntryScreen> with AutomaticKeepAliveClientMixin{
-    bool get wantKeepAlive => true;
+class _eEntryScreenState extends State<eEntryScreen>
+    with AutomaticKeepAliveClientMixin {
+  bool get wantKeepAlive => true;
 
   late Map<String, dynamic> competitionsMap;
   late Future<http.Response> eEntryDataFuture;
@@ -35,39 +36,32 @@ class _eEntryScreenState extends State<eEntryScreen> with AutomaticKeepAliveClie
           }
           return SingleChildScrollView(
             child: Expanded(
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  for (var entry in competitionsMap.entries)
-                    Column(children: [
-                      Container(
-                        width: double.infinity,
-                        alignment: Alignment.center,
-                        decoration: BoxDecoration(
-                            color: Colors.black,
-                            border: Border(
-                                top: BorderSide(
-                                    width: .3, color: Colors.grey.shade500))),
-                        child: Padding(
-                          padding: const EdgeInsets.all(10.0),
-                          child: Text(
-                            entry.key.toUpperCase(),
-                            textAlign: TextAlign.center,
-                            style: TextStyle(
-                                color: Colors.white,
-                                fontSize: 13.5,
-                                fontWeight: FontWeight.bold),
-                          ),
+              child: ListView.separated(
+                separatorBuilder: ((context, index) => SizedBox(
+                      height: 30,
+                    )),
+                    
+                shrinkWrap: true,
+                itemCount: competitionsMap.length,
+                physics: NeverScrollableScrollPhysics(),
+                itemBuilder: ((context, index) => Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
+                      Padding(
+                        padding: const EdgeInsets.all(10.0),
+                        child: Text(
+                          competitionsMap.entries.elementAt(index).key,
+                          style: TextStyle(
+                              fontSize: 17, fontWeight: FontWeight.bold),
                         ),
                       ),
                       Row(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
-                            FixedColumnWidget(entry.value),
-                            ScrollableColumnWidget(entry.value)
+                            FixedColumnWidget(
+                                competitionsMap.values.elementAt(index)),
+                            ScrollableColumnWidget(
+                                competitionsMap.values.elementAt(index))
                           ]),
-                    ])
-                ],
+                    ])),
               ),
             ),
           );
