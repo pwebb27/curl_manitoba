@@ -1,6 +1,7 @@
 import 'package:curl_manitoba/models/calendar_event.dart';
 import 'package:curl_manitoba/models/news_story.dart';
 import 'package:curl_manitoba/models/scoresCompetitionModels/scores_competition.dart';
+import 'package:curl_manitoba/widgets/carousel-image.dart';
 import 'package:curl_manitoba/widgets/competition_tile.dart';
 import 'package:curl_manitoba/widgets/font_awesome_pro_icons.dart';
 import 'package:flutter/material.dart';
@@ -19,11 +20,14 @@ class HomeFeedScreen extends StatefulWidget {
   State<HomeFeedScreen> createState() => _HomeFeedScreenState();
 }
 
-const List<String> imgList = [
-  'assets/images/carousel-image-1.png',
-  'assets/images/carousel-image-2.png',
-  'assets/images/carousel-image-3.png',
-  'assets/images/carousel-image-4.png'
+List<CarouselImage> carouselImages = [
+  CarouselImage('Officiating', 'Learn the requirements and enroll in courses'),
+  CarouselImage('Coaching', 'Become a coach in the community'),
+  CarouselImage('Ice Technician', 'Start your path to certification'),
+  CarouselImage(
+      'Curling Programs', 'Find a youth program for skill development'),
+  CarouselImage(
+      'Junior High Performance', 'Learn the requirements and enroll in courses')
 ];
 
 Map<String, Icon> EventsProgramsAndNewsData = {
@@ -118,60 +122,57 @@ class _HomeFeedScreenState extends State<HomeFeedScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return FutureBuilder(
-        future: homeFeedFuture,
-        builder: (context, snapshot) {
-          if (!snapshot.hasData) {
-            return CircularProgressBar();
-          }
-          return SafeArea(
-            top: false,
-            bottom: false,
-            child: Builder(
-                builder: (context) => SingleChildScrollView(
-                      child: Column(
-                          mainAxisAlignment: MainAxisAlignment.start,
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: <Widget>[
-                            CarouselSlider(
-                              items: itemss,
-                              options: CarouselOptions(
-                                  autoPlayInterval: Duration(seconds: 5),
-                                  height: 194,
-                                  autoPlay: true,
-                                  viewportFraction: 1,
-                                  onPageChanged: (index, reason) {
-                                    setState(() {
-                                      _currentBannerIndex = index;
-                                    });
-                                  }),
-                            ),
-                            buildSection('Latest Competitions',
-                                buildCompetitionSection(loadedCompetitions)),
-                            Divider(
-                                height: 5,
-                                thickness: 5,
-                                color: Colors.grey.shade500),
-                            buildSection('Latest News',
-                                buildNewsStorySegment(loadedNews, context)),
-                            Divider(
-                                height: 5,
-                                thickness: 5,
-                                color: Colors.grey.shade500),
-                            buildSection(
-                                'Upcoming Events', buildEventsSection()),
-                            Divider(
-                                height: 5,
-                                thickness: 5,
-                                color: Colors.grey.shade500),
-                            buildSection(
-                                'Events, Programs & News',
-                                buildEventsProgramsAndNewsSection(
-                                    EventsProgramsAndNewsData)),
-                          ]),
-                    )),
-          );
-        });
+    return SafeArea(
+      top: false,
+      bottom: false,
+      child: Builder(
+          builder: (context) => SingleChildScrollView(
+                child: Column(
+                    mainAxisAlignment: MainAxisAlignment.start,
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: <Widget>[
+                      Container(
+                        decoration: BoxDecoration(
+                            gradient: LinearGradient(
+                                begin: Alignment.topRight,
+                                end: Alignment.bottomLeft,
+                                colors: [
+                              Theme.of(context).primaryColor,
+                              Colors.black
+                            ])),
+                        child: CarouselSlider(
+                          items: carouselImages,
+                          options: CarouselOptions(
+                              autoPlayInterval: Duration(seconds: 5),
+                              height: 195,
+                              autoPlay: true,
+                              viewportFraction: 1,
+                              onPageChanged: (index, reason) {
+                                setState(() {
+                                  _currentBannerIndex = index;
+                                });
+                              }),
+                        ),
+                      ),
+                      buildAdBanner(),
+                      buildSection('Latest Competitions',
+                          buildCompetitionSection(loadedCompetitions)),
+                      Divider(
+                          height: 5, thickness: 5, color: Colors.grey.shade500),
+                      buildSection('Latest News',
+                          buildNewsStorySegment(loadedNews, context)),
+                      Divider(
+                          height: 5, thickness: 5, color: Colors.grey.shade500),
+                      buildSection('Upcoming Events', buildEventsSection()),
+                      Divider(
+                          height: 5, thickness: 5, color: Colors.grey.shade500),
+                      buildSection(
+                          'Events, Programs & News',
+                          buildEventsProgramsAndNewsSection(
+                              EventsProgramsAndNewsData)),
+                    ]),
+              )),
+    );
   }
 }
 
@@ -342,4 +343,14 @@ Widget buildNewsStoryItem(NewsStory newsStory, BuildContext context) {
                       ])),
             ],
           )));
+}
+
+Widget buildAdBanner() {
+  return Padding(
+      padding: EdgeInsets.only(top: 12, bottom: 2, left: 10, right: 10),
+      child: Container(
+        decoration: BoxDecoration(border: Border.all(width: .15)),
+        child: Image.asset('assets/images/liquor-mart-banner.jpg',
+            width: double.infinity),
+      ));
 }
