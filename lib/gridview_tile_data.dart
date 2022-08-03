@@ -45,9 +45,9 @@ List<gridViewTile> HIGH_PERFORMANCE_GRID_VIEW_TILES_DATA = [
 
 ];List<gridViewTile> ABOUT_US_TILES_DATA = [
   gridViewTile('COVID-19 Information', 'virus-covid.svg','covid-19.PNG'),
-  gridViewTile('Contact Us', 'contact.svg','rocks.PNG'),
+  gridViewTile('Contact Us', 'contact.svg','contact-us.jpg'),
   gridViewTile('Mission & Vision', 'bullseye-arrow.svg','mission.PNG'),
-  gridViewTile('Staff', 'people-group.svg','staff.PNG'),
+  gridViewTile('Staff', 'people-group.svg','staff.jpg'),
   gridViewTile('Leadership & Governance', 'podium.svg','governance.PNG'),
   gridViewTile('Sponsors/Partners', 'handshake.svg','sponsors-partners.PNG'),
   gridViewTile('Club Information', 'information-point.svg','club-information.PNG'),
