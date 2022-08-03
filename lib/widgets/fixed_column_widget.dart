@@ -11,20 +11,25 @@ class FixedColumnWidget extends StatelessWidget {
   Widget build(BuildContext context) {
     return FittedBox(
       child: DataTable(
+                  border: TableBorder.symmetric( outside: BorderSide(color: Colors.grey.shade400, width: .2),),
+
           headingRowHeight: 45,
           dataRowHeight: 90,
-          headingRowColor: MaterialStateProperty.all(Colors.grey.shade600),
+          headingRowColor: MaterialStateProperty.all(Colors.grey.shade200),
           decoration: BoxDecoration(
+            
             border: Border(
+
               right: BorderSide(
                 color: Colors.black,
                 width: 2,
               ),
+
             ),
           ),
           columns: [
             DataColumn(
-              label: Text('Event', style: TextStyle(color: Colors.white)),
+              label: Text('Event', style: TextStyle(color: Colors.black)),
             ),
           ],
           rows: [
