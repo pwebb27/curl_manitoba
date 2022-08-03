@@ -45,28 +45,12 @@ Map<String, Icon> EventsProgramsAndNewsIcons = {
   'News': Icon(FontAwesomePro.newspaper, size: 14, color: Colors.grey.shade700)
 };
 
-List<Widget> itemss = imgList
-    .map((item) => Container(
-          child: Center(child: Image.asset(item)),
-        ))
-    .toList();
-
 List<Widget> competitionItems = [];
 
 class _HomeFeedScreenState extends State<HomeFeedScreen> {
   late List<scoresCompetition> loadedCompetitions;
   late List<NewsStory> loadedNews;
   late Map<DateTime, List<CalendarEvent>> calendarEvents;
-
-  late Future<List<http.Response>> homeFeedFuture;
-
-  Future<List<http.Response>> _getDataFromWeb() async {
-    var responses = await Future.wait([
-      CalendarEvent.getCalendarData(),
-    ]);
-
-    return responses;
-  }
 
   buildCompetitionSection(
     List<scoresCompetition> competitions,
@@ -130,12 +114,6 @@ class _HomeFeedScreenState extends State<HomeFeedScreen> {
   void initState() {
     loadedCompetitions = widget.loadedCompetitions;
     loadedNews = widget.loadedNews;
-    homeFeedFuture = _getDataFromWeb();
-
-    homeFeedFuture.then((responses) {
-      calendarEvents = CalendarEvent.parseCalendarData(responses[0]);
-    });
-    super.initState();
   }
 
   @override
