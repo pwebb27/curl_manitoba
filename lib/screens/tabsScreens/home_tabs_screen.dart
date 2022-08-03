@@ -132,9 +132,9 @@ class _TabsScreenState extends State<TabsScreen> {
                         _buildBottomNavigationBarItem('Home', 'home', 23.5),
                         _buildBottomNavigationBarItem(
                             'e-Entry', 'add-group', 24),
-                        _buildBottomNavigationBarItem('News', 'newspaper', 23),
+                        _buildBottomNavigationBarItem('News', 'newspaper', 22.5),
                         _buildBottomNavigationBarItem(
-                            'Scores', 'scoreboard', 23),
+                            'Scores', 'scoreboard', 23.5),
                         _buildBottomNavigationBarItem(
                             'Calendar', 'calendar-days', 25),
                       ],
