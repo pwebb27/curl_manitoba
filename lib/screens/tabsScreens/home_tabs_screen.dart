@@ -1,4 +1,5 @@
 import 'package:curl_manitoba/models/apis/curling_io_api.dart';
+import 'package:curl_manitoba/models/calendar_event.dart';
 import 'package:curl_manitoba/models/news_story.dart';
 import 'package:curl_manitoba/models/scoresCompetitionModels/scores_competition.dart';
 import 'package:curl_manitoba/screens/mainTabs/news/news_screen.dart';
@@ -22,6 +23,7 @@ class _TabsScreenState extends State<TabsScreen> {
   late PageController _pageController;
   late List<Future<http.Response>> tabsScreenFutures;
   late List<scoresCompetition> loadedCompetitions;
+  late Map<DateTime, List<CalendarEvent>> loadedEvents;
   late List<NewsStory> loadedNews;
   late final List<Widget> _pages;
   late String test;
@@ -39,17 +41,20 @@ class _TabsScreenState extends State<TabsScreen> {
     _selectedPageIndex = 0;
     tabsScreenFutures = [
       CurlingIOAPI().fetchCompetitions(),
-      NewsStory.getNewsData(8)
+      NewsStory.getNewsData(8),
+      CalendarEvent.getCalendarData(),
     ];
     resultsFuture = Future.wait(tabsScreenFutures).then((data) {
       loadedCompetitions = scoresCompetition.parseCompetitionData(data[0]);
       loadedNews = NewsStory.parseNewsData(data[1]);
+            loadedEvents = CalendarEvent.parseCalendarData(data[2]);
+
       _pages = [
         HomeScreen(loadedCompetitions, loadedNews),
         eEntryScreen(),
         NewsFeedScreen(loadedNews),
         ScoresScreen(loadedCompetitions),
-        CalendarScreen(),
+        CalendarScreen(loadedEvents),
       ];
       _pageController = PageController(initialPage: _selectedPageIndex);
     });
