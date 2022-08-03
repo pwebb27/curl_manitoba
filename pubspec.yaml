@@ -39,8 +39,9 @@ dependencies:
   html: ^0.15.0
   table_calendar: ^3.0.5
   flutter_svg: ^1.0.3
-  
-
+  cloud_firestore: ^3.4.2
+  firebase_storage: ^10.3.4
+  file_picker: ^5.0.1
  
 
 
@@ -82,6 +83,7 @@ flutter:
   assets:
     - assets/images/
     - assets/icons/
+    - assets/images/carouselImages/
 
   # The following line ensures that the Material Icons font is
   # included with your application, so that you can use the icons in

@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "745672762905",
+    "project_id": "curlmanitoba-b488e",
+    "storage_bucket": "curlmanitoba-b488e.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:745672762905:android:8c34ddbd689e3683d96c88",
+        "android_client_info": {
+          "package_name": "com.example.curl_manitoba"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "745672762905-7c6v073iq9qsh73gsj8r4j8mcvho2n4l.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyB2-6iAw49Lr15-_k2zXIIK8Cmt34fzn28"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "745672762905-7c6v073iq9qsh73gsj8r4j8mcvho2n4l.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
