@@ -26,12 +26,40 @@ class _TeamDataScreenState extends State<TeamDataScreen> {
         child: Expanded(
       child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
         Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 10.0),
+          padding: const EdgeInsets.symmetric(horizontal: 15, vertical: 10.0),
+          child: Container(
+            decoration: BoxDecoration(
+                border: Border.all(width: 2, color: Colors.black)),
+            child: Row(
+              children: [
+                Container(
+                  decoration: BoxDecoration(
+                  color: Color.fromRGBO(251, 208, 7, 1),
+                      border: Border(right: BorderSide(width: 2))),
+                  height: 30,
+                  width: 10,
+                ),
+                Expanded(
+                  child: Container(
+                    height: 30,
+                    color: Theme.of(context).primaryColor,
+                    child: Align(
+                      alignment: Alignment.centerLeft,
+                      child: Padding(
+                        padding: const EdgeInsets.only(left: 8.0),
           child: Text(
             team.name!,
             style: TextStyle(
-              fontWeight: FontWeight.bold,
+                            color: Colors.white,
+                            fontWeight: FontWeight.w400,
               fontSize: 17,
+            ),
+          ),
+        ),
+                    ),
+                  ),
+                ),
+              ],
             ),
           ),
         ),
