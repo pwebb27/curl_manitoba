@@ -50,7 +50,7 @@ class CarouselImage extends StatelessWidget {
                   ? Alignment.topCenter
                   : Alignment.topRight,
           child: SizedBox(
-            height: 105,
+            height: 110,
             width: 120,
             child: ClipRRect(
               
