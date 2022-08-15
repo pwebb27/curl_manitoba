@@ -1,3 +1,4 @@
+import 'package:curl_manitoba/models/scoresCompetitionModels/team.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
 
@@ -10,6 +11,7 @@ class scoresCompetition {
   late DateTime endDate;
   late String venue;
   late String sponsorImageUrl;
+  Map<String,List<Team>>? formatMap;
 
   scoresCompetition.fromJson(Map<String, dynamic> json) {
     name = json['title'];
