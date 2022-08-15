@@ -131,27 +131,30 @@ class _HomeFeedScreenState extends State<HomeFeedScreen> {
                     mainAxisAlignment: MainAxisAlignment.start,
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: <Widget>[
-                      Container(
-                        decoration: BoxDecoration(
-                            gradient: LinearGradient(
-                                begin: Alignment.topRight,
-                                end: Alignment.bottomLeft,
-                                colors: [
-                              Theme.of(context).primaryColor,
-                              Colors.black
-                            ])),
-                        child: CarouselSlider(
-                          items: carouselImages,
-                          options: CarouselOptions(
-                              autoPlayInterval: Duration(seconds: 5),
-                              height: 195,
-                              autoPlay: true,
-                              viewportFraction: 1,
-                              onPageChanged: (index, reason) {
-                                setState(() {
-                                  _currentBannerIndex = index;
-                                });
-                              }),
+                      Padding(
+                        padding: const EdgeInsets.only(top:3.0),
+                        child: Container(
+                          decoration: BoxDecoration(
+                              gradient: LinearGradient(
+                                  begin: Alignment.topRight,
+                                  end: Alignment.bottomLeft,
+                                  colors: [
+                                Theme.of(context).colorScheme.primary,
+                                Colors.black
+                              ])),
+                          child: CarouselSlider(
+                            items: carouselImages,
+                            options: CarouselOptions(
+                                autoPlayInterval: Duration(seconds: 5),
+                                height: 195,
+                                autoPlay: true,
+                                viewportFraction: 1,
+                                onPageChanged: (index, reason) {
+                                  setState(() {
+                                    _currentBannerIndex = index;
+                                  });
+                                }),
+                          ),
                         ),
                       ),
                       buildAdBanner(),
@@ -354,3 +357,4 @@ Widget buildAdBanner() {
             width: double.infinity),
       ));
 }
+
