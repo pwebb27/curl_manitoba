@@ -42,6 +42,8 @@ dependencies:
   cloud_firestore: ^3.4.2
   firebase_storage: ^10.3.4
   file_picker: ^5.0.1
+  provider: ^6.0.3
+  data_table_2: ^2.3.6
  
 
 
