@@ -18,12 +18,18 @@ class CurlingIOAPI {
   Future<http.Response> fetchCompetitions(
       [String tag = '', int pageNumber = 1]) async {
     return await http
-        .get(Uri.parse(baseUrl + '.json?search=&tags=$tag&page=$pageNumber'));
+        .get(Uri.parse('$baseUrl.json?search=&tags=$tag&page=$pageNumber'));
   }
 
   Future<http.Response> fetchGameResults(
       String competitionId, String teamId, String id) async {
     return await http.get(Uri.parse(
-        baseUrl + '/${competitionId}/teams/${teamId}/game_positions/${id}'));
+        baseUrl + '/$competitionId/teams/$teamId/game_positions/$id'));
+  }
+
+  Future<http.Response> fetchFormat(
+      String competitionId) async {
+    return await http
+        .get(Uri.parse('$baseUrl/$competitionId/formats'));
   }
 }
