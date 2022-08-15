@@ -31,7 +31,6 @@ class CustomAppBar extends StatelessWidget with PreferredSizeWidget {
                 builder: (context) => IconButton(
                     icon: Icon(FontAwesomePro.bars, size: 24),
                     onPressed: () => Scaffold.of(context).openDrawer())),
-            backgroundColor: Theme.of(context).primaryColor,
             title: pageTitle!=''?Text(
               pageTitle,
               style: TextStyle(
