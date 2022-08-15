@@ -1,3 +1,4 @@
+import 'package:curl_manitoba/main_color_pallete.dart';
 import 'package:curl_manitoba/route_generator.dart';
 import 'package:curl_manitoba/screens/mainTabs/news/news_article_screen.dart';
 import 'package:curl_manitoba/screens/tabsScreens/home_tabs_screen.dart';
@@ -5,12 +6,13 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:wakelock/wakelock.dart';
 
-void main() async{
+void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp();
 
- runApp(MyApp());
+  runApp(MyApp());
 }
+
 final GlobalKey<NavigatorState> _navKey = GlobalKey<NavigatorState>();
 
 class MyApp extends StatelessWidget {
@@ -20,11 +22,10 @@ class MyApp extends StatelessWidget {
 
     return MaterialApp(
         theme: ThemeData(
-            primaryColor: Color.fromRGBO(111, 18, 0, 1),
-
-            colorScheme:
-                ColorScheme.fromSwatch().copyWith(secondary: Color.fromRGBO(251, 208, 7, 1)),
-            fontFamily: 'Roboto'),
+            colorScheme: ColorScheme.fromSwatch(
+          accentColor: Color.fromRGBO(251, 205, 7, 1),
+          primarySwatch: MainColorPallette.kToDark,
+        )),
         initialRoute: '/',
         onGenerateRoute: RouteGenerator.generateRoute);
   }
