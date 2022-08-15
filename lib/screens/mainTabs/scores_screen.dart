@@ -95,6 +95,7 @@ late List<dynamic> loadedCompetitions;
         automaticallyImplyLeading: false,
         expandedHeight: 145,
         floating: true,
+        snap: true,
         
         actionsIconTheme: IconThemeData(opacity: 0.0),
         flexibleSpace: 
@@ -106,10 +107,13 @@ late List<dynamic> loadedCompetitions;
         
       ),
       SliverList(
+
           delegate: SliverChildBuilderDelegate(
+            
         ((context, index) {
+
           if (index < loadedCompetitions.length)
-            return CompetitionTile(loadedCompetitions[index]);
+            return (loadedCompetitions[index]);
           else
             return Padding(
                 padding: EdgeInsets.symmetric(vertical: 32),
@@ -118,6 +122,7 @@ late List<dynamic> loadedCompetitions;
                     : Text('No more data to load'));
         }),
         childCount: loadedCompetitions.length + 1,
+
       ))
     ]);
   }

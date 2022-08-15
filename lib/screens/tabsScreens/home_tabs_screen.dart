@@ -1,3 +1,4 @@
+import 'package:curl_manitoba/main_color_pallete.dart';
 import 'package:curl_manitoba/models/apis/curling_io_api.dart';
 import 'package:curl_manitoba/models/calendar_event.dart';
 import 'package:curl_manitoba/models/news_story.dart';
@@ -74,7 +75,7 @@ class _TabsScreenState extends State<TabsScreen> {
     return BottomNavigationBarItem(
       label: title,
       activeIcon: SvgPicture.asset('assets/icons/' + iconName + '.svg',
-          height: iconSize, color: Theme.of(context).primaryColor),
+          height: iconSize, color: Theme.of(context).colorScheme.primary),
       icon: SvgPicture.asset(
         'assets/icons/' + iconName + '.svg',
         height: iconSize,
@@ -126,7 +127,7 @@ class _TabsScreenState extends State<TabsScreen> {
                       currentIndex: _selectedPageIndex,
                       type: BottomNavigationBarType.fixed,
                       unselectedItemColor: Colors.grey.shade700,
-                      selectedItemColor: Theme.of(context).primaryColor,
+                      selectedItemColor: MainColorPallette.kToDark.shade100,
                       onTap: (selectedPageIndex) {
                         setState(() {
                           _selectedPageIndex = selectedPageIndex;
