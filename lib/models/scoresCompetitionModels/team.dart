@@ -10,17 +10,25 @@ class Team {
   late String? name;
   late String id;
   List<Player>? players;
+
+  
+  String? coach;
+  String? affiliation;
+  String? location;
   
 
   Team(this.id);
 
   Team.fromJson(Map<String, dynamic> json) {
+    id = json['id'].toString();
+    coach = json['coach'];
+    location = json['location'];
+    affiliation = json['affiliation'];
     String tempName = json['name'];
     List<String> wordList = tempName.split(" ");
     (wordList[0].toLowerCase() == 'team')
         ? name = tempName
         : name = 'Team ' + tempName;
-    id = json['id'].toString();
     players = [];
     for (Map<String, dynamic> athlete in json['team_athletes'])
       players!.add(Player.fromJson(athlete));
