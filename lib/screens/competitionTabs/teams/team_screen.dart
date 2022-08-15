@@ -2,6 +2,7 @@ import 'package:curl_manitoba/models/scoresCompetitionModels/team.dart';
 import 'package:flutter/src/foundation/key.dart';
 import 'package:flutter/src/widgets/framework.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 
 class TeamDataScreen extends StatefulWidget {
   Team team;
@@ -47,15 +48,15 @@ class _TeamDataScreenState extends State<TeamDataScreen> {
                       alignment: Alignment.centerLeft,
                       child: Padding(
                         padding: const EdgeInsets.only(left: 8.0),
-          child: Text(
-            team.name!,
-            style: TextStyle(
+                        child: Text(
+                          team.name!,
+                          style: TextStyle(
                             color: Colors.white,
                             fontWeight: FontWeight.w400,
-              fontSize: 17,
-            ),
-          ),
-        ),
+                            fontSize: 17,
+                          ),
+                        ),
+                      ),
                     ),
                   ),
                 ),
@@ -77,8 +78,8 @@ class _TeamDataScreenState extends State<TeamDataScreen> {
                       onTap: () {
                         showDialog(
                             context: context,
-                            builder: (context) =>
-                                ImageDialog(team.players![index].profilePicUrl));
+                            builder: (context) => ImageDialog(
+                                team.players![index].profilePicUrl));
                       },
                       child: CircleAvatar(
                         backgroundImage:
@@ -95,16 +96,14 @@ class _TeamDataScreenState extends State<TeamDataScreen> {
                   children: [
                     Padding(
                       padding: const EdgeInsets.only(bottom: 5.0),
-                      child: Text(
-                          'City: ' + (team.players![index].city!),
+                      child: Text('City: ' + (team.players![index].city!),
                           style: TextStyle(fontSize: 16)),
                     ),
                     (team.players![index].delivery != null)
                         ? Padding(
                             padding: const EdgeInsets.only(bottom: 5.0),
                             child: Text(
-                                'Delivery: ' +
-                                    (team.players![index].delivery!),
+                                'Delivery: ' + (team.players![index].delivery!),
                                 style: TextStyle(fontSize: 16)))
                         : SizedBox.shrink(),
                     (team.players![index].club != null)
@@ -119,6 +118,11 @@ class _TeamDataScreenState extends State<TeamDataScreen> {
                 ),
               ))),
         ),
+        if (team.location != null)
+          buildTeamCard('Location', team.location!, 'whistle'),
+        if (team.affiliation != null)
+          buildTeamCard('Affiliation', team.affiliation!, 'location-dot'),
+        if (team.coach != null) buildTeamCard('Coach', team.coach!, 'landmark'),
         Padding(padding: EdgeInsets.all(12)),
         Row(children: [buildDrawsTable()]),
       ]),
@@ -146,9 +150,40 @@ class ImageDialog extends StatelessWidget {
   }
 }
 
+buildTeamCard(String title, String name, String iconName) {
+  return Padding(
+    padding: const EdgeInsets.only(left:15.0,right:15,top:10),
+    child: Card(
+        elevation: 5,
+        color: Colors.grey.shade200,
+        child: Padding(
+          padding: const EdgeInsets.all(10.0),
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              Padding(
+                padding: EdgeInsets.only(right: 15),
+                child: SvgPicture.asset(
+                  'assets/icons/' + iconName + '.svg',
+                  height: 20,
+                  alignment: Alignment.center,
+                ),
+              ),
+              Text(
+                title + ': ' + name,
+                style: TextStyle(fontSize: 17, fontWeight: FontWeight.w500),
+              )
+            ],
+          ),
+        )),
+  );
+}
+
 buildDrawsTable() {
   return Expanded(
-    child: Padding(padding: EdgeInsets.symmetric(horizontal: 10),child:SingleChildScrollView(
+      child: Padding(
+    padding: EdgeInsets.symmetric(horizontal: 10),
+    child: SingleChildScrollView(
       scrollDirection: Axis.horizontal,
       child: DataTable(
         border: TableBorder.symmetric(outside: BorderSide(width: .2)),
@@ -177,6 +212,7 @@ buildDrawsTable() {
               label: Text('Opponent', style: TextStyle(color: Colors.white))),
         ],
         rows: [],
+      
       ),
     ),
   ));
