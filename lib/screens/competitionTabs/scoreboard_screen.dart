@@ -23,7 +23,7 @@ class _ScoreboardScreenState extends State<ScoreboardScreen>
   late scoresCompetition competition;
   late List<Game> games;
   List<Draw>? draws;
-  late FutureGroup<void> _futureGroup;
+  FutureGroup<void>? _futureGroup;
 
   late Future<http.Response> competitionGamesFuture;
   late List<DropdownMenuItem> items;
@@ -44,7 +44,7 @@ class _ScoreboardScreenState extends State<ScoreboardScreen>
   @override
   void initState() {
     super.initState();
-    _futureGroup = FutureGroup();
+    
 
     competition = widget.competition;
     competitionGamesFuture = CurlingIOAPI().fetchGames(competition.id);
@@ -67,10 +67,11 @@ class _ScoreboardScreenState extends State<ScoreboardScreen>
             value = draws![0];
             return StatefulBuilder(builder: (context, setState) {
               for (Game game in value!.games) {
-                _futureGroup.add(game.getTeamOneResults());
-                _futureGroup.add(game.getTeamTwoResults());
+                _futureGroup = FutureGroup();
+                _futureGroup!.add(game.getTeamOneResults());
+                _futureGroup!.add(game.getTeamTwoResults());
               }
-              _futureGroup.close();
+              _futureGroup!.close();
 
               return SingleChildScrollView(
                 child: Column(children: [
@@ -118,7 +119,7 @@ class _ScoreboardScreenState extends State<ScoreboardScreen>
 
   buildScoresTables(Draw? draw) {
     return FutureBuilder(
-        future: _futureGroup.future,
+        future: _futureGroup!.future,
         builder: (context, snapshot) {
           if (snapshot.connectionState == ConnectionState.waiting)
             return CircularProgressBar();          
@@ -198,7 +199,7 @@ class _ScoreboardScreenState extends State<ScoreboardScreen>
           border: TableBorder.symmetric(outside: BorderSide(width: .2)),
           headingRowHeight: 40,
           dataRowHeight: 40,
-          headingRowColor: MaterialStateProperty.all(Colors.grey.shade200),
+          headingRowColor: MaterialStateProperty.all(Theme.of(context).primaryColor),
           decoration: BoxDecoration(
             border: Border(
               right: BorderSide(
@@ -210,7 +211,7 @@ class _ScoreboardScreenState extends State<ScoreboardScreen>
           columns: [
             DataColumn(
               label: Text('Teams',
-                  style: TextStyle(fontWeight: FontWeight.bold, fontSize: 15)),
+                  style: TextStyle(fontWeight: FontWeight.bold, fontSize: 15, color: Colors.white)),
             ),
           ],
           rows: [
@@ -234,10 +235,11 @@ class _ScoreboardScreenState extends State<ScoreboardScreen>
       child: SingleChildScrollView(
         scrollDirection: Axis.horizontal,
         child: DataTable(
+
           border: TableBorder.symmetric(outside: BorderSide(width: .2)),
           headingRowHeight: 40,
           dataRowHeight: 40,
-          headingRowColor: MaterialStateProperty.all(Colors.grey.shade400),
+          headingRowColor: MaterialStateProperty.all(Color.fromRGBO(143,108,102, 1),),
           columnSpacing: 15,
           decoration: BoxDecoration(
             border: Border(
