@@ -56,48 +56,51 @@ class _CompetitionScreenState extends State<CompetitionScreen>
 
   @override
   Widget build(BuildContext context) {
-    return new Scaffold(
-        appBar: CustomAppBar(context, 'Live Scores & Results'),
-        body: DefaultTabController(
-            length: 3,
-            child: CustomScrollView(slivers: [
-              SliverPersistentHeader(
-                pinned: true,
-                delegate: MyHeaderDelegate(competition),
-              ),
-              NestedScrollView(
-                  headerSliverBuilder: (context, innerBoxIsScrolled) => [
-                        SliverPersistentHeader(
-                            delegate: _SliverAppBarDelegate(TabBar(
-                          isScrollable: true,
-                          labelColor: Colors.black,
-                          controller: _controller,
-                          tabs: [
-                            new Tab(
-                              text: 'Scoreboards',
-                            ),
-                            new Tab(
-                              text: 'Teams/Standings',
-                            ),
-                            new Tab(
-                              text: 'Analysis',
-                            ),
-                          ],
-                        )))
-                      ],
-                  body: Navigator(
-                      key: navKey,
-                      onGenerateRoute: (_) => MaterialPageRoute(
-                            builder: (_) => TabBarView(
-                              controller: _controller,
-                              children: <Widget>[
-                                ScoreboardScreen(competition),
-                                TeamsScreen(competition),
-                                ReportsScreen(competition),
-                              ],
-                            ),
-                          ))),
-            ])));
+    return SafeArea(
+      child: new Scaffold(
+          body: DefaultTabController(
+        length: 3,
+        child: NestedScrollView(
+            headerSliverBuilder: (context, innerBoxIsScrolled) => [
+                  SliverPersistentHeader(
+                    pinned: true,
+                    delegate: MyHeaderDelegate(competition),
+                  ),
+                  SliverPersistentHeader(
+                    pinned: true,
+                      delegate: _SliverAppBarDelegate(TabBar(
+                        
+    
+                    isScrollable: true,
+                    labelColor: Colors.black,
+                    controller: _controller,
+                    tabs: [
+                      new Tab(
+                        text: 'Scoreboards',
+                      ),
+                      new Tab(
+                        text: 'Teams/Standings',
+                      ),
+                      new Tab(
+                        text: 'Analysis',
+                      ),
+                    ],
+                  )))
+                ],
+            body: Navigator(
+                key: navKey,
+                onGenerateRoute: (_) => MaterialPageRoute(
+                      builder: (_) => TabBarView(
+                        controller: _controller,
+                        children: <Widget>[
+                          ScoreboardScreen(competition),
+                          TeamsScreen(competition),
+                          ReportsScreen(competition),
+                        ],
+                      ),
+                    ))),
+      )),
+    );
   }
 
   _scrollListener() {
@@ -113,7 +116,7 @@ class MyHeaderDelegate extends SliverPersistentHeaderDelegate {
   double get maxExtent => 250;
 
   @override
-  double get minExtent => 84;
+  double get minExtent => 60;
 
   @override
   bool shouldRebuild(covariant SliverPersistentHeaderDelegate oldDelegate) =>
@@ -127,16 +130,15 @@ class MyHeaderDelegate extends SliverPersistentHeaderDelegate {
   ) {
     final progress = shrinkOffset / maxExtent;
     return Stack(
+      
       children: [
         AnimatedOpacity(
           duration: Duration(milliseconds: 0),
-          opacity: 1-progress,
+          opacity: 1 - progress,
           child: Column(children: <Widget>[
             Material(
-              
               elevation: 1,
               child: Container(
-                
                 color: Colors.white,
                 child: new Column(
                   children: [
@@ -199,7 +201,7 @@ class MyHeaderDelegate extends SliverPersistentHeaderDelegate {
           ]),
         ),
         AnimatedOpacity(
-          opacity: 0,
+          opacity: 0 + progress,
           duration: Duration(milliseconds: 0),
           child: Text(
             competition.name,
