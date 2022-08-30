@@ -3,6 +3,7 @@ import 'package:curl_manitoba/screens/competitionTabs/reports_screen.dart';
 import 'package:curl_manitoba/screens/competitionTabs/scoreboard_screen.dart';
 import 'package:curl_manitoba/screens/competitionTabs/standings_and_draws_screen.dart';
 import 'package:curl_manitoba/screens/competitionTabs/teams/teams_screen.dart';
+import 'package:curl_manitoba/screens/mainTabs/homeTabs/home_feed_screen.dart';
 import 'package:curl_manitoba/widgets/custom_app_bar.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
@@ -15,6 +16,8 @@ class CompetitionScreen extends StatefulWidget {
   @override
   State<CompetitionScreen> createState() => _CompetitionScreenState();
 }
+
+var top = 0.0;
 
 final GlobalKey<NavigatorState> navKey = GlobalKey<NavigatorState>();
 
@@ -57,47 +60,80 @@ class _CompetitionScreenState extends State<CompetitionScreen>
   @override
   Widget build(BuildContext context) {
     return new Scaffold(
-        appBar: CustomAppBar(context, 'Live Scores & Results'),
-        body: DefaultTabController(
-            length: 3,
-            child: CustomScrollView(slivers: [
-              SliverPersistentHeader(
-                pinned: true,
-                delegate: MyHeaderDelegate(competition),
-              ),
-              NestedScrollView(
-                  headerSliverBuilder: (context, innerBoxIsScrolled) => [
-                        SliverPersistentHeader(
-                            delegate: _SliverAppBarDelegate(TabBar(
-                          isScrollable: true,
-                          labelColor: Colors.black,
-                          controller: _controller,
-                          tabs: [
-                            new Tab(
-                              text: 'Scoreboards',
-                            ),
-                            new Tab(
-                              text: 'Teams/Standings',
-                            ),
-                            new Tab(
-                              text: 'Analysis',
-                            ),
-                          ],
-                        )))
-                      ],
-                  body: Navigator(
-                      key: navKey,
-                      onGenerateRoute: (_) => MaterialPageRoute(
-                            builder: (_) => TabBarView(
-                              controller: _controller,
-                              children: <Widget>[
-                                ScoreboardScreen(competition),
-                                TeamsScreen(competition),
-                                ReportsScreen(competition),
-                              ],
-                            ),
-                          ))),
-            ])));
+        body: SafeArea(
+      child: DefaultTabController(
+        length: 3,
+        child: NestedScrollView(
+          // Setting floatHeaderSlivers to true is required in order to float
+          // the outer slivers over the inner scrollable.
+
+          headerSliverBuilder: (BuildContext context, bool innerBoxIsScrolled) {
+            return <Widget>[
+              SliverAppBar(
+                  leading: AnimatedContainer(
+                      duration: Duration(milliseconds: 0),
+                      child: FittedBox(
+                        child: CircleAvatar(
+                            backgroundColor: Colors.grey.shade500.withOpacity(.5),
+                            child: Icon(
+                              Icons.arrow_back,
+                              color: Colors.white,
+                            )),
+                      )),
+                  floating: true,
+                  pinned: true,
+                  expandedHeight: 290.0,
+                  collapsedHeight: 75,
+                  forceElevated: innerBoxIsScrolled,
+                  flexibleSpace: LayoutBuilder(builder:
+                      (BuildContext context, BoxConstraints constraints) {
+                    // print('constraints=' + constraints.toString());
+                    top = constraints.biggest.height;
+                    return FlexibleSpaceBar(
+                        titlePadding: EdgeInsets.only(bottom: 50),
+                        title: AnimatedOpacity(
+                            duration: Duration(milliseconds: 300),
+                            opacity: top ==
+                                    MediaQuery.of(context).padding.top +
+                                        kToolbarHeight +
+                                        100
+                                ? 1.0
+                                : 0.0,
+                            child: Text(
+                              top.toString(),
+                              style: TextStyle(fontSize: 30.0),
+                            )),
+                        background: MyHeaderDelegate(competition));
+                  }),
+                  bottom: _SliverAppBarDelegate(TabBar(
+                    isScrollable: true,
+                    labelColor: Colors.black,
+                    controller: _controller,
+                    tabs: [
+                      new Tab(
+                        text: 'Scoreboards',
+                      ),
+                      new Tab(
+                        text: 'Teams/Standings',
+                      ),
+                      new Tab(
+                        text: 'Analysis',
+                      ),
+                    ],
+                  )))
+            ];
+          },
+          body: TabBarView(
+            controller: _controller,
+            children: <Widget>[
+              ScoreboardScreen(competition),
+              TeamsScreen(competition),
+              ReportsScreen(competition),
+            ],
+          ),
+        ),
+      ),
+    ));
   }
 
   _scrollListener() {
@@ -105,134 +141,93 @@ class _CompetitionScreenState extends State<CompetitionScreen>
   }
 }
 
-class MyHeaderDelegate extends SliverPersistentHeaderDelegate {
+class MyHeaderDelegate extends StatelessWidget {
   MyHeaderDelegate(this.competition);
   scoresCompetition competition;
 
   @override
-  double get maxExtent => 250;
-
-  @override
-  double get minExtent => 84;
-
-  @override
-  bool shouldRebuild(covariant SliverPersistentHeaderDelegate oldDelegate) =>
-      true;
-
-  @override
   Widget build(
     BuildContext context,
-    double shrinkOffset,
-    bool overlapsContent,
   ) {
-    final progress = shrinkOffset / maxExtent;
-    return Stack(
-      children: [
-        AnimatedOpacity(
-          duration: Duration(milliseconds: 0),
-          opacity: 1-progress,
-          child: Column(children: <Widget>[
-            Material(
-              
-              elevation: 1,
-              child: Container(
-                
-                color: Colors.white,
-                child: new Column(
-                  children: [
-                    Padding(
-                        padding: EdgeInsets.symmetric(vertical: 7),
-                        child: Image.network(competition.sponsorImageUrl,
-                            height: 60)),
-                    Padding(
-                      padding: const EdgeInsets.only(
-                        left: 12.0,
-                        right: 12,
-                        bottom: 12,
-                        top: 3,
-                      ),
-                      child: Text(
-                        competition.name,
-                        style: TextStyle(
-                            fontSize: 22, fontWeight: FontWeight.bold),
-                        textAlign: TextAlign.center,
-                      ),
-                    ),
-                    Padding(
-                      padding: const EdgeInsets.only(
-                        bottom: 8.0,
-                      ),
-                      child: Row(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: [
-                            SvgPicture.asset('assets/icons/landmark.svg',
-                                height: 13, color: Colors.grey.shade700),
-                            Padding(
-                              padding: EdgeInsets.only(left: 10),
-                              child: Text(
-                                competition.venue,
-                                style: TextStyle(
-                                    fontSize: 16,
-                                    color: Colors.grey.shade700,
-                                    fontWeight: FontWeight.w500),
-                              ),
-                            ),
-                          ]),
-                    ),
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        Padding(
-                            padding:
-                                const EdgeInsets.only(left: 8.0, bottom: 5),
-                            child: Text(
-                              competition.formatDateRange(),
-                              style: TextStyle(
-                                  color: Colors.grey.shade500, fontSize: 14),
-                            ))
-                      ],
-                    ),
-                  ],
+    return Material(
+      elevation: 1,
+      child: IntrinsicHeight(
+        child: Container(
+          color: Colors.white,
+          child: new Column(
+            children: [
+              Padding(
+                  padding: EdgeInsets.symmetric(vertical: 7),
+                  child:
+                      Image.network(competition.sponsorImageUrl, height: 60)),
+              Padding(
+                padding: const EdgeInsets.only(
+                  left: 12.0,
+                  right: 12,
+                  bottom: 12,
+                  top: 3,
+                ),
+                child: Text(
+                  competition.name,
+                  style: TextStyle(fontSize: 22, fontWeight: FontWeight.bold),
+                  textAlign: TextAlign.center,
                 ),
               ),
-            )
-          ]),
-        ),
-        AnimatedOpacity(
-          opacity: 0,
-          duration: Duration(milliseconds: 0),
-          child: Text(
-            competition.name,
-            style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
-            textAlign: TextAlign.center,
+              Padding(
+                padding: const EdgeInsets.only(
+                  bottom: 8.0,
+                ),
+                child:
+                    Row(mainAxisAlignment: MainAxisAlignment.center, children: [
+                  SvgPicture.asset('assets/icons/landmark.svg',
+                      height: 13, color: Colors.grey.shade700),
+                  Padding(
+                    padding: EdgeInsets.only(left: 10),
+                    child: Text(
+                      competition.venue,
+                      style: TextStyle(
+                          fontSize: 16,
+                          color: Colors.grey.shade700,
+                          fontWeight: FontWeight.w500),
+                    ),
+                  ),
+                ]),
+              ),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Padding(
+                      padding: const EdgeInsets.only(left: 8.0, bottom: 5),
+                      child: Text(
+                        competition.formatDateRange(),
+                        style: TextStyle(
+                            color: Colors.grey.shade500, fontSize: 14),
+                      ))
+                ],
+              ),
+            ],
           ),
-        )
-      ],
+        ),
+      ),
     );
   }
 }
 
-class _SliverAppBarDelegate extends SliverPersistentHeaderDelegate {
+class _SliverAppBarDelegate extends StatelessWidget with PreferredSizeWidget {
   _SliverAppBarDelegate(this._tabBar);
 
   final TabBar _tabBar;
 
-  @override
-  double get minExtent => _tabBar.preferredSize.height;
-  @override
-  double get maxExtent => _tabBar.preferredSize.height;
-
-  @override
-  Widget build(
-      BuildContext context, double shrinkOffset, bool overlapsContent) {
-    return new Container(
-      color: Colors.white, // ADD THE COLOR YOU WANT AS BACKGROUND.
-      child: _tabBar,
-    );
+  Size get preferredSize {
+    return new Size.fromHeight(20.0);
   }
 
   @override
-  bool shouldRebuild(_SliverAppBarDelegate oldDelegate) {
-    return false;
+  Widget build(BuildContext context) {
+    return new Container(
+      width: double.infinity,
+      color: Colors.white, // ADD THE COLOR YOU WANT AS BACKGROUND.
+      child: _tabBar,
+    );
   }
 }
