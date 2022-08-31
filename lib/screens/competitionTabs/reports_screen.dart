@@ -33,9 +33,10 @@ class _ReportsScreenState extends State<ReportsScreen>
   @override
   Widget build(BuildContext context) {
     super.build(context);
-    return ListView(children: [
+    return ListView(padding:EdgeInsets.zero, children: [
       for (String report in reports)
         ListTile(
+          
           title: Text(report),
         )
     ]);

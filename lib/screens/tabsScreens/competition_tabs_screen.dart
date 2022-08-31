@@ -64,21 +64,25 @@ class _CompetitionScreenState extends State<CompetitionScreen>
       child: DefaultTabController(
         length: 3,
         child: NestedScrollView(
+           
           // Setting floatHeaderSlivers to true is required in order to float
           // the outer slivers over the inner scrollable.
 
           headerSliverBuilder: (BuildContext context, bool innerBoxIsScrolled) {
             return <Widget>[
               SliverAppBar(
-                  leading: AnimatedContainer(
-                      duration: Duration(milliseconds: 0),
-                      child: FittedBox(
-                        child: CircleAvatar(
-                            backgroundColor: Colors.grey.shade500.withOpacity(.5),
-                            child: Icon(
-                              Icons.arrow_back,
-                              color: Colors.white,
-                            )),
+                  leading: Container(
+                    height:20,
+                    margin: EdgeInsets.all(8),
+                      decoration: BoxDecoration(
+                        color: Colors.grey.shade500.withOpacity(.5),
+                        shape: BoxShape.circle
+                        
+                      ),
+                      child: Icon(
+                        Icons.arrow_back,
+                        size: 30,
+                        color: Colors.white,
                       )),
                   floating: true,
                   pinned: true,
