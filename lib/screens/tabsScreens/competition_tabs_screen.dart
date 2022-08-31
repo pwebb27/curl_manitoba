@@ -64,21 +64,24 @@ class _CompetitionScreenState extends State<CompetitionScreen>
       child: DefaultTabController(
         length: 3,
         child: NestedScrollView(
-           
+          controller: _scrollController,
           // Setting floatHeaderSlivers to true is required in order to float
           // the outer slivers over the inner scrollable.
 
           headerSliverBuilder: (BuildContext context, bool innerBoxIsScrolled) {
             return <Widget>[
               SliverAppBar(
+                           title: FadeOnScroll(
+            scrollController: _scrollController,
+            fullOpacityOffset: 180,
+            child: Text(competition.name),
+          ),
                   leading: Container(
-                    height:20,
-                    margin: EdgeInsets.all(8),
+                      height: 20,
+                      margin: EdgeInsets.all(8),
                       decoration: BoxDecoration(
-                        color: Colors.grey.shade500.withOpacity(.5),
-                        shape: BoxShape.circle
-                        
-                      ),
+                          color: Colors.grey.shade500.withOpacity(.5),
+                          shape: BoxShape.circle),
                       child: Icon(
                         Icons.arrow_back,
                         size: 30,
@@ -87,28 +90,10 @@ class _CompetitionScreenState extends State<CompetitionScreen>
                   floating: true,
                   pinned: true,
                   expandedHeight: 290.0,
-                  collapsedHeight: 75,
+                  collapsedHeight: 60,
                   forceElevated: innerBoxIsScrolled,
-                  flexibleSpace: LayoutBuilder(builder:
-                      (BuildContext context, BoxConstraints constraints) {
-                    // print('constraints=' + constraints.toString());
-                    top = constraints.biggest.height;
-                    return FlexibleSpaceBar(
-                        titlePadding: EdgeInsets.only(bottom: 50),
-                        title: AnimatedOpacity(
-                            duration: Duration(milliseconds: 300),
-                            opacity: top ==
-                                    MediaQuery.of(context).padding.top +
-                                        kToolbarHeight +
-                                        100
-                                ? 1.0
-                                : 0.0,
-                            child: Text(
-                              top.toString(),
-                              style: TextStyle(fontSize: 30.0),
-                            )),
-                        background: MyHeaderDelegate(competition));
-                  }),
+                  flexibleSpace: FlexibleSpaceBar(
+                      background: MyHeaderDelegate(competition)),
                   bottom: _SliverAppBarDelegate(TabBar(
                     isScrollable: true,
                     labelColor: Colors.black,
@@ -223,7 +208,7 @@ class _SliverAppBarDelegate extends StatelessWidget with PreferredSizeWidget {
   final TabBar _tabBar;
 
   Size get preferredSize {
-    return new Size.fromHeight(20.0);
+    return new Size.fromHeight(kToolbarHeight);
   }
 
   @override
@@ -232,6 +217,86 @@ class _SliverAppBarDelegate extends StatelessWidget with PreferredSizeWidget {
       width: double.infinity,
       color: Colors.white, // ADD THE COLOR YOU WANT AS BACKGROUND.
       child: _tabBar,
+    );
+  }
+}
+
+
+//https://gist.github.com/smkhalsa/ec33ec61993f29865a52a40fff4b81a2
+class FadeOnScroll extends StatefulWidget {
+  final ScrollController scrollController;
+  final double zeroOpacityOffset;
+  final double fullOpacityOffset;
+  final Widget child;
+  
+
+  FadeOnScroll(
+      {Key? key,
+      required this.scrollController,
+      required this.child,
+      this.zeroOpacityOffset = 0,
+      this.fullOpacityOffset = 0});
+
+  @override
+  _FadeOnScrollState createState() => _FadeOnScrollState();
+}
+
+class _FadeOnScrollState extends State<FadeOnScroll> {
+  late double _offset;
+
+  @override
+  initState() {
+    super.initState();
+    _offset = widget.scrollController.offset;
+    widget.scrollController.addListener(_setOffset);
+  }
+
+  @override
+  dispose() {
+    widget.scrollController.removeListener(_setOffset);
+    super.dispose();
+  }
+
+  void _setOffset() {
+    setState(() {
+      _offset = widget.scrollController.offset;
+    });
+  }
+
+  double _calculateOpacity() {
+    print(_offset);
+         
+     if (widget.fullOpacityOffset > widget.zeroOpacityOffset) {
+      // fading in
+      if (_offset <= widget.fullOpacityOffset/1.1){
+        
+        return 0;
+      }
+      else if (_offset >= widget.fullOpacityOffset)
+        return 1;
+      else{
+   
+
+        return (widget.fullOpacityOffset-_offset) /
+            (widget.fullOpacityOffset - (widget.fullOpacityOffset/1.1));
+    
+    }} else {
+      // fading out
+      if (_offset <= widget.fullOpacityOffset)
+        return 1;
+      else if (_offset >= widget.zeroOpacityOffset)
+        return 0;
+      else
+        return (_offset - widget.fullOpacityOffset) /
+            (widget.zeroOpacityOffset - widget.fullOpacityOffset);
+    }
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Opacity(
+      opacity: _calculateOpacity(),
+      child: widget.child,
     );
   }
 }
