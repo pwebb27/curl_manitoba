@@ -3,6 +3,7 @@ import 'package:curl_manitoba/screens/competitionTabs/reports_screen.dart';
 import 'package:curl_manitoba/screens/competitionTabs/scoreboard_screen.dart';
 import 'package:curl_manitoba/screens/competitionTabs/standings_and_draws_screen.dart';
 import 'package:curl_manitoba/screens/competitionTabs/teams/teams_screen.dart';
+import 'package:curl_manitoba/screens/mainTabs/homeTabs/home_feed_screen.dart';
 import 'package:curl_manitoba/widgets/custom_app_bar.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
@@ -16,6 +17,8 @@ class CompetitionScreen extends StatefulWidget {
   State<CompetitionScreen> createState() => _CompetitionScreenState();
 }
 
+var top = 0.0;
+
 final GlobalKey<NavigatorState> navKey = GlobalKey<NavigatorState>();
 
 class _CompetitionScreenState extends State<CompetitionScreen>
@@ -23,6 +26,7 @@ class _CompetitionScreenState extends State<CompetitionScreen>
   late scoresCompetition competition;
   late TabController _controller;
   late ScrollController _scrollController;
+  late Animation headerAnimation;
 
   late AnimationController _animationController;
   double currentExtent = 0.0;
@@ -30,17 +34,15 @@ class _CompetitionScreenState extends State<CompetitionScreen>
   double get maxExtent => _scrollController.position.maxScrollExtent;
   double get deltaExtent => maxExtent - minExtent;
 
-  final Tween<double> headerImageHeightTween = Tween(begin: 60, end: 20);
-  final Tween<double> titleFontSize = Tween(begin: 22, end: 18);
-
   @override
   void initState() {
     super.initState();
+
     competition = widget.competition;
     _controller = new TabController(length: 3, vsync: this);
     _animationController = new AnimationController(
         duration: Duration(milliseconds: 200), vsync: this);
-    _scrollController = ScrollController(initialScrollOffset: 100);
+    _scrollController = ScrollController();
     _scrollController.addListener(() {
       _scrollListener();
     });
@@ -58,66 +60,102 @@ class _CompetitionScreenState extends State<CompetitionScreen>
   @override
   Widget build(BuildContext context) {
     return new Scaffold(
-        appBar: CustomAppBar(context, 'Live Scores & Results'),
-        body: DefaultTabController(
-          length: 3,
-          child: NestedScrollView(
-            controller: _scrollController,
-              floatHeaderSlivers: true,
-              headerSliverBuilder: (context, innerBoxIsScrolled) => [
-                    SliverAppBar(
-                      backgroundColor:
-                          Theme.of(context).scaffoldBackgroundColor,
-                      automaticallyImplyLeading: false,
-                      expandedHeight: 250,
-                      pinned: true,
-                      floating: true,
-                      actionsIconTheme: IconThemeData(
-                        size: 0.0),
-                      flexibleSpace: FlexibleSpaceBar(
+        body: SafeArea(
+      child: DefaultTabController(
+        length: 3,
+        child: NestedScrollView(
+           
+          // Setting floatHeaderSlivers to true is required in order to float
+          // the outer slivers over the inner scrollable.
+
+          headerSliverBuilder: (BuildContext context, bool innerBoxIsScrolled) {
+            return <Widget>[
+              SliverAppBar(
+                  leading: Container(
+                    height:20,
+                    margin: EdgeInsets.all(8),
+                      decoration: BoxDecoration(
+                        color: Colors.grey.shade500.withOpacity(.5),
+                        shape: BoxShape.circle
                         
-                        background: 
-                        buildHeader(),
                       ),
-                      bottom: 
-                        TabBar(
-                          isScrollable: true,
-                          labelColor: Colors.black,
-                          controller: _controller,
-                          tabs: [
-                            new Tab(
-                              text: 'Scoreboards',
-                            ),
-                            new Tab(
-                              text: 'Teams/Standings',
-                            ),
-                            new Tab(
-                              text: 'Analysis',
-                            ),
-                          ],
-                        ),
-                    
-                    )
-                  ],
-              body: Navigator(
-                  key: navKey,
-                  onGenerateRoute: (_) => MaterialPageRoute(
-                        builder: (_) => TabBarView(
-                          controller: _controller,
-                          children: <Widget>[
-                            ScoreboardScreen(competition),
-                            TeamsScreen(competition),
-                            ReportsScreen(competition),
-                          ],
-                        ),
-                      ))),
-        ));
+                      child: Icon(
+                        Icons.arrow_back,
+                        size: 30,
+                        color: Colors.white,
+                      )),
+                  floating: true,
+                  pinned: true,
+                  expandedHeight: 290.0,
+                  collapsedHeight: 75,
+                  forceElevated: innerBoxIsScrolled,
+                  flexibleSpace: LayoutBuilder(builder:
+                      (BuildContext context, BoxConstraints constraints) {
+                    // print('constraints=' + constraints.toString());
+                    top = constraints.biggest.height;
+                    return FlexibleSpaceBar(
+                        titlePadding: EdgeInsets.only(bottom: 50),
+                        title: AnimatedOpacity(
+                            duration: Duration(milliseconds: 300),
+                            opacity: top ==
+                                    MediaQuery.of(context).padding.top +
+                                        kToolbarHeight +
+                                        100
+                                ? 1.0
+                                : 0.0,
+                            child: Text(
+                              top.toString(),
+                              style: TextStyle(fontSize: 30.0),
+                            )),
+                        background: MyHeaderDelegate(competition));
+                  }),
+                  bottom: _SliverAppBarDelegate(TabBar(
+                    isScrollable: true,
+                    labelColor: Colors.black,
+                    controller: _controller,
+                    tabs: [
+                      new Tab(
+                        text: 'Scoreboards',
+                      ),
+                      new Tab(
+                        text: 'Teams/Standings',
+                      ),
+                      new Tab(
+                        text: 'Analysis',
+                      ),
+                    ],
+                  )))
+            ];
+          },
+          body: TabBarView(
+            controller: _controller,
+            children: <Widget>[
+              ScoreboardScreen(competition),
+              TeamsScreen(competition),
+              ReportsScreen(competition),
+            ],
+          ),
+        ),
+      ),
+    ));
   }
 
-  buildHeader() {
-    return Column(children: <Widget>[
-      Material(
-        elevation: 1,
+  _scrollListener() {
+    currentExtent = _scrollController.offset;
+  }
+}
+
+class MyHeaderDelegate extends StatelessWidget {
+  MyHeaderDelegate(this.competition);
+  scoresCompetition competition;
+
+  @override
+  Widget build(
+    BuildContext context,
+  ) {
+    return Material(
+      elevation: 1,
+      child: IntrinsicHeight(
         child: Container(
           color: Colors.white,
           child: new Column(
@@ -174,58 +212,26 @@ class _CompetitionScreenState extends State<CompetitionScreen>
             ],
           ),
         ),
-      )
-    ]);
-  }
-
-  _scrollListener() {
-    setState(() {
-      currentExtent = _scrollController.offset;
-      print(currentExtent);
-
-
-    });
-  }
-
-  _remapCurrentExtent(Tween<double> target) {
-    final double deltaTarget = target.end! - target.begin!;
-
-    double currentTarget =
-        (((currentExtent - minExtent) * deltaTarget) / deltaExtent) +
-            target.begin!;
-
-
-
+      ),
+    );
   }
 }
 
-class ColoredTabBar extends Container implements PreferredSizeWidget {
-  ColoredTabBar(this.color, this.tabBar);
+class _SliverAppBarDelegate extends StatelessWidget with PreferredSizeWidget {
+  _SliverAppBarDelegate(this._tabBar);
 
-  final Color color;
-  final TabBar tabBar;
+  final TabBar _tabBar;
+
+  Size get preferredSize {
+    return new Size.fromHeight(20.0);
+  }
 
   @override
-  Size get preferredSize => tabBar.preferredSize;
-
-  @override
-  Widget build(BuildContext context) => ClipRRect(
-      borderRadius: BorderRadius.circular(5.0),
-      child: Container(
-          width: double.infinity,
-          alignment: Alignment.center,
-          child: tabBar,
-          margin:
-              const EdgeInsets.only(bottom: 6.0), //Same as `blurRadius` i guess
-          decoration: BoxDecoration(
-            borderRadius: BorderRadius.circular(5.0),
-            color: Colors.white,
-            boxShadow: [
-              BoxShadow(
-                color: Colors.grey,
-                offset: Offset(0.0, 1.0), //(x,y)
-                blurRadius: 6.0,
-              ),
-            ],
-          )));
+  Widget build(BuildContext context) {
+    return new Container(
+      width: double.infinity,
+      color: Colors.white, // ADD THE COLOR YOU WANT AS BACKGROUND.
+      child: _tabBar,
+    );
+  }
 }
