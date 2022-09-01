@@ -5,6 +5,7 @@ import 'package:curl_manitoba/models/scoresCompetitionModels/team.dart';
 import 'package:curl_manitoba/screens/tabsScreens/competition_tabs_screen.dart';
 import 'package:curl_manitoba/screens/competitionTabs/teams/team_screen.dart';
 import 'package:curl_manitoba/widgets/circular_progress_bar.dart';
+import 'package:curl_manitoba/widgets/sliverWrap.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
@@ -60,7 +61,6 @@ class _TeamsScreenState extends State<TeamsScreen>
                         top: BorderSide(
                             color: Colors.grey.shade700, width: .4))),
                 child: BottomNavigationBar(
-                  
                     elevation: 10,
                     type: BottomNavigationBarType.fixed,
                     unselectedItemColor: Colors.grey.shade700,
@@ -87,58 +87,67 @@ class _TeamsScreenState extends State<TeamsScreen>
                         ),
                       ),
                     ])),
-            body: SingleChildScrollView(
-              child: Column( crossAxisAlignment: CrossAxisAlignment.stretch, children: [
-                buildWrap(),
-                DataTable(
-                  showCheckboxColumn: false,
-                  dataRowHeight: 60,
-                  horizontalMargin: 0,
-                  columnSpacing: 17,
-                  border: TableBorder.symmetric(outside: BorderSide(width: .2)),
-                  headingRowColor:
-                      MaterialStateProperty.all<Color>(Theme.of(context).primaryColor),
-                  decoration: BoxDecoration(
-                    border: Border(
-                      right: BorderSide(
-                        color: Colors.black,
-                        width: 0.5,
-                      ),
-                    ),
-                  ),
-                  columns: [
-                    buildDataColumn('Team'),
-                    buildDataColumn('Games'),
-                    buildDataColumn('Wins'),
-                    buildDataColumn('Losses'),
-                  ],
-                  rows: [
-                    for (Team team in teams)
-                      DataRow(
-                          onSelectChanged: (bool? selected) {
-                            if (selected != null)
-                              navKey.currentState!.push(MaterialPageRoute(
-                                builder: (_) => TeamDataScreen(team),
-                              ));
-                          },
-                          cells: [
-                            DataCell(Padding(
-                              padding:
-                                  const EdgeInsets.symmetric(horizontal: 10.0),
-                              child: Text(team.name!,
-                                  style:
-                                      TextStyle(fontWeight: FontWeight.bold)),
-                            )),
-                           buildDataCell('3'),
-                           buildDataCell('4'),
-                           buildDataCell('5'),
-
-                           
-                          ])
-                  ],
+            body: Builder(builder: (BuildContext context) {
+              return CustomScrollView(slivers: <Widget>[
+                SliverOverlapInjector(
+                    handle: NestedScrollView.sliverOverlapAbsorberHandleFor(
+                        context)),
+                SliverToBoxAdapter(
+                  child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.stretch,
+                      children: [
+                        buildWrap(),
+                        DataTable(
+                          showCheckboxColumn: false,
+                          dataRowHeight: 60,
+                          horizontalMargin: 0,
+                          columnSpacing: 17,
+                          border: TableBorder.symmetric(
+                              outside: BorderSide(width: .2)),
+                          headingRowColor: MaterialStateProperty.all<Color>(
+                              Theme.of(context).primaryColor),
+                          decoration: BoxDecoration(
+                            border: Border(
+                              right: BorderSide(
+                                color: Colors.black,
+                                width: 0.5,
+                              ),
+                            ),
+                          ),
+                          columns: [
+                            buildDataColumn('Team'),
+                            buildDataColumn('Games'),
+                            buildDataColumn('Wins'),
+                            buildDataColumn('Losses'),
+                          ],
+                          rows: [
+                            for (Team team in teams)
+                              DataRow(
+                                  onSelectChanged: (bool? selected) {
+                                    if (selected != null)
+                                      navKey.currentState!
+                                          .push(MaterialPageRoute(
+                                        builder: (_) => TeamDataScreen(team),
+                                      ));
+                                  },
+                                  cells: [
+                                    DataCell(Padding(
+                                      padding: const EdgeInsets.symmetric(
+                                          horizontal: 10.0),
+                                      child: Text(team.name!,
+                                          style: TextStyle(
+                                              fontWeight: FontWeight.bold)),
+                                    )),
+                                    buildDataCell('3'),
+                                    buildDataCell('4'),
+                                    buildDataCell('5'),
+                                  ])
+                          ],
+                        ),
+                      ]),
                 ),
-              ]),
-            ),
+              ]);
+            }),
           );
         });
   }
@@ -159,7 +168,7 @@ class _TeamsScreenState extends State<TeamsScreen>
       padding: const EdgeInsets.symmetric(horizontal: 8.0),
       child: Center(
         child: Padding(
-          padding: const EdgeInsets.symmetric(horizontal:4.0),
+          padding: const EdgeInsets.symmetric(horizontal: 4.0),
           child: Text(
             label,
             style: TextStyle(color: Colors.white),

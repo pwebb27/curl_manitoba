@@ -70,54 +70,58 @@ class _CompetitionScreenState extends State<CompetitionScreen>
 
           headerSliverBuilder: (BuildContext context, bool innerBoxIsScrolled) {
             return <Widget>[
-              SliverAppBar(
-                           title: FadeOnScroll(
-            scrollController: _scrollController,
-            fullOpacityOffset: 180,
-            child: Text(competition.name),
-          ),
-                  leading: Container(
-                      height: 20,
-                      margin: EdgeInsets.all(8),
-                      decoration: BoxDecoration(
-                          color: Colors.grey.shade500.withOpacity(.5),
-                          shape: BoxShape.circle),
-                      child: Icon(
-                        Icons.arrow_back,
-                        size: 30,
-                        color: Colors.white,
-                      )),
-                  floating: true,
-                  pinned: true,
-                  expandedHeight: 290.0,
-                  collapsedHeight: 60,
-                  forceElevated: innerBoxIsScrolled,
-                  flexibleSpace: FlexibleSpaceBar(
-                      background: MyHeaderDelegate(competition)),
-                  bottom: _SliverAppBarDelegate(TabBar(
-                    isScrollable: true,
-                    labelColor: Colors.black,
-                    controller: _controller,
-                    tabs: [
-                      new Tab(
-                        text: 'Scoreboards',
-                      ),
-                      new Tab(
-                        text: 'Teams/Standings',
-                      ),
-                      new Tab(
-                        text: 'Analysis',
-                      ),
-                    ],
-                  )))
+              SliverOverlapAbsorber(
+                handle:
+                    NestedScrollView.sliverOverlapAbsorberHandleFor(context),
+                sliver: SliverAppBar(
+                    title: FadeOnScroll(
+                      scrollController: _scrollController,
+                      fullOpacityOffset: 180,
+                      child: Text(competition.name),
+                    ),
+                    leading: Container(
+                        height: 20,
+                        margin: EdgeInsets.all(8),
+                        decoration: BoxDecoration(
+                            color: Colors.grey.shade500.withOpacity(.5),
+                            shape: BoxShape.circle),
+                        child: Icon(
+                          Icons.arrow_back,
+                          size: 30,
+                          color: Colors.white,
+                        )),
+                    floating: true,
+                    pinned: true,
+                    expandedHeight: 290.0,
+                    collapsedHeight: 60,
+                    forceElevated: innerBoxIsScrolled,
+                    flexibleSpace: FlexibleSpaceBar(
+                        background: MyHeaderDelegate(competition)),
+                    bottom: _SliverAppBarDelegate(TabBar(
+                      isScrollable: true,
+                      labelColor: Colors.black,
+                      controller: _controller,
+                      tabs: [
+                        new Tab(
+                          text: 'Scoreboards',
+                        ),
+                        new Tab(
+                          text: 'Teams/Standings',
+                        ),
+                        new Tab(
+                          text: 'Analysis',
+                        ),
+                      ],
+                    ))),
+              )
             ];
           },
           body: TabBarView(
             controller: _controller,
-            children: <Widget>[
+            children: [
               ScoreboardScreen(competition),
               TeamsScreen(competition),
-              ReportsScreen(competition),
+              ReportsScreen(competition)
             ],
           ),
         ),
@@ -221,14 +225,12 @@ class _SliverAppBarDelegate extends StatelessWidget with PreferredSizeWidget {
   }
 }
 
-
 //https://gist.github.com/smkhalsa/ec33ec61993f29865a52a40fff4b81a2
 class FadeOnScroll extends StatefulWidget {
   final ScrollController scrollController;
   final double zeroOpacityOffset;
   final double fullOpacityOffset;
   final Widget child;
-  
 
   FadeOnScroll(
       {Key? key,
@@ -265,22 +267,18 @@ class _FadeOnScrollState extends State<FadeOnScroll> {
 
   double _calculateOpacity() {
     print(_offset);
-         
-     if (widget.fullOpacityOffset > widget.zeroOpacityOffset) {
-      // fading in
-      if (_offset <= widget.fullOpacityOffset/1.1){
-        
-        return 0;
-      }
-      else if (_offset >= widget.fullOpacityOffset)
-        return 1;
-      else{
-   
 
-        return (widget.fullOpacityOffset-_offset) /
-            (widget.fullOpacityOffset - (widget.fullOpacityOffset/1.1));
-    
-    }} else {
+    if (widget.fullOpacityOffset > widget.zeroOpacityOffset) {
+      // fading in
+      if (_offset <= widget.fullOpacityOffset / 1.1) {
+        return 0;
+      } else if (_offset >= widget.fullOpacityOffset)
+        return 1;
+      else {
+        return (widget.fullOpacityOffset - _offset) /
+            (widget.fullOpacityOffset - (widget.fullOpacityOffset / 1.1));
+      }
+    } else {
       // fading out
       if (_offset <= widget.fullOpacityOffset)
         return 1;
