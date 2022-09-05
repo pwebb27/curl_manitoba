@@ -5,6 +5,7 @@ import 'package:curl_manitoba/models/scoresCompetitionModels/game_results.dart';
 import 'package:curl_manitoba/models/scoresCompetitionModels/scores_competition.dart';
 import 'package:curl_manitoba/widgets/circular_progress_bar.dart';
 import 'package:curl_manitoba/widgets/custom_expansion_tile.dart';
+import 'package:curl_manitoba/widgets/sliverWrap.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:http/http.dart' as http;
@@ -44,7 +45,6 @@ class _ScoreboardScreenState extends State<ScoreboardScreen>
   @override
   void initState() {
     super.initState();
-    
 
     competition = widget.competition;
     competitionGamesFuture = CurlingIOAPI().fetchGames(competition.id);
@@ -53,35 +53,43 @@ class _ScoreboardScreenState extends State<ScoreboardScreen>
   @override
   Widget build(BuildContext context) {
     super.build(context);
-    return Padding(
-      padding: const EdgeInsets.only(left: 12.0, right: 12, top: 12),
-      child: FutureBuilder(
-          future: competitionGamesFuture,
-          builder: (context, snapshot) {
-            if (snapshot.connectionState == ConnectionState.waiting)
-              return CircularProgressBar();
-            games = Game.parseGamesData(
-                snapshot.data as http.Response, competition);
-            draws = Draw.createDraws(games);
+    return Builder(builder: (BuildContext context) {
+      return CustomScrollView(slivers: <Widget>[
+        SliverOverlapInjector(
+            handle: NestedScrollView.sliverOverlapAbsorberHandleFor(context)),
+        SliverPadding(
+          padding: const EdgeInsets.only(left: 12.0, right: 12, top: 12),
+          sliver: SliverToBoxAdapter(
+            child: FutureBuilder(
+                future: competitionGamesFuture,
+                builder: (context, snapshot) {
+                  if (snapshot.connectionState == ConnectionState.waiting)
+                    return CircularProgressBar();
+                  games = Game.parseGamesData(
+                      snapshot.data as http.Response, competition);
+                  draws = Draw.createDraws(games);
 
-            value = draws![0];
-            return StatefulBuilder(builder: (context, setState) {
-              for (Game game in value!.games) {
-                _futureGroup = FutureGroup();
-                _futureGroup!.add(game.getTeamOneResults());
-                _futureGroup!.add(game.getTeamTwoResults());
-              }
-              _futureGroup!.close();
+                  value = draws![0];
+                  return StatefulBuilder(builder: (context, setState) {
+                    for (Game game in value!.games) {
+                      _futureGroup = FutureGroup();
+                      _futureGroup!.add(game.getTeamOneResults());
+                      _futureGroup!.add(game.getTeamTwoResults());
+                    }
+                    _futureGroup!.close();
 
-              return SingleChildScrollView(
-                child: Column(children: [
-                  buildDropDownMenu(setState),
-                  buildScoresTables(value),
-                ]),
-              );
-            });
-          }),
-    );
+                    return SingleChildScrollView(
+                      child: Column(children: [
+                        buildDropDownMenu(setState),
+                        buildScoresTables(value),
+                      ]),
+                    );
+                  });
+                }),
+          ),
+        ),
+      ]);
+    });
   }
 
   buildDropDownMenu(Function setState) {
@@ -122,7 +130,7 @@ class _ScoreboardScreenState extends State<ScoreboardScreen>
         future: _futureGroup!.future,
         builder: (context, snapshot) {
           if (snapshot.connectionState == ConnectionState.waiting)
-            return CircularProgressBar();          
+            return CircularProgressBar();
           return ListView.builder(
               shrinkWrap: true,
               physics: ScrollPhysics(),
@@ -199,7 +207,8 @@ class _ScoreboardScreenState extends State<ScoreboardScreen>
           border: TableBorder.symmetric(outside: BorderSide(width: .2)),
           headingRowHeight: 40,
           dataRowHeight: 40,
-          headingRowColor: MaterialStateProperty.all(Theme.of(context).primaryColor),
+          headingRowColor:
+              MaterialStateProperty.all(Theme.of(context).primaryColor),
           decoration: BoxDecoration(
             border: Border(
               right: BorderSide(
@@ -211,7 +220,10 @@ class _ScoreboardScreenState extends State<ScoreboardScreen>
           columns: [
             DataColumn(
               label: Text('Teams',
-                  style: TextStyle(fontWeight: FontWeight.bold, fontSize: 15, color: Colors.white)),
+                  style: TextStyle(
+                      fontWeight: FontWeight.bold,
+                      fontSize: 15,
+                      color: Colors.white)),
             ),
           ],
           rows: [
@@ -235,11 +247,12 @@ class _ScoreboardScreenState extends State<ScoreboardScreen>
       child: SingleChildScrollView(
         scrollDirection: Axis.horizontal,
         child: DataTable(
-
           border: TableBorder.symmetric(outside: BorderSide(width: .2)),
           headingRowHeight: 40,
           dataRowHeight: 40,
-          headingRowColor: MaterialStateProperty.all(Color.fromRGBO(143,108,102, 1),),
+          headingRowColor: MaterialStateProperty.all(
+            Color.fromRGBO(143, 108, 102, 1),
+          ),
           columnSpacing: 15,
           decoration: BoxDecoration(
             border: Border(
