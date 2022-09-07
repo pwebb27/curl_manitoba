@@ -17,8 +17,6 @@ class CompetitionScreen extends StatefulWidget {
   State<CompetitionScreen> createState() => _CompetitionScreenState();
 }
 
-var top = 0.0;
-
 final GlobalKey<NavigatorState> navKey = GlobalKey<NavigatorState>();
 
 class _CompetitionScreenState extends State<CompetitionScreen>
@@ -26,13 +24,6 @@ class _CompetitionScreenState extends State<CompetitionScreen>
   late scoresCompetition competition;
   late TabController _controller;
   late ScrollController _scrollController;
-  late Animation headerAnimation;
-
-  late AnimationController _animationController;
-  double currentExtent = 0.0;
-  double get minExtent => 0.0;
-  double get maxExtent => _scrollController.position.maxScrollExtent;
-  double get deltaExtent => maxExtent - minExtent;
 
   @override
   void initState() {
@@ -40,18 +31,11 @@ class _CompetitionScreenState extends State<CompetitionScreen>
 
     competition = widget.competition;
     _controller = new TabController(length: 3, vsync: this);
-    _animationController = new AnimationController(
-        duration: Duration(milliseconds: 200), vsync: this);
     _scrollController = ScrollController();
-    _scrollController.addListener(() {
-      _scrollListener();
-    });
   }
 
   @override
   void dispose() {
-    _animationController.dispose();
-    _scrollController.removeListener(_scrollListener);
     _scrollController.dispose();
     _controller.dispose();
     super.dispose();
@@ -76,8 +60,10 @@ class _CompetitionScreenState extends State<CompetitionScreen>
                 sliver: SliverAppBar(
                     title: FadeOnScroll(
                       scrollController: _scrollController,
-                      fullOpacityOffset: 180,
-                      child: Text(competition.name),
+                      child: Text(
+                        competition.name,
+                        style: TextStyle(fontSize: 22, color: Colors.white),
+                      ),
                     ),
                     leading: Container(
                         height: 20,
@@ -93,7 +79,7 @@ class _CompetitionScreenState extends State<CompetitionScreen>
                     floating: true,
                     pinned: true,
                     expandedHeight: 290.0,
-                    collapsedHeight: 60,
+                    collapsedHeight: kToolbarHeight,
                     forceElevated: innerBoxIsScrolled,
                     flexibleSpace: FlexibleSpaceBar(
                         background: MyHeaderDelegate(competition)),
@@ -127,10 +113,6 @@ class _CompetitionScreenState extends State<CompetitionScreen>
         ),
       ),
     ));
-  }
-
-  _scrollListener() {
-    currentExtent = _scrollController.offset;
   }
 }
 
@@ -228,16 +210,13 @@ class _SliverAppBarDelegate extends StatelessWidget with PreferredSizeWidget {
 //https://gist.github.com/smkhalsa/ec33ec61993f29865a52a40fff4b81a2
 class FadeOnScroll extends StatefulWidget {
   final ScrollController scrollController;
-  final double zeroOpacityOffset;
-  final double fullOpacityOffset;
   final Widget child;
 
-  FadeOnScroll(
-      {Key? key,
-      required this.scrollController,
-      required this.child,
-      this.zeroOpacityOffset = 0,
-      this.fullOpacityOffset = 0});
+  FadeOnScroll({
+    Key? key,
+    required this.scrollController,
+    required this.child,
+  });
 
   @override
   _FadeOnScrollState createState() => _FadeOnScrollState();
@@ -245,6 +224,7 @@ class FadeOnScroll extends StatefulWidget {
 
 class _FadeOnScrollState extends State<FadeOnScroll> {
   late double _offset;
+  double? _maxExtent;
 
   @override
   initState() {
@@ -260,34 +240,21 @@ class _FadeOnScrollState extends State<FadeOnScroll> {
   }
 
   void _setOffset() {
+    _maxExtent = widget.scrollController.position.maxScrollExtent;
+
     setState(() {
       _offset = widget.scrollController.offset;
     });
   }
 
   double _calculateOpacity() {
-    print(_offset);
-
-    if (widget.fullOpacityOffset > widget.zeroOpacityOffset) {
-      // fading in
-      if (_offset <= widget.fullOpacityOffset / 1.1) {
-        return 0;
-      } else if (_offset >= widget.fullOpacityOffset)
-        return 1;
-      else {
-        return (widget.fullOpacityOffset - _offset) /
-            (widget.fullOpacityOffset - (widget.fullOpacityOffset / 1.1));
-      }
-    } else {
-      // fading out
-      if (_offset <= widget.fullOpacityOffset)
-        return 1;
-      else if (_offset >= widget.zeroOpacityOffset)
-        return 0;
-      else
-        return (_offset - widget.fullOpacityOffset) /
-            (widget.zeroOpacityOffset - widget.fullOpacityOffset);
-    }
+    // fading in
+    if (_offset <= (_maxExtent! * .9))
+      return 0;
+    else if (_offset >= _maxExtent!)
+      return 1;
+    else
+      return (1 - (_maxExtent! - _offset) / (_maxExtent! * .1));
   }
 
   @override
