@@ -3,6 +3,8 @@ import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
 
+import 'package:intl/intl.dart';
+
 class CalendarEvent {
   late String eventName;
   late DateTime startDate;
@@ -24,8 +26,9 @@ class CalendarEvent {
   }
 
   static Future<http.Response> getCalendarData() async {
-    const calendarURL =
-        'http://curlmanitoba.org/wp-json/tribe/events/v1/events?per_page=999&start_date=2022-03-01&end_date=2022-05-31';
+    String calendarURL =
+        'http://curlmanitoba.org/wp-json/tribe/events/v1/events?per_page=999&start_date=' +
+            (DateFormat('y-MM-dd').format(DateTime.now()));
     var response = await http.get(Uri.parse(calendarURL));
     return response;
   }
