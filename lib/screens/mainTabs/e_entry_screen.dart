@@ -1,3 +1,4 @@
+import 'package:curl_manitoba/models/apis/wordpress_api.dart';
 import 'package:curl_manitoba/models/e_entry_competition.dart';
 import 'package:curl_manitoba/widgets/fixed_column_widget.dart';
 import 'package:curl_manitoba/widgets/scrollable_column_widget.dart';
@@ -14,16 +15,20 @@ class _eEntryScreenState extends State<eEntryScreen>
     with AutomaticKeepAliveClientMixin {
   bool get wantKeepAlive => true;
 
+ late WordPressAPI api;
+  late Future eEntryDataFuture;
   late Map<String, dynamic> competitionsMap;
-  late Future<http.Response> eEntryDataFuture;
+
 
   @override
   void initState() {
-    eEntryDataFuture = eEntryCompetition.getElectronicEntryData();
-    eEntryDataFuture.then((value) =>
-        competitionsMap = eEntryCompetition.parseElectronicEntryData(value));
     super.initState();
+    api = WordPressAPI();
+    eEntryDataFuture = api.call('1979');
+    eEntryDataFuture.then(
+        (response) => competitionsMap = eEntryCompetition.parseElectronicEntryData(response));
   }
+
 
   @override
   Widget build(BuildContext context) {
