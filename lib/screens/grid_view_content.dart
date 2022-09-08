@@ -6,6 +6,7 @@ import 'package:curl_manitoba/screens/mainTabs/e_entry_screen.dart';
 import 'package:curl_manitoba/widgets/custom_app_bar.dart';
 import 'package:curl_manitoba/widgets/font_awesome_pro_icons.dart';
 import 'package:flutter/material.dart';
+import 'package:html/parser.dart';
 
 import 'package:http/http.dart' as http;
 
@@ -19,17 +20,26 @@ class GridViewContentScreen extends StatefulWidget {
 }
 
 class _GridViewContentScreenState extends State<GridViewContentScreen> {
-  late WordPressAPI api;
-  late Future gridViewFuture;
+  String? pageContent;
 
   @override
   void initState() {
     super.initState();
     pageTitle = widget.pageTitle;
-    api = WordPressAPI();
-    gridViewFuture = api.call('1996');
-    gridViewFuture.then(
-        (response) => eEntryCompetition.parseElectronicEntryData(response));
+
+    _getDataFromWeb();
+  }
+
+  Future<Map<String, dynamic>> _getDataFromWeb() async {
+    WordPressAPI api = WordPressAPI();
+    http.Response response = await api.fetchPage('1996');
+
+    return json.decode(response.body);
+  }
+
+  void buildContent(Map<String, dynamic> contentMap) {
+    final document = parse(contentMap['content']['rendered']);
+    pageContent = parse(document.body!.text).documentElement!.text;
   }
 
   late String pageTitle;
@@ -41,6 +51,11 @@ class _GridViewContentScreenState extends State<GridViewContentScreen> {
           context,
           pageTitle,
         ),
-        body: null);
+        body: FutureBuilder(
+            future: _getDataFromWeb(),
+            builder: (context, snapshot) {
+              buildContent(snapshot.data as Map<String, dynamic>);
+              return Text(pageContent!);
+            }));
   }
 }
