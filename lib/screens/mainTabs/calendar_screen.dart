@@ -52,22 +52,25 @@ class _CalendarScreenState extends State<CalendarScreen>
           height: 370,
           child: TableCalendar(
             shouldFillViewport: true,
-            calendarBuilders: CalendarBuilders(
-                singleMarkerBuilder: ((context, day, event) => Container(
-                      decoration: BoxDecoration(
-                        color: Colors.black,
-                        shape: BoxShape.rectangle,
-                      ),
-                      child: Padding(
-                        padding: const EdgeInsets.all(1.0),
-                        child: Text(
-                            preLoadedEvents[DateUtils.dateOnly(day)]!
-                                .length
-                                .toString(),
-                            style:
-                                TextStyle(color: Colors.white, fontSize: 12)),
-                      ),
-                    ))),
+            calendarBuilders:
+                CalendarBuilders(markerBuilder: ((context, day, events) {
+              if (events.isNotEmpty)
+                return Positioned(
+                  top: -2,
+                  right: -2,
+                  child: Container(
+                    decoration: BoxDecoration(
+                        color: Theme.of(context).textSelectionColor,
+                        shape: BoxShape.circle),
+                    padding: const EdgeInsets.all(5.0),
+                    child: Text(
+                      preLoadedEvents[DateUtils.dateOnly(day)]!
+                          .length
+                          .toString(),
+                    ),
+                  ),
+                );
+            })),
             focusedDay: selectedDay,
             firstDay: DateTime(2021, 1, 1),
             lastDay: DateTime(2022, 12, 31),
@@ -94,7 +97,6 @@ class _CalendarScreenState extends State<CalendarScreen>
                     _getEventsFromDay(DateUtils.dateOnly(selectedDay));
               });
             },
-   
           ),
         ),
         Divider(thickness: 1, height: 40),
