@@ -1,5 +1,6 @@
 import 'dart:convert';
 
+import 'package:curl_manitoba/models/apis/wordpress_api.dart';
 import 'package:curl_manitoba/models/news_story.dart';
 import 'package:curl_manitoba/widgets/circular_progress_bar.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
@@ -30,11 +31,9 @@ class _NewsStoryScreenState extends State<NewsStoryScreen> {
   }
 
   Future<Map<String, dynamic>> _getDataFromWeb() async {
-    String URL = 'https://curlmanitoba.org/wp-json/wp/v2/posts/' +
-        newsStory.id.toString() +
-        '?_fields=content';
+    WordPressAPI api = WordPressAPI();
+    var response = await api.fetchPost(newsStory.id.toString());
 
-    var response = await http.get(Uri.parse(URL));
     return json.decode(response.body);
   }
 
