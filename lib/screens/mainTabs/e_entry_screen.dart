@@ -24,7 +24,7 @@ class _eEntryScreenState extends State<eEntryScreen>
   void initState() {
     super.initState();
     api = WordPressAPI();
-    eEntryDataFuture = api.call('1979');
+    eEntryDataFuture = api.fetchPage('1979');
     eEntryDataFuture.then(
         (response) => competitionsMap = eEntryCompetition.parseElectronicEntryData(response));
   }
