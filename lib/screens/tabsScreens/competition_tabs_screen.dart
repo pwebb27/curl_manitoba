@@ -1,4 +1,5 @@
 import 'package:curl_manitoba/models/scoresCompetitionModels/scores_competition.dart';
+import 'package:curl_manitoba/providers/sliverappbar_arrow_provider.dart';
 import 'package:curl_manitoba/providers/sliverappbar_title_provider.dart';
 import 'package:curl_manitoba/screens/competitionTabs/reports_screen.dart';
 import 'package:curl_manitoba/screens/competitionTabs/scoreboard_screen.dart';
@@ -46,6 +47,7 @@ class _CompetitionScreenState extends State<CompetitionScreen>
 
   void _setOffset() {
     context.read<SliverAppBarTitle>().calculateOpacity(_scrollController.offset, _scrollController.position.maxScrollExtent);
+    context.read<SliverAppBarArrow>().calculateOpacity(_scrollController.offset, _scrollController.position.maxScrollExtent);
   }
 
   @override
@@ -66,17 +68,7 @@ class _CompetitionScreenState extends State<CompetitionScreen>
                     NestedScrollView.sliverOverlapAbsorberHandleFor(context),
                 sliver: SliverAppBar(
                     title: Title(competition),
-                    leading: Container(
-                        height: 20,
-                        margin: EdgeInsets.all(8),
-                        decoration: BoxDecoration(
-                            color: Colors.grey.shade500.withOpacity(.5),
-                            shape: BoxShape.circle),
-                        child: Icon(
-                          Icons.arrow_back,
-                          size: 30,
-                          color: Colors.white,
-                        )),
+                    leading: Arrow(),
                     floating: true,
                     pinned: true,
                     expandedHeight: 290.0,
@@ -127,6 +119,22 @@ class Title extends StatelessWidget {
           competition.name,
           style: TextStyle(fontSize: 22, color: Colors.white),
         )));
+  }
+}
+
+class Arrow extends StatelessWidget {
+  Widget build(BuildContext context) {
+    return Container(
+                        height: 20,
+                        margin: EdgeInsets.all(8),
+                        decoration: BoxDecoration(
+                            color: Colors.grey.shade500.withOpacity(context.watch<SliverAppBarArrow>().opacity),
+                            shape: BoxShape.circle),
+                        child: Icon(
+                          Icons.arrow_back,
+                          size: 30,
+                          color: Colors.white,
+                        ));
   }
 }
 
@@ -220,3 +228,5 @@ class _SliverAppBarDelegate extends StatelessWidget with PreferredSizeWidget {
     );
   }
 }
+
+

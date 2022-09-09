@@ -1,4 +1,5 @@
 import 'package:curl_manitoba/main_color_pallete.dart';
+import 'package:curl_manitoba/providers/sliverappbar_arrow_provider.dart';
 import 'package:curl_manitoba/providers/sliverappbar_title_provider.dart';
 import 'package:curl_manitoba/route_generator.dart';
 import 'package:curl_manitoba/screens/mainTabs/news/news_article_screen.dart';
@@ -13,7 +14,7 @@ void main() async {
   await Firebase.initializeApp();
 
   runApp(MultiProvider(
-      providers: [ChangeNotifierProvider(create: (_) => SliverAppBarTitle())],
+      providers: [ChangeNotifierProvider(create: (_) => SliverAppBarTitle()),ChangeNotifierProvider(create: (_) => SliverAppBarArrow())],
       child: MyApp()));
 }
 
