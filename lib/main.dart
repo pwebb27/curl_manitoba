@@ -1,16 +1,20 @@
 import 'package:curl_manitoba/main_color_pallete.dart';
+import 'package:curl_manitoba/providers/sliverappbar_title_provider.dart';
 import 'package:curl_manitoba/route_generator.dart';
 import 'package:curl_manitoba/screens/mainTabs/news/news_article_screen.dart';
 import 'package:curl_manitoba/screens/tabsScreens/home_tabs_screen.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 import 'package:wakelock/wakelock.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp();
 
-  runApp(MyApp());
+  runApp(MultiProvider(
+      providers: [ChangeNotifierProvider(create: (_) => SliverAppBarTitle())],
+      child: MyApp()));
 }
 
 final GlobalKey<NavigatorState> _navKey = GlobalKey<NavigatorState>();
