@@ -1,12 +1,11 @@
 import 'package:curl_manitoba/models/scoresCompetitionModels/scores_competition.dart';
+import 'package:curl_manitoba/providers/sliverappbar_title_provider.dart';
 import 'package:curl_manitoba/screens/competitionTabs/reports_screen.dart';
 import 'package:curl_manitoba/screens/competitionTabs/scoreboard_screen.dart';
-import 'package:curl_manitoba/screens/competitionTabs/standings_and_draws_screen.dart';
 import 'package:curl_manitoba/screens/competitionTabs/teams/teams_screen.dart';
-import 'package:curl_manitoba/screens/mainTabs/homeTabs/home_feed_screen.dart';
-import 'package:curl_manitoba/widgets/custom_app_bar.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:provider/provider.dart';
 
 class CompetitionScreen extends StatefulWidget {
   CompetitionScreen(this.competition);
@@ -24,6 +23,7 @@ class _CompetitionScreenState extends State<CompetitionScreen>
   late scoresCompetition competition;
   late TabController _controller;
   late ScrollController _scrollController;
+  late  SliverAppBarTitle sliverAppBarTitle;
 
   @override
   void initState() {
@@ -32,6 +32,9 @@ class _CompetitionScreenState extends State<CompetitionScreen>
     competition = widget.competition;
     _controller = new TabController(length: 3, vsync: this);
     _scrollController = ScrollController();
+
+    _scrollController.addListener(_setOffset);
+
   }
 
   @override
@@ -39,6 +42,10 @@ class _CompetitionScreenState extends State<CompetitionScreen>
     _scrollController.dispose();
     _controller.dispose();
     super.dispose();
+  }
+
+  void _setOffset() {
+    context.read<SliverAppBarTitle>().calculateOpacity(_scrollController.offset, _scrollController.position.maxScrollExtent);
   }
 
   @override
@@ -58,13 +65,7 @@ class _CompetitionScreenState extends State<CompetitionScreen>
                 handle:
                     NestedScrollView.sliverOverlapAbsorberHandleFor(context),
                 sliver: SliverAppBar(
-                    title: FadeOnScroll(
-                      scrollController: _scrollController,
-                      child: Text(
-                        competition.name,
-                        style: TextStyle(fontSize: 22, color: Colors.white),
-                      ),
-                    ),
+                    title: Title(competition),
                     leading: Container(
                         height: 20,
                         margin: EdgeInsets.all(8),
@@ -113,6 +114,19 @@ class _CompetitionScreenState extends State<CompetitionScreen>
         ),
       ),
     ));
+  }
+}
+
+class Title extends StatelessWidget {
+  scoresCompetition competition;
+  Title(this.competition);
+  Widget build(BuildContext context) {
+    return Opacity(
+        opacity: context.watch<SliverAppBarTitle>().opacity,
+        child: (Text(
+          competition.name,
+          style: TextStyle(fontSize: 22, color: Colors.white),
+        )));
   }
 }
 
@@ -203,65 +217,6 @@ class _SliverAppBarDelegate extends StatelessWidget with PreferredSizeWidget {
       width: double.infinity,
       color: Colors.white, // ADD THE COLOR YOU WANT AS BACKGROUND.
       child: _tabBar,
-    );
-  }
-}
-
-//https://gist.github.com/smkhalsa/ec33ec61993f29865a52a40fff4b81a2
-class FadeOnScroll extends StatefulWidget {
-  final ScrollController scrollController;
-  final Widget child;
-
-  FadeOnScroll({
-    Key? key,
-    required this.scrollController,
-    required this.child,
-  });
-
-  @override
-  _FadeOnScrollState createState() => _FadeOnScrollState();
-}
-
-class _FadeOnScrollState extends State<FadeOnScroll> {
-  late double _offset;
-  double? _maxExtent;
-
-  @override
-  initState() {
-    super.initState();
-    _offset = widget.scrollController.offset;
-    widget.scrollController.addListener(_setOffset);
-  }
-
-  @override
-  dispose() {
-    widget.scrollController.removeListener(_setOffset);
-    super.dispose();
-  }
-
-  void _setOffset() {
-    _maxExtent = widget.scrollController.position.maxScrollExtent;
-
-    setState(() {
-      _offset = widget.scrollController.offset;
-    });
-  }
-
-  double _calculateOpacity() {
-    // fading in
-    if (_offset <= (_maxExtent! * .9))
-      return 0;
-    else if (_offset >= _maxExtent!)
-      return 1;
-    else
-      return (1 - (_maxExtent! - _offset) / (_maxExtent! * .1));
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    return Opacity(
-      opacity: _calculateOpacity(),
-      child: widget.child,
     );
   }
 }
