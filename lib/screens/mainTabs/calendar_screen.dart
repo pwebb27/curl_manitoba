@@ -1,8 +1,11 @@
 import 'package:curl_manitoba/models/calendar_event.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 import 'package:intl/intl.dart';
+import 'package:url_launcher/url_launcher.dart';
 import '../../widgets/circular_progress_bar.dart';
 import 'package:table_calendar/table_calendar.dart';
+import 'package:flutter_html/flutter_html.dart';
 
 import 'package:http/http.dart' as http;
 
@@ -46,6 +49,7 @@ class _CalendarScreenState extends State<CalendarScreen>
   @override
   Widget build(BuildContext context) {
     super.build(context);
+
     return SingleChildScrollView(
       child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
         SizedBox(
@@ -60,15 +64,17 @@ class _CalendarScreenState extends State<CalendarScreen>
                   right: -2,
                   child: Container(
                     decoration: BoxDecoration(
-                        color: Theme.of(context).textSelectionColor,
+                        color: Theme.of(context).textSelectionTheme.selectionColor,
                         shape: BoxShape.circle),
                     padding: const EdgeInsets.all(5.0),
                     child: Text(
                       preLoadedEvents[DateUtils.dateOnly(day)]!
                           .length
                           .toString(),
+          
+                      ),
                     ),
-                  ),
+                  
                 );
             })),
             focusedDay: selectedDay,
@@ -106,30 +112,194 @@ class _CalendarScreenState extends State<CalendarScreen>
               'Events for ' + DateFormat('LLL d, y').format(selectedDay),
               style: TextStyle(fontSize: 19, fontWeight: FontWeight.w700)),
         ),
-        ...selectedEvents.map((event) => ExpansionTile(
-                title: Text(event.eventName,
-                    style:
-                        TextStyle(fontSize: 16, fontWeight: FontWeight.w500)),
-                expandedAlignment: Alignment.centerLeft,
-                subtitle: Text(
-                    DateFormat('LLL d, y').format(event.startDate) +
-                        ' - ' +
-                        DateFormat('LLL d, y').format(event.endDate),
-                    style:
-                        TextStyle(fontSize: 13.5, color: Colors.grey.shade700)),
-                children: [
-                  Column(
-                    children: [
-                      (event.venue != '')
-                          ? Text('Venue: ' + event.venue)
-                          : Text(''),
-                      (event.details != '')
-                          ? Text('Details: ' + event.details)
-                          : Text('')
-                    ],
-                  )
-                ]))
+        ...selectedEvents.map((event) => Theme(
+            data: ThemeData().copyWith(dividerColor: Colors.transparent),
+            child: eventTile(event)))
       ]),
     );
   }
 }
+
+class eventTile extends StatelessWidget {
+  const eventTile(this.event);
+  final CalendarEvent event;
+
+  @override
+  Widget build(BuildContext context) {
+    return Padding(
+      padding: const EdgeInsets.only(bottom: 17.0),
+      child: (event.htmlDescription != '')
+          ? ExpansionTile(
+              title: Padding(
+                padding: const EdgeInsets.only(bottom: 3.0),
+                child: Text(event.name,
+                    style:
+                        TextStyle(fontSize: 16, fontWeight: FontWeight.w500)),
+              ),
+              subtitle: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                        DateFormat('hh:mm:ss').format(event.startDate) !=
+                                '00:00:00'
+                            ? DateFormat('LLLL d @ hh:mm aaa')
+                                    .format(event.startDate) +
+                                ' - ' +
+                                DateFormat('LLLL d @ hh:mm aaa')
+                                    .format(event.endDate)
+                            : DateFormat('LLLL d').format(event.startDate) +
+                                ' - ' +
+                                DateFormat('LLLL d').format(event.endDate),
+                        style: TextStyle(
+                            fontSize: 13.5, color: Colors.grey.shade700)),
+                    Padding(
+                        padding: const EdgeInsets.symmetric(vertical: 6.0),
+                        child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              if (event.venue != null || event.cost != null)
+                                DefaultTextStyle(
+                                  style: TextStyle(
+                                      fontSize: 14,
+                                      fontWeight: FontWeight.bold,
+                                      color: Theme.of(context)
+                                          .colorScheme
+                                          .primary),
+                                  child: Row(
+                                    children: [
+                                      if (event.venue != null)
+                                        Row(
+                                          children: [
+                                            SvgPicture.asset(
+                                              'assets/icons/landmark.svg',
+                                              height: 13,
+                                            ),
+                                            Padding(
+                                              padding: const EdgeInsets.only(
+                                                  left: 4.0, right: 12),
+                                              child: Text(
+                                                event.venue!,
+                                              ),
+                                            ),
+                                          ],
+                                        ),
+                                      if (event.cost != null)
+                                        Row(
+                                          children: [
+                                            SvgPicture.asset(
+                                                'assets/icons/circle-dollar.svg',
+                                                height: 14),
+                                            Padding(
+                                              padding: const EdgeInsets.only(
+                                                  left: 4.0),
+                                              child: Text(event.cost!),
+                                            ),
+                                          ],
+                                        ),
+                                    ],
+                                  ),
+                                ),
+                            ]))
+                  ]),
+              children: [
+                Column(
+                  children: [
+                    Padding(
+                      padding: const EdgeInsets.symmetric(horizontal: 10.0),
+                      child: Html(
+                          data: event.htmlDescription,
+                    
+                          style: {
+                            "p": Style(
+                              margin: EdgeInsets.only(bottom:8),
+                            )
+                          },
+                          onLinkTap:
+                              ((url, context, attributes, element) async {
+                            if (await canLaunch(url!))
+                              await launch(url);
+                            else
+                              throw "Error occurred";
+                          })),
+                    )
+                  ],
+                )
+              ],
+            )
+          : ListTile(
+              title: Padding(
+                padding: const EdgeInsets.only(bottom: 3.0),
+                child: Text(event.name,
+                    style:
+                        TextStyle(fontSize: 16, fontWeight: FontWeight.w500)),
+              ),
+              subtitle: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                        DateFormat.Hms().format(event.startDate) != '00:00:00'
+                            ? DateFormat('LLLL d @ hh:mm aaa')
+                                    .format(event.startDate) +
+                                ' - ' +
+                                DateFormat('LLLL d @ hh:mm aaa')
+                                    .format(event.endDate)
+                            : DateFormat('LLLL d').format(event.startDate) +
+                                ' - ' +
+                                DateFormat('LLLL d').format(event.endDate),
+                        style: TextStyle(
+                            fontSize: 13.5, color: Colors.grey.shade700)),
+                    Padding(
+                        padding: const EdgeInsets.symmetric(vertical: 6.0),
+                        child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              if (event.venue != null || event.cost != null)
+                                DefaultTextStyle(
+                                  style: TextStyle(
+                                      fontSize: 14,
+                                      fontWeight: FontWeight.bold,
+                                      color: Theme.of(context)
+                                          .colorScheme
+                                          .primary),
+                                  child: Row(
+                                    children: [
+                                      if (event.venue != null)
+                                        Row(
+                                          children: [
+                                            SvgPicture.asset(
+                                              'assets/icons/landmark.svg',
+                                              height: 13,
+                                            ),
+                                            Padding(
+                                              padding: const EdgeInsets.only(
+                                                  left: 4.0, right: 12),
+                                              child: Text(
+                                                event.venue!,
+                                              ),
+                                            ),
+                                          ],
+                                        ),
+                                      if (event.cost != null)
+                                        Row(
+                                          children: [
+                                            SvgPicture.asset(
+                                                'assets/icons/circle-dollar.svg',
+                                                height: 14),
+                                            Padding(
+                                              padding: const EdgeInsets.only(
+                                                  left: 4.0),
+                                              child: Text(event.cost!),
+                                            ),
+                                          ],
+                                        ),
+                                    ],
+                                  ),
+                                ),
+                            ]))
+                  ]),
+            ),
+    );
+  }
+}
+
+
