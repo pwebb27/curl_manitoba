@@ -36,9 +36,9 @@ dependencies:
   intl: ^0.17.0
   carousel_slider: ^4.0.0
   wakelock: ^0.6.1+2
-  html: ^0.15.0
+  flutter_html: ^2.2.1
   table_calendar: ^3.0.5
-  flutter_svg: ^1.0.3
+  flutter_svg: ^0.23.0+1
   cloud_firestore: ^3.4.2
   firebase_storage: ^10.3.4
   file_picker: ^5.0.1
