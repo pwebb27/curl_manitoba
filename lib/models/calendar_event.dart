@@ -2,27 +2,27 @@ import 'package:curl_manitoba/models/news_story.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
+import 'package:html/parser.dart';
 
 import 'package:intl/intl.dart';
 
 class CalendarEvent {
-  late String eventName;
+  late String name;
   late DateTime startDate;
   late DateTime endDate;
-  late String details;
-  late String venue;
+  late String htmlDescription;
+  late String? venue;
+  late String? cost;
 
   CalendarEvent.fromJson(Map<String, dynamic> json) {
-    eventName = json['title'];
-    startDate = DateUtils.dateOnly(DateTime.parse(json['start_date']));
-    endDate = DateUtils.dateOnly(DateTime.parse(json['end_date']).toUtc());
-    details = json['description'];
-    venue = getVenue(json['venue']);
-  }
-
-  getVenue(dynamic venue) {
-    if (venue.isEmpty) return '';
-    return venue['venue'];
+    name = parse(json['title']).body!.text;
+    startDate = DateTime.parse(json['start_date']);
+    endDate = DateTime.parse(json['end_date']);
+    htmlDescription = json['description'];
+    venue = json['venue'].isEmpty ? null : parse(json['venue']['venue']).body!.text;
+    cost = json['cost'].isEmpty
+        ? null
+        : json['cost_details']['values'][0];
   }
 
   static Future<http.Response> getCalendarData() async {
@@ -33,29 +33,45 @@ class CalendarEvent {
     return response;
   }
 
-  static Map<DateTime, List<CalendarEvent>> parseCalendarData(
-      http.Response newsStoriesResponse) {
-    Map<String, dynamic> calendarMap = json.decode(newsStoriesResponse.body);
+  static Map<DateTime, List<CalendarEvent>> parseCalendarData(http.Response calendarResponse) {
+    Map<String, dynamic> calendarMap = json.decode(calendarResponse.body);
     List<CalendarEvent> calendarEvents = [];
-    Map<DateTime, List<CalendarEvent>> events = {};
+
     for (var event in calendarMap['events']) {
       calendarEvents.add(CalendarEvent.fromJson(event));
     }
-    for (CalendarEvent event in calendarEvents) {
-      //https://stackoverflow.com/questions/61362685/return-all-dates-between-two-dates-as-a-list-in-flutter-date-range-picker
+    return createEventsMap(calendarEvents);
+  }
 
-      List<DateTime> days = [];
-      for (int i = 0;
-          i <= event.endDate.difference(event.startDate).inDays;
-          i++) {
-        days.add(event.startDate.add(Duration(days: i)));
-      }
-      for (DateTime day in days) {
-        if (!events.containsKey(day)) events[day] = [];
-        events[day]!.add(event);
-      }
+  static Map<DateTime, List<CalendarEvent>> createEventsMap(
+      List<CalendarEvent> eventsList) {
+    Map<DateTime, List<CalendarEvent>> eventsMap = {};
+    for (CalendarEvent event in eventsList) {
+      List<DateTime> days = getCalendarEventDates(event);
+      addDaysToEventsMap(days, eventsMap, event);
     }
+    return eventsMap;
+  }
 
-    return events;
+  static void addDaysToEventsMap(List<DateTime> days,
+      Map<DateTime, List<CalendarEvent>> events, CalendarEvent event) {
+    for (DateTime day in days) {
+      if (!events.containsKey((day))) events[day] = [];
+      events[day]!.add(event);
+    }
+  }
+
+  //Return list of in
+  static List<DateTime> getCalendarEventDates(CalendarEvent event) {
+    //https://stackoverflow.com/questions/61362685/return-all-dates-between-two-dates-as-a-list-in-flutter-date-range-picker
+
+    List<DateTime> calendarEventDates = [];
+    for (int i = 0;
+        i <= event.endDate.difference(event.startDate).inDays;
+        i++) {
+      calendarEventDates
+          .add(DateUtils.dateOnly((event.startDate).add(Duration(days: i))));
+    }
+    return calendarEventDates;
   }
 }
