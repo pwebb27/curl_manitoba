@@ -5,8 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 
 class TeamDataScreen extends StatefulWidget {
-  Team team;
-
+  final Team team;
   TeamDataScreen(this.team);
 
   @override
@@ -14,10 +13,7 @@ class TeamDataScreen extends StatefulWidget {
 }
 
 class _TeamDataScreenState extends State<TeamDataScreen> {
-  late Team team;
-
   void initState() {
-    team = widget.team;
     super.initState();
   }
 
@@ -35,7 +31,7 @@ class _TeamDataScreenState extends State<TeamDataScreen> {
               children: [
                 Container(
                   decoration: BoxDecoration(
-                  color: Color.fromRGBO(251, 208, 7, 1),
+                      color: Color.fromRGBO(251, 208, 7, 1),
                       border: Border(right: BorderSide(width: 2))),
                   height: 30,
                   width: 10,
@@ -49,7 +45,7 @@ class _TeamDataScreenState extends State<TeamDataScreen> {
                       child: Padding(
                         padding: const EdgeInsets.only(left: 8.0),
                         child: Text(
-                          team.name!,
+                          widget.team.name!,
                           style: TextStyle(
                             color: Colors.white,
                             fontWeight: FontWeight.w400,
@@ -67,7 +63,7 @@ class _TeamDataScreenState extends State<TeamDataScreen> {
         ListView.builder(
           shrinkWrap: true,
           physics: NeverScrollableScrollPhysics(),
-          itemCount: team.players!.length,
+          itemCount: widget.team.players!.length,
           itemBuilder: ((context, index) => ListTileTheme(
               dense: true,
               child: Theme(
@@ -79,38 +75,40 @@ class _TeamDataScreenState extends State<TeamDataScreen> {
                         showDialog(
                             context: context,
                             builder: (context) => ImageDialog(
-                                team.players![index].profilePicUrl));
+                                widget.team.players![index].profilePicUrl));
                       },
                       child: CircleAvatar(
-                        backgroundImage:
-                            NetworkImage(team.players![index].profilePicUrl),
+                        backgroundImage: NetworkImage(
+                            widget.team.players![index].profilePicUrl),
                       )),
                   subtitle: Text(
-                    team.players![index].position,
+                    widget.team.players![index].position,
                     style: TextStyle(fontSize: 14),
                   ),
                   title: Text(
-                    team.players![index].name,
+                    widget.team.players![index].name,
                     style: TextStyle(fontSize: 16),
                   ),
                   children: [
                     Padding(
                       padding: const EdgeInsets.only(bottom: 5.0),
-                      child: Text('City: ' + (team.players![index].city!),
+                      child: Text(
+                          'City: ' + (widget.team.players![index].city!),
                           style: TextStyle(fontSize: 16)),
                     ),
-                    (team.players![index].delivery != null)
+                    (widget.team.players![index].delivery != null)
                         ? Padding(
                             padding: const EdgeInsets.only(bottom: 5.0),
                             child: Text(
-                                'Delivery: ' + (team.players![index].delivery!),
+                                'Delivery: ' +
+                                    (widget.team.players![index].delivery!),
                                 style: TextStyle(fontSize: 16)))
                         : SizedBox.shrink(),
-                    (team.players![index].club != null)
+                    (widget.team.players![index].club != null)
                         ? Padding(
                             padding: const EdgeInsets.only(bottom: 5.0),
                             child: Text(
-                              'Club: ' + (team.players![index].club!),
+                              'Club: ' + (widget.team.players![index].club!),
                               style: TextStyle(fontSize: 16),
                             ))
                         : SizedBox.shrink()
@@ -118,11 +116,12 @@ class _TeamDataScreenState extends State<TeamDataScreen> {
                 ),
               ))),
         ),
-        if (team.location != null)
-          buildTeamCard('Location', team.location!, 'whistle'),
-        if (team.affiliation != null)
-          buildTeamCard('Affiliation', team.affiliation!, 'location-dot'),
-        if (team.coach != null) buildTeamCard('Coach', team.coach!, 'landmark'),
+        if (widget.team.location != null)
+          _TeamCard('Location', widget.team.location!, 'whistle'),
+        if (widget.team.affiliation != null)
+          _TeamCard('Affiliation', widget.team.affiliation!, 'location-dot'),
+        if (widget.team.coach != null)
+          _TeamCard('Coach', widget.team.coach!, 'landmark'),
         Padding(padding: EdgeInsets.all(12)),
         Row(children: [buildDrawsTable()]),
       ]),
@@ -131,8 +130,9 @@ class _TeamDataScreenState extends State<TeamDataScreen> {
 }
 
 class ImageDialog extends StatelessWidget {
-  String imageUrl;
+  final String imageUrl;
   ImageDialog(this.imageUrl);
+ 
   @override
   Widget build(BuildContext context) {
     return Dialog(
@@ -150,33 +150,41 @@ class ImageDialog extends StatelessWidget {
   }
 }
 
-buildTeamCard(String title, String name, String iconName) {
-  return Padding(
-    padding: const EdgeInsets.only(left:15.0,right:15,top:10),
-    child: Card(
-        elevation: 5,
-        color: Colors.grey.shade200,
-        child: Padding(
-          padding: const EdgeInsets.all(10.0),
-          child: Row(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              Padding(
-                padding: EdgeInsets.only(right: 15),
-                child: SvgPicture.asset(
-                  'assets/icons/' + iconName + '.svg',
-                  height: 20,
-                  alignment: Alignment.center,
+class _TeamCard extends StatelessWidget {
+  const _TeamCard(this.title, this.name, this.iconName);
+  final String title;
+  final String name;
+  final String iconName;
+
+  @override
+  Widget build(BuildContext context) {
+    return Padding(
+      padding: const EdgeInsets.only(left: 15.0, right: 15, top: 10),
+      child: Card(
+          elevation: 5,
+          color: Colors.grey.shade200,
+          child: Padding(
+            padding: const EdgeInsets.all(10.0),
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Padding(
+                  padding: EdgeInsets.only(right: 15),
+                  child: SvgPicture.asset(
+                    'assets/icons/' + iconName + '.svg',
+                    height: 20,
+                    alignment: Alignment.center,
+                  ),
                 ),
-              ),
-              Text(
-                title + ': ' + name,
-                style: TextStyle(fontSize: 17, fontWeight: FontWeight.w500),
-              )
-            ],
-          ),
-        )),
-  );
+                Text(
+                  title + ': ' + name,
+                  style: TextStyle(fontSize: 17, fontWeight: FontWeight.w500),
+                )
+              ],
+            ),
+          )),
+    );
+  }
 }
 
 buildDrawsTable() {
@@ -212,7 +220,6 @@ buildDrawsTable() {
               label: Text('Opponent', style: TextStyle(color: Colors.white))),
         ],
         rows: [],
-      
       ),
     ),
   ));
