@@ -15,25 +15,25 @@ class _eEntryScreenState extends State<eEntryScreen>
     with AutomaticKeepAliveClientMixin {
   bool get wantKeepAlive => true;
 
-  late Future eEntryDataFuture;
-  late Map<String, dynamic> eEntryCompetitions;
+  late Future _eEntryDataFuture;
+  late Map<String, dynamic> _eEntryCompetitions;
 
   @override
   void initState() {
     super.initState();
-    eEntryDataFuture = WordPressAPI().fetchPage('1979');
+    _eEntryDataFuture = WordPressAPI().fetchPage('1979');
   }
 
   @override
   Widget build(BuildContext context) {
     super.build(context);
     return FutureBuilder(
-        future: eEntryDataFuture,
+        future: _eEntryDataFuture,
         builder: (context, snapshot) {
           if (snapshot.connectionState == ConnectionState.waiting) {
             return CircularProgressBar();
           }
-          eEntryCompetitions = eEntryCompetition
+          _eEntryCompetitions = eEntryCompetition
               .parseElectronicEntryData(snapshot.data as http.Response);
           return SingleChildScrollView(
             child: Expanded(
@@ -42,15 +42,15 @@ class _eEntryScreenState extends State<eEntryScreen>
                       height: 30,
                     )),
                 shrinkWrap: true,
-                itemCount: eEntryCompetitions.length,
+                itemCount: _eEntryCompetitions.length,
                 physics: NeverScrollableScrollPhysics(),
                 itemBuilder: ((context, index) => Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
+                        children: [  
                           Padding(
                             padding: const EdgeInsets.all(10.0),
                             child: Text(
-                              eEntryCompetitions.entries.elementAt(index).key,
+                              _eEntryCompetitions.entries.elementAt(index).key,
                               style: TextStyle(
                                   fontSize: 17, fontWeight: FontWeight.bold),
                             ),
@@ -59,9 +59,9 @@ class _eEntryScreenState extends State<eEntryScreen>
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
                                 FixedColumnWidget(
-                                    eEntryCompetitions.values.elementAt(index)),
+                                    _eEntryCompetitions.values.elementAt(index)),
                                 ScrollableColumnWidget(
-                                    eEntryCompetitions.values.elementAt(index))
+                                    _eEntryCompetitions.values.elementAt(index))
                               ]),
                         ])),
               ),
