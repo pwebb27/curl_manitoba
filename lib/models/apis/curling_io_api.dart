@@ -1,8 +1,10 @@
 import 'package:http/http.dart' as http;
 import 'dart:convert';
+import 'package:http/http.dart' show Client;
 
 class CurlingIOAPI {
-
+  
+  Client client = Client();
   static String baseUrl =
       'https://legacy-curlingio.global.ssl.fastly.net/api/organizations/MTZFJ5miuro/competitions';
 
@@ -16,7 +18,7 @@ class CurlingIOAPI {
 
   Future<http.Response> fetchCompetitions(
       [String tag = '', int pageNumber = 1]) async {
-    return await http
+    return await client
         .get(Uri.parse('$baseUrl.json?search=&tags=$tag&page=$pageNumber'));
   }
 

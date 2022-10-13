@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 import 'package:curl_manitoba/main_color_pallete.dart';
 import 'package:curl_manitoba/models/apis/curling_io_api.dart';
 import 'package:curl_manitoba/models/calendar_event.dart';
@@ -7,7 +9,9 @@ import 'package:curl_manitoba/screens/mainTabs/news/news_screen.dart';
 import 'package:curl_manitoba/screens/mainTabs/scores_screen.dart';
 import 'package:curl_manitoba/widgets/circular_progress_bar.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:http/http.dart' as http;
+import 'package:http/testing.dart';
 import '../../widgets/custom_app_bar.dart';
 import '../../widgets/main_drawer.dart';
 import '../mainTabs/calendar_screen.dart';
@@ -29,6 +33,7 @@ class _TabsScreenState extends State<TabsScreen> {
   late final List<Widget> _pages;
   late String test;
   Future<void>? resultsFuture;
+  late CurlingIOAPI curlingIoApi;
 
   late int _selectedPageIndex;
 
@@ -40,15 +45,21 @@ class _TabsScreenState extends State<TabsScreen> {
 
   void initState() {
     _selectedPageIndex = 0;
+    final curlingIoApi = CurlingIOAPI();
+
+    curlingIoApi.client = MockClient((request) async {
+      return http.Response(await rootBundle.loadString('assets/json/competitions.json'), 200);
+    });
+
     tabsScreenFutures = [
-      CurlingIOAPI().fetchCompetitions(),
+      curlingIoApi.fetchCompetitions(),
       NewsStory.getNewsData(8),
       CalendarEvent.getCalendarData(),
     ];
     resultsFuture = Future.wait(tabsScreenFutures).then((data) {
       loadedCompetitions = scoresCompetition.parseCompetitionData(data[0]);
       loadedNews = NewsStory.parseNewsData(data[1]);
-            loadedEvents = CalendarEvent.parseCalendarData(data[2]);
+      loadedEvents = CalendarEvent.parseCalendarData(data[2]);
 
       _pages = [
         HomeScreen(loadedCompetitions, loadedNews),
@@ -138,7 +149,8 @@ class _TabsScreenState extends State<TabsScreen> {
                         _buildBottomNavigationBarItem('Home', 'home', 23.5),
                         _buildBottomNavigationBarItem(
                             'e-Entry', 'add-group', 24),
-                        _buildBottomNavigationBarItem('News', 'newspaper', 22.5),
+                        _buildBottomNavigationBarItem(
+                            'News', 'newspaper', 22.5),
                         _buildBottomNavigationBarItem(
                             'Scores', 'scoreboard', 23.5),
                         _buildBottomNavigationBarItem(
