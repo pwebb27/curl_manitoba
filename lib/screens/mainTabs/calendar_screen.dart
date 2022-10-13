@@ -5,11 +5,10 @@ import 'package:intl/intl.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'package:table_calendar/table_calendar.dart';
 import 'package:flutter_html/flutter_html.dart';
-
 import 'package:http/http.dart' as http;
 
 class CalendarScreen extends StatefulWidget {
-  Map<DateTime, List<CalendarEvent>> preloadedEvents;
+  final Map<DateTime, List<CalendarEvent>> preloadedEvents;
   CalendarScreen(this.preloadedEvents);
 
   @override
@@ -21,24 +20,15 @@ class _CalendarScreenState extends State<CalendarScreen>
   bool get wantKeepAlive => true;
 
   late Future<http.Response> calendarDataFuture;
-  late Map<DateTime, List<CalendarEvent>> preLoadedEvents;
 
-  late DateTime selectedDay;
-  late DateTime focusedDay;
+  late DateTime _selectedDay;
   late List<CalendarEvent> selectedEvents;
-  late Map<DateTime, List<CalendarEvent>> additionalEvents;
-  bool loadedAdditionalEvents = false;
 
   @override
   void initState() {
     super.initState();
-    preLoadedEvents = widget.preloadedEvents;
     selectedEvents = [];
-    selectedDay = DateUtils.dateOnly(DateTime.now());
-    focusedDay = DateUtils.dateOnly(DateTime.now());
-    calendarDataFuture = CalendarEvent.getCalendarData();
-    calendarDataFuture.then(
-        (value) => preLoadedEvents = CalendarEvent.parseCalendarData(value));
+    _selectedDay = DateUtils.dateOnly(DateTime.now());
   }
 
   List<CalendarEvent> _getEventsFromDay(DateTime date) {
