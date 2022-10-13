@@ -165,7 +165,7 @@ class eventExpansionTile extends StatelessWidget {
                 {
                   Future.delayed(Duration(milliseconds: 100))
                       .then((value) {
-                    Scrollable.(context,
+                    Scrollable.ensureVisible(context,
                         duration: Duration(milliseconds: 200));
                   })
                 }
