@@ -18,6 +18,7 @@ class CalendarScreen extends StatefulWidget {
 class _CalendarScreenState extends State<CalendarScreen>
     with AutomaticKeepAliveClientMixin {
   bool get wantKeepAlive => true;
+  final ScrollController scrollController = ScrollController();
 
   late Future<http.Response> calendarDataFuture;
 
@@ -31,8 +32,10 @@ class _CalendarScreenState extends State<CalendarScreen>
     _selectedDay = DateUtils.dateOnly(DateTime.now());
   }
 
-  List<CalendarEvent> _getEventsFromDay(DateTime date) {
-    return preLoadedEvents[DateUtils.dateOnly(date)] ?? [];
+  @override
+  void dispose() {
+    scrollController.dispose();
+    super.dispose();
   }
 
   @override
@@ -40,119 +43,160 @@ class _CalendarScreenState extends State<CalendarScreen>
     super.build(context);
 
     return SingleChildScrollView(
+      controller: scrollController,
       child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
         buildTableCalendar(context),
         Divider(thickness: 1, height: 40),
         Padding(
           padding: const EdgeInsets.symmetric(horizontal: 12),
-          child: Text(
-              'Events for ' + DateFormat('LLL d, y').format(selectedDay),
-              style: TextStyle(fontSize: 19, fontWeight: FontWeight.w700)),
+          child: Padding(
+            padding: const EdgeInsets.only(bottom: 12.0),
+            child: Text(
+                'Events for ' + DateFormat('LLL d, y').format(_selectedDay),
+                style: TextStyle(fontSize: 19, fontWeight: FontWeight.w700)),
+          ),
         ),
         ...selectedEvents.map((event) => Theme(
             data: ThemeData().copyWith(dividerColor: Colors.transparent),
-            child: _eventTile(event)))
+            child: _eventTile(event, scrollController)))
       ]),
     );
   }
 
+  List<CalendarEvent> _getEventsFromDay(DateTime date) {
+    return widget.preloadedEvents[DateUtils.dateOnly(date)] ?? [];
+  }
+
   SizedBox buildTableCalendar(BuildContext context) {
     return SizedBox(
-          height: 370,
-          child: TableCalendar(
-            shouldFillViewport: true,
-            calendarBuilders:
-                CalendarBuilders(markerBuilder: ((context, day, events) {
-              if (events.isNotEmpty)
-                return Positioned(
-                  top: -2,
-                  right: -2,
-                  child: Container(
-                    decoration: BoxDecoration(
-                      color:
-                          Theme.of(context).textSelectionTheme.selectionColor,
-                        shape: BoxShape.circle),
-                    padding: const EdgeInsets.all(5.0),
-                    child: Text(
-                      preLoadedEvents[DateUtils.dateOnly(day)]!
-                          .length
-                          .toString(),
-                      ),
-                    ),
-                );
-            })),
-            focusedDay: selectedDay,
-            firstDay: DateTime(2021, 1, 1),
-            lastDay: DateTime(2022, 12, 31),
-            headerStyle: HeaderStyle(formatButtonVisible: false),
-            selectedDayPredicate: (DateTime date) {
-              return isSameDay(selectedDay, date);
-            },
-            eventLoader: (day) {
-              return _getEventsFromDay(day);
-            },
-            calendarStyle: CalendarStyle(
-                markersMaxCount: 1,
-                todayDecoration: BoxDecoration(
-                    color: Color.fromRGBO(169, 113, 102, 1),
-                    shape: BoxShape.circle),
-                selectedDecoration: BoxDecoration(
-                    color: Theme.of(context).primaryColor,
-                    shape: BoxShape.circle)),
-            onDaySelected: (DateTime selectDay, DateTime focusDay) {
-              setState(() {
-                selectedDay = selectDay;
-                focusedDay = focusDay;
-                selectedEvents =
-                    _getEventsFromDay(DateUtils.dateOnly(selectedDay));
-              });
-            },
-          ),
+      height: 370,
+      child: TableCalendar(
+        shouldFillViewport: true,
+        calendarBuilders:
+            CalendarBuilders(markerBuilder: ((context, day, events) {
+          if (events.isNotEmpty)
+            return Positioned(
+              top: -2,
+              right: -2,
+              child: Container(
+                decoration:
+                    BoxDecoration(color: Colors.blue, shape: BoxShape.circle),
+                padding: const EdgeInsets.all(5.0),
+                child: Text(
+                  widget.preloadedEvents[DateUtils.dateOnly(day)]!.length
+                      .toString(),
+                ),
+              ),
+            );
+        })),
+        focusedDay: _selectedDay,
+        firstDay:
+            (DateTime.now().isBefore(DateTime(DateTime.now().year, 7, 01)))
+                ? DateTime(DateTime.now().year - 1, 7, 1)
+                : DateTime(DateTime.now().year, 07, 1),
+        lastDay: (DateTime.now().isAfter(DateTime(DateTime.now().year, 6, 30)))
+            ? DateTime(DateTime.now().year + 1, 6, 30)
+            : DateTime(DateTime.now().year, 6, 30),
+        headerStyle: HeaderStyle(formatButtonVisible: false),
+        selectedDayPredicate: (DateTime date) {
+          return isSameDay(_selectedDay, date);
+        },
+        //Tells the calendar the events to display with markers
+        eventLoader: (day) {
+          return _getEventsFromDay(day);
+        },
+        calendarStyle: CalendarStyle(
+            markersMaxCount: 1,
+            todayDecoration: BoxDecoration(
+                color: Color.fromRGBO(169, 113, 102, 1),
+                shape: BoxShape.circle),
+            selectedDecoration: BoxDecoration(
+                color: Theme.of(context).primaryColor, shape: BoxShape.circle)),
+
+        onDaySelected: (DateTime selectedDay, DateTime focusDay) {
+          setState(() {
+            if (!isSameDay(_selectedDay, selectedDay)) {
+              _selectedDay = selectedDay;
+              selectedEvents = _getEventsFromDay(selectedDay);
+            }
+          });
+        },
+      ),
     );
   }
 }
 
 class _eventTile extends StatelessWidget {
-  const _eventTile(this.event);
+  _eventTile(this.event, this.scrollController);
+  final ScrollController scrollController;
+
   final CalendarEvent event;
+  
 
   @override
   Widget build(BuildContext context) {
     return Padding(
-      padding: const EdgeInsets.only(bottom: 17.0),
-      child: (event.htmlDescription != '')
-          ? ExpansionTile(
-                title: _TileTitle(event: event),
-                subtitle: _TileSubtitle(event: event),
-              children: [
-                Column(
-                  children: [
-                    Padding(
-                      padding: const EdgeInsets.symmetric(horizontal: 10.0),
-                      child: Html(
-                          data: event.htmlDescription,
-                          style: {
-                            "p": Style(
-                                margin: EdgeInsets.only(bottom: 8),
-                            )
-                          },
-                          onLinkTap:
-                              ((url, context, attributes, element) async {
-                            if (await canLaunch(url!))
-                              await launch(url);
-                            else
-                              throw "Error occurred";
-                          })),
-                    )
-                  ],
-                )
-              ],
-            )
-          : ListTile(
+        padding: const EdgeInsets.only(bottom: 17.0),
+        child: (event.htmlDescription != '')
+            ? eventExpansionTile(event: event)
+            : ListTile(
                 title: _TileTitle(
                   event: event,
-              ),
+                ),
                 subtitle: _TileSubtitle(event: event)));
+  }
+}
+
+class eventExpansionTile extends StatelessWidget {
+  const eventExpansionTile({
+    Key? key,
+    required this.event,
+  }) : super(key: key);
+
+  final CalendarEvent event;
+
+  @override
+  Widget build(BuildContext context) {
+    return ExpansionTile(
+        //Key value required to prevent other event tiles from pre-expanding
+        key: Key(event.name),
+        onExpansionChanged: ((value) => {
+              if (value)
+                {
+                  Future.delayed(Duration(milliseconds: 100))
+                      .then((value) {
+                    Scrollable.(context,
+                        duration: Duration(milliseconds: 200));
+                  })
+                }
+            }),
+
+        title: _TileTitle(event: event),
+        subtitle: _TileSubtitle(event: event),
+        children: [
+          Column(
+            children: [
+              Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 10.0),
+                child: Html(
+                    data: event.htmlDescription,
+                    style: {
+                      "p": Style(
+                        margin: EdgeInsets.only(bottom: 8),
+                      )
+                    },
+                    onLinkTap:
+                        ((url, context, attributes, element) async {
+                      if (await canLaunch(url!))
+                        await launch(url);
+                      else
+                        throw "Error occurred";
+                    })),
+              )
+            ],
+          )
+        ],
+      );
   }
 }
 
@@ -165,59 +209,60 @@ class _TileSubtitle extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    print(DateFormat('hh:mm:ss').format(event.startDate));
     return Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
-                    Text(
-          DateFormat('hh:mm:ss').format(event.startDate) != '00:00:00'
+      Text(
+          DateFormat('hh:mm:ss').format(event.startDate) != '12:00:00'
               ? DateFormat('LLLL d @ hh:mm aaa').format(event.startDate) +
-                                ' - ' +
+                  ' - ' +
                   DateFormat('LLLL d @ hh:mm aaa').format(event.endDate)
-                            : DateFormat('LLLL d').format(event.startDate) +
-                                ' - ' +
-                                DateFormat('LLLL d').format(event.endDate),
+              : DateFormat('LLLL d').format(event.startDate) +
+                  ' - ' +
+                  DateFormat('LLLL d').format(event.endDate),
           style: TextStyle(fontSize: 13.5, color: Colors.grey.shade700)),
-                    Padding(
-                        padding: const EdgeInsets.symmetric(vertical: 6.0),
+      Padding(
+          padding: const EdgeInsets.symmetric(vertical: 6.0),
           child:
               Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
-                              if (event.venue != null || event.cost != null)
-                                DefaultTextStyle(
-                                  style: TextStyle(
-                                      fontSize: 14,
-                                      fontWeight: FontWeight.bold,
+            if (event.venue != null || event.cost != null)
+              DefaultTextStyle(
+                style: TextStyle(
+                    fontSize: 14,
+                    fontWeight: FontWeight.bold,
                     color: Theme.of(context).colorScheme.primary),
-                                  child: Row(
-                                    children: [
-                                      if (event.venue != null)
-                                        Row(
-                                          children: [
-                                            SvgPicture.asset(
-                                              'assets/icons/landmark.svg',
-                                              height: 13,
-                                            ),
-                                            Padding(
+                child: Row(
+                  children: [
+                    if (event.venue != null)
+                      Row(
+                        children: [
+                          SvgPicture.asset(
+                            'assets/icons/landmark.svg',
+                            height: 13,
+                          ),
+                          Padding(
                             padding:
                                 const EdgeInsets.only(left: 4.0, right: 12),
-                                              child: Text(
-                                                event.venue!,
-                                              ),
-                                            ),
-                                          ],
-                                        ),
-                                      if (event.cost != null)
-                                        Row(
-                                          children: [
+                            child: Text(
+                              event.venue!,
+                            ),
+                          ),
+                        ],
+                      ),
+                    if (event.cost != null)
+                      Row(
+                        children: [
                           SvgPicture.asset('assets/icons/circle-dollar.svg',
-                                                height: 14),
-                                            Padding(
+                              height: 14),
+                          Padding(
                             padding: const EdgeInsets.only(left: 4.0),
-                                              child: Text(event.cost!),
-                                            ),
-                                          ],
-                                        ),
-                                    ],
-                                  ),
-                                ),
-                            ]))
+                            child: Text(event.cost!),
+                          ),
+                        ],
+                      ),
+                  ],
+                ),
+              ),
+          ]))
     ]);
   }
 }
@@ -225,7 +270,7 @@ class _TileSubtitle extends StatelessWidget {
 class _TileTitle extends StatelessWidget {
   const _TileTitle({
     required this.event,
-  }) ;
+  });
 
   final CalendarEvent event;
 
