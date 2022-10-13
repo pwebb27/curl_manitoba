@@ -1,56 +1,52 @@
 import 'package:curl_manitoba/models/apis/curling_io_api.dart';
 import 'package:curl_manitoba/models/scoresCompetitionModels/scores_competition.dart';
-import 'package:curl_manitoba/widgets/competition_tile.dart';
 import 'package:flutter/material.dart';
-
+import '../../widgets/circular_progress_bar.dart';
 import 'package:http/http.dart' as http;
 
-import '../../widgets/circular_progress_bar.dart';
-
 class ScoresScreen extends StatefulWidget {
-  List<scoresCompetition> loadedCompetitions;
-  ScoresScreen(this.loadedCompetitions);
+  final List<scoresCompetition> preloadedCompetitions;
+  ScoresScreen(this.preloadedCompetitions);
 
   @override
   _ScoresScreenState createState() => _ScoresScreenState();
 }
 
-const List<String> _competitionTags = [
-  'Under 18',
-  'Mens',
-  'Womens',
-  'Mixed',
-  'Mixed Doubles',
-  'U21 Junior',
-  'Curling Club',
-  'Seniors',
-  'Masters',
-  'Youth',
-];
-
-class _ScoresScreenState extends State<ScoresScreen> with AutomaticKeepAliveClientMixin {
-    bool get wantKeepAlive => true;
-
-late List<dynamic> loadedCompetitions;
-
-  final ScrollController _scrollController = ScrollController();
-  late Future<http.Response> competitionDataFuture;
-  late int page;
-  bool hasMore = true;
-  bool isLoading = false;
-  late List<scoresCompetition> newCompetitions;
+class _ScoresScreenState extends State<ScoresScreen>
+    with AutomaticKeepAliveClientMixin {
+  bool get wantKeepAlive => true;
 
   static const routeName = '/competitions';
+  static const List<String> _competitionTags = [
+    'Under 18',
+    'Mens',
+    'Womens',
+    'Mixed',
+    'Mixed Doubles',
+    'U21 Junior',
+    'Curling Club',
+    'Seniors',
+    'Masters',
+    'Youth',
+  ];
+
+  final ScrollController _scrollController = ScrollController();
+  late Future<http.Response> _competitionDataFuture;
+  late int page;
   late int defaultChoiceIndex;
+  late List<scoresCompetition> _loadedCompetitions;
+
+  bool _hasMore = true;
+  bool _isLoading = false;
 
   filterCompetitions() {}
 
   @override
   void initState() {
     defaultChoiceIndex = -1;
-    loadedCompetitions = widget.loadedCompetitions;
     page = 1;
-    competitionDataFuture = CurlingIOAPI().fetchCompetitions('', page);
+    _competitionDataFuture = CurlingIOAPI().fetchCompetitions('', page);
+    _loadedCompetitions = widget.preloadedCompetitions;
 
     _scrollController.addListener(() {
       if (_scrollController.position.pixels >=
@@ -70,19 +66,18 @@ late List<dynamic> loadedCompetitions;
 
   Future<void> fetch() async {
     List<scoresCompetition> newCompetitions = [];
-    if (isLoading) return;
-    isLoading = true;
-    http.Response response =
-        await CurlingIOAPI().fetchCompetitions('', page);
+    if (_isLoading) return;
+    _isLoading = true;
+    http.Response response = await CurlingIOAPI().fetchCompetitions('', page);
 
     newCompetitions = scoresCompetition.parseCompetitionData(response);
 
     setState(() {
       page++;
-      isLoading = false;
-      if (newCompetitions.length < 10) hasMore = false;
+      _isLoading = false;
+      if (newCompetitions.length < 10) _hasMore = false;
 
-      loadedCompetitions.addAll(newCompetitions);
+      _loadedCompetitions.addAll(newCompetitions);
     });
   }
 
@@ -96,33 +91,24 @@ late List<dynamic> loadedCompetitions;
         expandedHeight: 145,
         floating: true,
         snap: true,
-        
         actionsIconTheme: IconThemeData(opacity: 0.0),
-        flexibleSpace: 
-            FlexibleSpaceBar(
-                background:
-              buildWrap(),
-            ),
-          
-        
+        flexibleSpace: FlexibleSpaceBar(
+          background: buildWrap(),
+        ),
       ),
       SliverList(
-
           delegate: SliverChildBuilderDelegate(
-            
         ((context, index) {
-
-          if (index < loadedCompetitions.length)
-            return (loadedCompetitions[index]);
+          if (index < _loadedCompetitions.length)
+            return (_loadedCompetitions[index] as Widget);
           else
             return Padding(
                 padding: EdgeInsets.symmetric(vertical: 32),
-                child: hasMore
+                child: _hasMore
                     ? Center(child: CircularProgressBar())
                     : Text('No more data to load'));
         }),
-        childCount: loadedCompetitions.length + 1,
-
+        childCount: _loadedCompetitions.length + 1,
       ))
     ]);
   }
@@ -156,11 +142,13 @@ late List<dynamic> loadedCompetitions;
                                     setState(() {
                                       defaultChoiceIndex =
                                           (isSelected ? entry.key : null)!;
-                                      competitionDataFuture = CurlingIOAPI().fetchCompetitions(entry.value
+                                      _competitionDataFuture = CurlingIOAPI()
+                                          .fetchCompetitions(entry.value
                                               .replaceAll(' ', '%20'));
-                                      competitionDataFuture.then((value) =>
-                                          loadedCompetitions = scoresCompetition
-                                              .parseCompetitionData(value));
+                                      _competitionDataFuture.then((value) =>
+                                          _loadedCompetitions =
+                                              scoresCompetition
+                                                  .parseCompetitionData(value));
                                     });
                                   }))
                               .toList())),
