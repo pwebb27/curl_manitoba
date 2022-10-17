@@ -113,7 +113,7 @@ class _CalendarScreenState extends State<CalendarScreen>
             selectedDecoration: BoxDecoration(
                 color: Theme.of(context).primaryColor, shape: BoxShape.circle)),
 
-        onDaySelected: (DateTime selectedDay, DateTime focusDay) {
+        onDaySelected: (DateTime selectedDay, _) {
           setState(() {
             if (!isSameDay(_selectedDay, selectedDay)) {
               _selectedDay = selectedDay;
