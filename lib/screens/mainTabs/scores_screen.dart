@@ -1,6 +1,7 @@
 import 'package:curl_manitoba/models/apis/curling_io_api.dart';
 import 'package:curl_manitoba/models/scoresCompetitionModels/scores_competition.dart';
 import 'package:curl_manitoba/providers/hasMoreCompetitionsProvider.dart';
+import 'package:curl_manitoba/providers/loadedCompetitionsProvider.dart';
 import 'package:curl_manitoba/providers/loadingProvider.dart';
 import 'package:curl_manitoba/widgets/competition_tile.dart';
 import 'package:flutter/material.dart';
@@ -38,7 +39,6 @@ class _ScoresScreenState extends State<ScoresScreen>
   late Future<http.Response> _competitionDataFuture;
   late int _pageIndex;
   late int defaultChoiceIndex;
-  late List<scoresCompetition> _loadedCompetitions;
   late CurlingIOAPI _curlingIOAPI;
 
   filterCompetitions() {}
@@ -49,7 +49,8 @@ class _ScoresScreenState extends State<ScoresScreen>
     _pageIndex = 0;
     _curlingIOAPI = CurlingIOAPI();
     _competitionDataFuture = _curlingIOAPI.fetchCompetitions('', _pageIndex);
-    _loadedCompetitions = widget.preloadedCompetitions;
+    context.read<LoadedCompetitionsProvider>().loadedCompetitions =
+        widget.preloadedCompetitions;
 
     _scrollController = ScrollController()..addListener(_loadMoreCompetitions);
 
@@ -63,7 +64,7 @@ class _ScoresScreenState extends State<ScoresScreen>
     _scrollController.dispose();
   }
 
-  void _loadMoreCompetitions() async{
+  void _loadMoreCompetitions() async {
     if (_scrollController.position.pixels >=
             _scrollController.position.maxScrollExtent &&
         !context.read<LoadingProvider>().isLoading &&
@@ -73,33 +74,36 @@ class _ScoresScreenState extends State<ScoresScreen>
 
       _pageIndex++;
 
-        try {
-          http.Response response =
-              await _curlingIOAPI.fetchCompetitions('', _pageIndex);
+      try {
+        http.Response response =
+            await _curlingIOAPI.fetchCompetitions('', _pageIndex);
 
-          List<scoresCompetition> newCompetitions =
-              scoresCompetition.parseCompetitionData(response);
+        List<scoresCompetition> newCompetitions =
+            scoresCompetition.parseCompetitionData(response);
 
-          if (newCompetitions.isNotEmpty) {
-            setState(() {
-              if (newCompetitions.length < 10)
-                context
-                    .read<HasMoreCompetitionsProvider>()
-                    .hasMoreCompetitions = false;
+        if (newCompetitions.isNotEmpty) {
+          setState(() {
+            if (newCompetitions.length < 10)
+              context.read<HasMoreCompetitionsProvider>().hasMoreCompetitions =
+                  false;
 
-              _loadedCompetitions.addAll(newCompetitions);
-            });
-          } else {
-            // This means there is no more data
-            // and therefore, we will not send another GET request
-            context.read<HasMoreCompetitionsProvider>().hasMoreCompetitions =
-                false;
-          }
-        } catch (err) {
-          print('Something went wrong!');
-        
-      };
-      _loadedCompetitions.addAll(newCompetitions);
+            context
+                .read<LoadedCompetitionsProvider>()
+                .addCompetitions(newCompetitions);
+          });
+        } else {
+          // This means there is no more data
+          // and therefore, we will not send another GET request
+          context.read<HasMoreCompetitionsProvider>().hasMoreCompetitions =
+              false;
+        }
+      } catch (err) {
+        print('Something went wrong!');
+      }
+      ;
+      context
+          .read<LoadedCompetitionsProvider>()
+          .addCompetitions(newCompetitions);
       context.read<LoadingProvider>().isLoading = false;
     }
   }
@@ -109,22 +113,37 @@ class _ScoresScreenState extends State<ScoresScreen>
     super.build(context);
     return CustomScrollView(controller: _scrollController, slivers: [
       SliverAppBar(
-        backgroundColor: Theme.of(context).scaffoldBackgroundColor,
-        automaticallyImplyLeading: false,
-        expandedHeight: 145,
-        floating: true,
-        snap: true,
-        actionsIconTheme: IconThemeData(opacity: 0.0),
-        flexibleSpace: FlexibleSpaceBar(
-          background: buildWrap(),
-        ),
-      ),
+          backgroundColor: Theme.of(context).scaffoldBackgroundColor,
+          automaticallyImplyLeading: false,
+          expandedHeight: 145,
+          floating: true,
+          snap: true,
+          actionsIconTheme: IconThemeData(opacity: 0.0),
+          flexibleSpace: FlexibleSpaceBar(
+              background: Column(children: [
+            Material(
+                elevation: 1,
+                child: Container(
+                    height: 145,
+                    width: double.infinity,
+                    color: Theme.of(context).scaffoldBackgroundColor,
+                    child: Padding(
+                      padding: const EdgeInsets.only(
+                          top: 17, bottom: 15, left: 11, right: 11),
+                      child: buildWrap(),
+                    ))),
+          ]))),
       SliverList(
           delegate: SliverChildBuilderDelegate(
         ((_, index) {
-          return (CompetitionTile(_loadedCompetitions[index]));
+          return (CompetitionTile(context
+              .read<LoadedCompetitionsProvider>()
+              .loadedCompetitions[index]));
         }),
-        childCount: _loadedCompetitions.length,
+        childCount: context
+            .read<LoadedCompetitionsProvider>()
+            .loadedCompetitions
+            .length,
       )),
       SliverToBoxAdapter(
           child: Padding(
@@ -140,46 +159,46 @@ class _ScoresScreenState extends State<ScoresScreen>
   }
 
   Widget buildWrap() {
-    return StatefulBuilder(
-        builder: (context, setState) => Column(children: [
-              Material(
-                elevation: 1,
-                child: Container(
-                  height: 145,
-                  width: double.infinity,
-                  color: Theme.of(context).scaffoldBackgroundColor,
-                  child: Padding(
-                      padding: const EdgeInsets.only(
-                          top: 17, bottom: 15, left: 11, right: 11),
-                      child: Wrap(
-                          runSpacing: 10,
-                          alignment: WrapAlignment.center,
-                          spacing: 15,
-                          children: _competitionTags
-                              .asMap()
-                              .entries
-                              .map((entry) => ChoiceChip(
-                                  selected: defaultChoiceIndex == entry.key,
-                                  selectedColor: Colors.grey.shade500,
-                                  materialTapTargetSize:
-                                      MaterialTapTargetSize.shrinkWrap,
-                                  label: Text(entry.value),
-                                  onSelected: (bool isSelected) {
-                                    setState(() {
-                                      defaultChoiceIndex =
-                                          (isSelected ? entry.key : null)!;
-                                      _competitionDataFuture = CurlingIOAPI()
-                                          .fetchCompetitions(entry.value
-                                              .replaceAll(' ', '%20'));
-                                      _competitionDataFuture.then((value) =>
-                                          _loadedCompetitions =
-                                              scoresCompetition
-                                                  .parseCompetitionData(value));
-                                    });
-                                  }))
-                              .toList())),
-                ),
-              ),
-            ]));
+    return Wrap(
+      runSpacing: 10,
+      alignment: WrapAlignment.center,
+      spacing: 15,
+      children: _competitionTags.asMap().entries.map((entry) {
+        print(defaultChoiceIndex);
+        return ChoiceChip(
+            selected: defaultChoiceIndex == entry.key,
+            selectedColor: Colors.grey.shade500,
+            materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
+            label: Text(entry.value),
+            onSelected: (bool isSelected) async {
+              setState(() {
+                defaultChoiceIndex == entry.key
+                    ? defaultChoiceIndex = -1
+                    : defaultChoiceIndex = entry.key;
+              });
+
+              http.Response response = await _curlingIOAPI
+                  .fetchCompetitions(entry.value.replaceAll(' ', '%20'));
+
+              context.read<LoadedCompetitionsProvider>().loadedCompetitions =
+                  scoresCompetition.parseCompetitionData(response);
+
+              if (context
+                      .read<LoadedCompetitionsProvider>()
+                      .loadedCompetitions
+                      .isEmpty ||
+                  context
+                          .read<LoadedCompetitionsProvider>()
+                          .loadedCompetitions
+                          .length <
+                      10)
+                context
+                    .read<HasMoreCompetitionsProvider>()
+                    .hasMoreCompetitions = false;
+
+              ;
+            });
+      }).toList(),
+    );
   }
 }
