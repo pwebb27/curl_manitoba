@@ -1,4 +1,6 @@
 import 'package:curl_manitoba/main_color_pallete.dart';
+import 'package:curl_manitoba/providers/hasMoreCompetitionsProvider.dart';
+import 'package:curl_manitoba/providers/loadingProvider.dart';
 import 'package:curl_manitoba/providers/sliverappbar_arrow_provider.dart';
 import 'package:curl_manitoba/providers/sliverappbar_title_provider.dart';
 import 'package:curl_manitoba/route_generator.dart';
@@ -13,9 +15,13 @@ void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp();
 
-  runApp(MultiProvider(
-      providers: [ChangeNotifierProvider(create: (_) => SliverAppBarTitle()),ChangeNotifierProvider(create: (_) => SliverAppBarArrow())],
-      child: MyApp()));
+  runApp(MultiProvider(providers: [
+    ChangeNotifierProvider(create: (_) => SliverAppBarTitle()),
+    ChangeNotifierProvider(create: (_) => SliverAppBarArrow()),
+    ChangeNotifierProvider(create: (_) => LoadingProvider()),
+    ChangeNotifierProvider(create: (_) => HasMoreCompetitionsProvider()),
+
+  ], child: MyApp()));
 }
 
 final GlobalKey<NavigatorState> _navKey = GlobalKey<NavigatorState>();
