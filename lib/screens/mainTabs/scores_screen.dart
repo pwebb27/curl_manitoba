@@ -1,8 +1,12 @@
 import 'package:curl_manitoba/models/apis/curling_io_api.dart';
 import 'package:curl_manitoba/models/scoresCompetitionModels/scores_competition.dart';
+import 'package:curl_manitoba/providers/hasMoreCompetitionsProvider.dart';
+import 'package:curl_manitoba/providers/loadingProvider.dart';
+import 'package:curl_manitoba/widgets/competition_tile.dart';
 import 'package:flutter/material.dart';
 import '../../widgets/circular_progress_bar.dart';
 import 'package:http/http.dart' as http;
+import 'package:provider/provider.dart';
 
 class ScoresScreen extends StatefulWidget {
   final List<scoresCompetition> preloadedCompetitions;
@@ -30,30 +34,24 @@ class _ScoresScreenState extends State<ScoresScreen>
     'Youth',
   ];
 
-  final ScrollController _scrollController = ScrollController();
+  late ScrollController _scrollController;
   late Future<http.Response> _competitionDataFuture;
-  late int page;
+  late int _pageIndex;
   late int defaultChoiceIndex;
   late List<scoresCompetition> _loadedCompetitions;
-
-  bool _hasMore = true;
-  bool _isLoading = false;
+  late CurlingIOAPI _curlingIOAPI;
 
   filterCompetitions() {}
 
   @override
   void initState() {
     defaultChoiceIndex = -1;
-    page = 1;
-    _competitionDataFuture = CurlingIOAPI().fetchCompetitions('', page);
+    _pageIndex = 0;
+    _curlingIOAPI = CurlingIOAPI();
+    _competitionDataFuture = _curlingIOAPI.fetchCompetitions('', _pageIndex);
     _loadedCompetitions = widget.preloadedCompetitions;
 
-    _scrollController.addListener(() {
-      if (_scrollController.position.pixels >=
-          _scrollController.position.maxScrollExtent) {
-        fetch();
-      }
-    });
+    _scrollController = ScrollController()..addListener(_loadMoreCompetitions);
 
     super.initState();
   }
@@ -61,24 +59,49 @@ class _ScoresScreenState extends State<ScoresScreen>
   @override
   void dispose() {
     super.dispose();
+    _scrollController.removeListener(_loadMoreCompetitions);
     _scrollController.dispose();
   }
 
-  Future<void> fetch() async {
-    List<scoresCompetition> newCompetitions = [];
-    if (_isLoading) return;
-    _isLoading = true;
-    http.Response response = await CurlingIOAPI().fetchCompetitions('', page);
+  void _loadMoreCompetitions() async{
+    if (_scrollController.position.pixels >=
+            _scrollController.position.maxScrollExtent &&
+        !context.read<LoadingProvider>().isLoading &&
+        context.read<HasMoreCompetitionsProvider>().hasMoreCompetitions) {
+      List<scoresCompetition> newCompetitions = [];
+      context.read<LoadingProvider>().isLoading = true;
 
-    newCompetitions = scoresCompetition.parseCompetitionData(response);
+      _pageIndex++;
 
-    setState(() {
-      page++;
-      _isLoading = false;
-      if (newCompetitions.length < 10) _hasMore = false;
+        try {
+          http.Response response =
+              await _curlingIOAPI.fetchCompetitions('', _pageIndex);
 
+          List<scoresCompetition> newCompetitions =
+              scoresCompetition.parseCompetitionData(response);
+
+          if (newCompetitions.isNotEmpty) {
+            setState(() {
+              if (newCompetitions.length < 10)
+                context
+                    .read<HasMoreCompetitionsProvider>()
+                    .hasMoreCompetitions = false;
+
+              _loadedCompetitions.addAll(newCompetitions);
+            });
+          } else {
+            // This means there is no more data
+            // and therefore, we will not send another GET request
+            context.read<HasMoreCompetitionsProvider>().hasMoreCompetitions =
+                false;
+          }
+        } catch (err) {
+          print('Something went wrong!');
+        
+      };
       _loadedCompetitions.addAll(newCompetitions);
-    });
+      context.read<LoadingProvider>().isLoading = false;
+    }
   }
 
   @override
@@ -98,18 +121,21 @@ class _ScoresScreenState extends State<ScoresScreen>
       ),
       SliverList(
           delegate: SliverChildBuilderDelegate(
-        ((context, index) {
-          if (index < _loadedCompetitions.length)
-            return (_loadedCompetitions[index] as Widget);
-          else
-            return Padding(
-                padding: EdgeInsets.symmetric(vertical: 32),
-                child: _hasMore
-                    ? Center(child: CircularProgressBar())
-                    : Text('No more data to load'));
+        ((_, index) {
+          return (CompetitionTile(_loadedCompetitions[index]));
         }),
-        childCount: _loadedCompetitions.length + 1,
-      ))
+        childCount: _loadedCompetitions.length,
+      )),
+      SliverToBoxAdapter(
+          child: Padding(
+              padding: EdgeInsets.symmetric(vertical: 32),
+              child: context.watch<LoadingProvider>().isLoading
+                  ? Center(child: CircularProgressBar())
+                  : !context
+                          .read<HasMoreCompetitionsProvider>()
+                          .hasMoreCompetitions
+                      ? Text('No more data to load')
+                      : null)),
     ]);
   }
 
