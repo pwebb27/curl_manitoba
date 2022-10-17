@@ -24,7 +24,6 @@ class _CompetitionScreenState extends State<CompetitionScreen>
   late scoresCompetition competition;
   late TabController _controller;
   late ScrollController _scrollController;
-  late  SliverAppBarTitle sliverAppBarTitle;
 
   @override
   void initState() {
