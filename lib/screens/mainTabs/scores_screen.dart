@@ -69,41 +69,23 @@ class _ScoresScreenState extends State<ScoresScreen>
             _scrollController.position.maxScrollExtent &&
         !context.read<LoadingProvider>().isLoading &&
         context.read<HasMoreCompetitionsProvider>().hasMoreCompetitions) {
-      List<scoresCompetition> newCompetitions = [];
       context.read<LoadingProvider>().isLoading = true;
 
       _pageIndex++;
 
-      try {
-        http.Response response =
-            await _curlingIOAPI.fetchCompetitions('', _pageIndex);
+      http.Response response =
+          await _curlingIOAPI.fetchCompetitions('', _pageIndex);
 
-        List<scoresCompetition> newCompetitions =
-            scoresCompetition.parseCompetitionData(response);
+      List<scoresCompetition> newCompetitions =
+          scoresCompetition.parseCompetitionData(response);
 
-        if (newCompetitions.isNotEmpty) {
-          setState(() {
-            if (newCompetitions.length < 10)
-              context.read<HasMoreCompetitionsProvider>().hasMoreCompetitions =
-                  false;
+      if (newCompetitions.length < 10)
+        context.read<HasMoreCompetitionsProvider>().hasMoreCompetitions = false;
 
-            context
-                .read<LoadedCompetitionsProvider>()
-                .addCompetitions(newCompetitions);
-          });
-        } else {
-          // This means there is no more data
-          // and therefore, we will not send another GET request
-          context.read<HasMoreCompetitionsProvider>().hasMoreCompetitions =
-              false;
-        }
-      } catch (err) {
-        print('Something went wrong!');
-      }
-      ;
       context
           .read<LoadedCompetitionsProvider>()
           .addCompetitions(newCompetitions);
+
       context.read<LoadingProvider>().isLoading = false;
     }
   }
