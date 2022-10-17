@@ -1,5 +1,6 @@
 import 'package:curl_manitoba/main_color_pallete.dart';
 import 'package:curl_manitoba/providers/hasMoreCompetitionsProvider.dart';
+import 'package:curl_manitoba/providers/loadedCompetitionsProvider.dart';
 import 'package:curl_manitoba/providers/loadingProvider.dart';
 import 'package:curl_manitoba/providers/sliverappbar_arrow_provider.dart';
 import 'package:curl_manitoba/providers/sliverappbar_title_provider.dart';
@@ -20,6 +21,8 @@ void main() async {
     ChangeNotifierProvider(create: (_) => SliverAppBarArrow()),
     ChangeNotifierProvider(create: (_) => LoadingProvider()),
     ChangeNotifierProvider(create: (_) => HasMoreCompetitionsProvider()),
+    ChangeNotifierProvider(create: (_) => LoadedCompetitionsProvider()),
+    
 
   ], child: MyApp()));
 }
