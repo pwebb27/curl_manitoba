@@ -5,6 +5,7 @@ import 'package:curl_manitoba/models/apis/curling_io_api.dart';
 import 'package:curl_manitoba/models/calendar_event.dart';
 import 'package:curl_manitoba/models/news_story.dart';
 import 'package:curl_manitoba/models/scoresCompetitionModels/scores_competition.dart';
+import 'package:curl_manitoba/providers/curlingIOProvider.dart';
 import 'package:curl_manitoba/screens/mainTabs/news/news_screen.dart';
 import 'package:curl_manitoba/screens/mainTabs/scores_screen.dart';
 import 'package:curl_manitoba/widgets/circular_progress_bar.dart';
@@ -12,6 +13,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:http/http.dart' as http;
 import 'package:http/testing.dart';
+import 'package:provider/provider.dart';
 import '../../widgets/custom_app_bar.dart';
 import '../../widgets/main_drawer.dart';
 import '../mainTabs/calendar_screen.dart';
@@ -33,7 +35,6 @@ class _TabsScreenState extends State<TabsScreen> {
   late final List<Widget> _pages;
   late String test;
   Future<void>? resultsFuture;
-  late CurlingIOAPI curlingIoApi;
 
   late int _selectedPageIndex;
 
@@ -45,14 +46,15 @@ class _TabsScreenState extends State<TabsScreen> {
 
   void initState() {
     _selectedPageIndex = 0;
-    final curlingIoApi = CurlingIOAPI();
-
-    curlingIoApi.client = MockClient((request) async {
-      return http.Response(await rootBundle.loadString('assets/json/competitions.json'), 200);
+    Provider.of<CurlingIOProvider>(context, listen: false).curlingIOAPI.client =
+        MockClient((request) async {
+      return http.Response(
+          await rootBundle.loadString('assets/json/competitions.json'), 200);
     });
 
     tabsScreenFutures = [
-      curlingIoApi.fetchCompetitions(),
+      context.read<CurlingIOProvider>()
+          .fetchCompetitions(),
       NewsStory.getNewsData(8),
       CalendarEvent.getCalendarData(),
     ];

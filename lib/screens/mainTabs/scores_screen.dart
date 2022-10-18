@@ -1,5 +1,6 @@
 import 'package:curl_manitoba/models/apis/curling_io_api.dart';
 import 'package:curl_manitoba/models/scoresCompetitionModels/scores_competition.dart';
+import 'package:curl_manitoba/providers/curlingIOProvider.dart';
 import 'package:curl_manitoba/providers/hasMoreCompetitionsProvider.dart';
 import 'package:curl_manitoba/providers/loadedCompetitionsProvider.dart';
 import 'package:curl_manitoba/providers/loadingProvider.dart';
@@ -38,19 +39,20 @@ class _ScoresScreenState extends State<ScoresScreen>
   late ScrollController _scrollController;
   late Future<http.Response> _competitionDataFuture;
   late int _pageIndex;
-  late int defaultChoiceIndex;
-  late CurlingIOAPI _curlingIOAPI;
+  late int _selectedIndex;
+  late String searchTags;
 
   filterCompetitions() {}
 
   @override
   void initState() {
-    defaultChoiceIndex = -1;
-    _pageIndex = 0;
-    _curlingIOAPI = CurlingIOAPI();
-    _competitionDataFuture = _curlingIOAPI.fetchCompetitions('', _pageIndex);
-    context.read<LoadedCompetitionsProvider>().loadedCompetitions =
-        widget.preloadedCompetitions;
+    _selectedIndex = -1;
+    _pageIndex = 1;
+    searchTags = '';
+    Provider.of<CurlingIOProvider>(context, listen: false)
+        .fetchCompetitions(searchTags);
+    Provider.of<LoadedCompetitionsProvider>(context, listen: false)
+        .addCompetitions(widget.preloadedCompetitions);
 
     _scrollController = ScrollController()..addListener(_loadMoreCompetitions);
 
@@ -72,9 +74,9 @@ class _ScoresScreenState extends State<ScoresScreen>
       context.read<LoadingProvider>().isLoading = true;
 
       _pageIndex++;
-
-      http.Response response =
-          await _curlingIOAPI.fetchCompetitions('', _pageIndex);
+      http.Response response = await context
+          .read<CurlingIOProvider>()
+          .fetchCompetitions(searchTags, ++_pageIndex);
 
       List<scoresCompetition> newCompetitions =
           scoresCompetition.parseCompetitionData(response);
@@ -119,24 +121,21 @@ class _ScoresScreenState extends State<ScoresScreen>
           delegate: SliverChildBuilderDelegate(
         ((_, index) {
           return (CompetitionTile(context
-              .read<LoadedCompetitionsProvider>()
+              .watch<LoadedCompetitionsProvider>()
               .loadedCompetitions[index]));
         }),
         childCount: context
-            .read<LoadedCompetitionsProvider>()
+            .watch<LoadedCompetitionsProvider>()
             .loadedCompetitions
             .length,
       )),
       SliverToBoxAdapter(
-          child: Padding(
-              padding: EdgeInsets.symmetric(vertical: 32),
-              child: context.watch<LoadingProvider>().isLoading
-                  ? Center(child: CircularProgressBar())
-                  : !context
-                          .read<HasMoreCompetitionsProvider>()
-                          .hasMoreCompetitions
-                      ? Text('No more data to load')
-                      : null)),
+          child:
+              context.watch<HasMoreCompetitionsProvider>().hasMoreCompetitions
+                  ? Padding(
+                      padding: EdgeInsets.symmetric(vertical: 28),
+                      child: Center(child: CircularProgressBar()))
+                  : SizedBox.shrink())
     ]);
   }
 
@@ -146,21 +145,24 @@ class _ScoresScreenState extends State<ScoresScreen>
       alignment: WrapAlignment.center,
       spacing: 15,
       children: _competitionTags.asMap().entries.map((entry) {
-        print(defaultChoiceIndex);
+        print(_selectedIndex);
         return ChoiceChip(
-            selected: defaultChoiceIndex == entry.key,
+            selected: _selectedIndex == entry.key,
             selectedColor: Colors.grey.shade500,
             materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
             label: Text(entry.value),
             onSelected: (bool isSelected) async {
               setState(() {
-                defaultChoiceIndex == entry.key
-                    ? defaultChoiceIndex = -1
-                    : defaultChoiceIndex = entry.key;
+                isSelected ? _selectedIndex = entry.key : _selectedIndex = -1;
               });
+              context.read<HasMoreCompetitionsProvider>().hasMoreCompetitions =
+                  true;
 
-              http.Response response = await _curlingIOAPI
-                  .fetchCompetitions(entry.value.replaceAll(' ', '%20'));
+              searchTags = entry.value.replaceAll(' ', '%20');
+              _pageIndex = 1;
+              http.Response response = await context
+                  .read<CurlingIOProvider>()
+                  .fetchCompetitions(searchTags);
 
               context.read<LoadedCompetitionsProvider>().loadedCompetitions =
                   scoresCompetition.parseCompetitionData(response);

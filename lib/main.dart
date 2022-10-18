@@ -1,4 +1,6 @@
 import 'package:curl_manitoba/main_color_pallete.dart';
+import 'package:curl_manitoba/models/apis/curling_io_api.dart';
+import 'package:curl_manitoba/providers/curlingIOProvider.dart';
 import 'package:curl_manitoba/providers/hasMoreCompetitionsProvider.dart';
 import 'package:curl_manitoba/providers/loadedCompetitionsProvider.dart';
 import 'package:curl_manitoba/providers/loadingProvider.dart';
@@ -22,6 +24,8 @@ void main() async {
     ChangeNotifierProvider(create: (_) => LoadingProvider()),
     ChangeNotifierProvider(create: (_) => HasMoreCompetitionsProvider()),
     ChangeNotifierProvider(create: (_) => LoadedCompetitionsProvider()),
+    ChangeNotifierProvider(create: (_) => CurlingIOProvider()),
+
     
 
   ], child: MyApp()));
