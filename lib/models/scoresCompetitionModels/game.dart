@@ -31,18 +31,6 @@ class Game {
     };
   }
 
-  Future<void> getTeamOneResults() async {
-    http.Response response = await CurlingIOAPI().fetchGameResults(
-        competition.id, resultsMap.keys.first.id, resultsMap.values.first.id);
-    resultsMap[resultsMap.keys.first] = GameResults.parseGameResults(response);
-  }
-
-  Future<void> getTeamTwoResults() async {
-    http.Response response = await CurlingIOAPI().fetchGameResults(
-        competition.id, resultsMap.keys.last.id, resultsMap.values.last.id);
-    resultsMap[resultsMap.keys.last] = GameResults.parseGameResults(response);
-  }
-
   static List<Game> parseGamesData(
       http.Response gamesResponse, scoresCompetition competition) {
     List<dynamic> jsonList = json.decode(gamesResponse.body);
