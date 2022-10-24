@@ -3,6 +3,7 @@ import 'package:curl_manitoba/widgets/font_awesome_pro_icons.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:intl/intl.dart';
+import 'package:image_fade/image_fade.dart';
 
 class CompetitionTile extends StatelessWidget {
   scoresCompetition competition;
@@ -71,15 +72,38 @@ class CompetitionTile extends StatelessWidget {
                                                 color: Colors.grey.shade700)))
                                   ])
                                 ]),
-                            Image.network(
-                              competition.sponsorImageUrl,
-                              height: 30,
-                            )
+                            CompetitionTileImage(competition: competition)
                           ]),
                     )
                   ]),
             ),
           )),
+    );
+  }
+}
+
+class CompetitionTileImage extends StatefulWidget {
+  const CompetitionTileImage({
+    Key? key,
+    required this.competition,
+  }) : super(key: key);
+
+  final scoresCompetition competition;
+
+  @override
+  State<CompetitionTileImage> createState() => _CompetitionTileImageState();
+}
+
+class _CompetitionTileImageState extends State<CompetitionTileImage> {
+  @override
+  Widget build(BuildContext context) {
+    return ImageFade(
+      image: NetworkImage(
+        widget.competition.sponsorImageUrl,
+      ),
+      duration: const Duration(milliseconds: 150),
+      height: 30,
+      placeholder: SizedBox.shrink(),
     );
   }
 }
