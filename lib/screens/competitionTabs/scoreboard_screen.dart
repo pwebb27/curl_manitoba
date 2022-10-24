@@ -25,10 +25,11 @@ class _ScoreboardScreenState extends State<ScoreboardScreen>
   late List<Game> games;
   List<Draw>? draws;
   FutureGroup<void>? _futureGroup;
+  late CurlingIOAPI _curlingIOAPI;
 
   late Future<http.Response> competitionGamesFuture;
   late List<DropdownMenuItem> items;
-  Draw? value;
+  Draw? selectedDraw;
   static const List<String> headers = [
     'LSFE',
     '1',
@@ -47,7 +48,8 @@ class _ScoreboardScreenState extends State<ScoreboardScreen>
     super.initState();
 
     competition = widget.competition;
-    competitionGamesFuture = CurlingIOAPI().fetchGames(competition.id);
+    CurlingIOAPI _curlingIOAPI = CurlingIOAPI(context);
+    competitionGamesFuture = _curlingIOAPI.fetchGames(competition.id);
   }
 
   @override
@@ -69,19 +71,26 @@ class _ScoreboardScreenState extends State<ScoreboardScreen>
                       snapshot.data as http.Response, competition);
                   draws = Draw.createDraws(games);
 
-                  value = draws![0];
+                  selectedDraw = draws![0];
                   return StatefulBuilder(builder: (context, setState) {
-                    for (Game game in value!.games) {
-                      _futureGroup = FutureGroup();
-                      _futureGroup!.add(game.getTeamOneResults());
-                      _futureGroup!.add(game.getTeamTwoResults());
+                    //Go through each game and add both teams game results to FutureGroup
+                    for (Game game in selectedDraw!.games) {
+                      _futureGroup = FutureGroup()
+                        ..add(_curlingIOAPI.fetchGameResults(
+                            competition.id,
+                            game.resultsMap.keys.first.id,
+                            game.resultsMap.values.first.id))
+                        ..add(_curlingIOAPI.fetchGameResults(
+                            competition.id,
+                            game.resultsMap.keys.first.id,
+                            game.resultsMap.values.first.id));
                     }
                     _futureGroup!.close();
 
                     return SingleChildScrollView(
                       child: Column(children: [
                         buildDropDownMenu(setState),
-                        buildScoresTables(value),
+                        buildScoresTables(selectedDraw),
                       ]),
                     );
                   });
@@ -104,9 +113,9 @@ class _ScoreboardScreenState extends State<ScoreboardScreen>
           child: DropdownButtonHideUnderline(
             child: DropdownButton<Draw>(
               isExpanded: true,
-              value: value,
-              onChanged: (value) => setState(() {
-                this.value = value;
+              value: selectedDraw,
+              onChanged: (selectedDraw) => setState(() {
+                this.selectedDraw = selectedDraw;
               }),
               items: draws!
                   .map(
@@ -131,6 +140,12 @@ class _ScoreboardScreenState extends State<ScoreboardScreen>
         builder: (context, snapshot) {
           if (snapshot.connectionState == ConnectionState.waiting)
             return CircularProgressBar();
+
+          List<http.Response> FutureGroupResponses =
+              snapshot.data as List<http.Response>;
+          for (http.Response response in FutureGroupResponses) {
+            Game.parseGamesData(response, competition);
+          }
           return ListView.builder(
               shrinkWrap: true,
               physics: ScrollPhysics(),
