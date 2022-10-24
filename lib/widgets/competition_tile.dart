@@ -97,13 +97,15 @@ class CompetitionTileImage extends StatefulWidget {
 class _CompetitionTileImageState extends State<CompetitionTileImage> {
   @override
   Widget build(BuildContext context) {
-    return ImageFade(
-      image: NetworkImage(
-        widget.competition.sponsorImageUrl,
-      ),
+    return CachedNetworkImage(
+      imageBuilder: (context, imageProvider) => ImageFade(
+        image: imageProvider,
       duration: const Duration(milliseconds: 150),
+      ),
       height: 30,
-      placeholder: SizedBox.shrink(),
+      imageUrl: widget.competition.sponsorImageUrl,
+      placeholder: (_, __) => SizedBox.shrink(),
+      errorWidget: (context, url, error) => Icon(Icons.error),
     );
   }
 }
