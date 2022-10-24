@@ -57,6 +57,7 @@ dependencies:
   darq: ^1.2.1
   string_extensions: ^0.6.2
   image_fade: ^0.6.1
+  cached_network_image: ^3.2.2
  
 
 dev_dependencies:
