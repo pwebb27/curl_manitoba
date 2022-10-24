@@ -2,6 +2,7 @@ import 'package:curl_manitoba/models/apis/curling_io_api.dart';
 import 'package:curl_manitoba/models/scoresCompetitionModels/format.dart';
 import 'package:curl_manitoba/models/scoresCompetitionModels/scores_competition.dart';
 import 'package:curl_manitoba/models/scoresCompetitionModels/team.dart';
+import 'package:curl_manitoba/providers/curlingIOClient.dart';
 import 'package:curl_manitoba/screens/tabsScreens/competition_tabs_screen.dart';
 import 'package:curl_manitoba/screens/competitionTabs/teams/team_screen.dart';
 import 'package:curl_manitoba/widgets/circular_progress_bar.dart';
@@ -11,6 +12,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 
 import 'package:http/http.dart' as http;
+import 'package:provider/provider.dart';
 
 class TeamsScreen extends StatefulWidget {
   TeamsScreen(this.competition);
@@ -27,16 +29,20 @@ class _TeamsScreenState extends State<TeamsScreen>
   late Future<List<http.Response>> futures;
   late List<Format> formats;
   late int defaultChoiceIndex = -1;
+  late CurlingIOAPI _curlingIOAPI;
 
   late List<Team> teams;
   void initState() {
     teams = [];
+    _curlingIOAPI = CurlingIOAPI()
+      ..client = Provider.of<CurlingIOClientProvider>(context, listen: false)
+          .getClient();
 
     competition = widget.competition;
     print(competition.id);
     futures = Future.wait([
-      CurlingIOAPI().fetchTeams(competition.id),
-      CurlingIOAPI().fetchFormat(competition.id)
+      _curlingIOAPI.fetchTeams(competition.id),
+      _curlingIOAPI.fetchFormat(competition.id)
     ]);
 
     super.initState();
