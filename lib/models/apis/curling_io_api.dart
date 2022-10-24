@@ -1,10 +1,17 @@
+import 'package:curl_manitoba/providers/curlingIOClient.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
 import 'package:http/http.dart' show Client;
+import 'package:provider/provider.dart';
 
 class CurlingIOAPI {
+  late http.Client client;
+
+  CurlingIOAPI(BuildContext context){
+    client = Provider.of<CurlingIOClientProvider>(context,listen: false).getClient();
+  }
   
-  Client client = Client();
   static String baseUrl =
       'https://legacy-curlingio.global.ssl.fastly.net/api/organizations/MTZFJ5miuro/competitions';
 
@@ -33,4 +40,7 @@ class CurlingIOAPI {
     return await http
         .get(Uri.parse('$baseUrl/$competitionId/formats'));
   }
+  
+  
+
 }
