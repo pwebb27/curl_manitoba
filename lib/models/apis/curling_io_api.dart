@@ -8,10 +8,6 @@ import 'package:provider/provider.dart';
 class CurlingIOAPI {
   late http.Client client;
 
-  CurlingIOAPI(BuildContext context){
-    client = Provider.of<CurlingIOClientProvider>(context,listen: false).getClient();
-  }
-  
   static String baseUrl =
       'https://legacy-curlingio.global.ssl.fastly.net/api/organizations/MTZFJ5miuro/competitions';
 
