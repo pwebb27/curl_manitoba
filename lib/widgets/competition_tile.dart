@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:intl/intl.dart';
 import 'package:image_fade/image_fade.dart';
+import 'package:cached_network_image/cached_network_image.dart';
 
 class CompetitionTile extends StatelessWidget {
   scoresCompetition competition;
@@ -100,7 +101,7 @@ class _CompetitionTileImageState extends State<CompetitionTileImage> {
     return CachedNetworkImage(
       imageBuilder: (context, imageProvider) => ImageFade(
         image: imageProvider,
-      duration: const Duration(milliseconds: 150),
+        duration: const Duration(milliseconds: 150),
       ),
       height: 30,
       imageUrl: widget.competition.sponsorImageUrl,
