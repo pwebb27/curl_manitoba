@@ -3,6 +3,7 @@ import 'package:curl_manitoba/models/draw.dart';
 import 'package:curl_manitoba/models/scoresCompetitionModels/game.dart';
 import 'package:curl_manitoba/models/scoresCompetitionModels/game_results.dart';
 import 'package:curl_manitoba/models/scoresCompetitionModels/scores_competition.dart';
+import 'package:curl_manitoba/providers/curlingIOClient.dart';
 import 'package:curl_manitoba/widgets/circular_progress_bar.dart';
 import 'package:curl_manitoba/widgets/custom_expansion_tile.dart';
 import 'package:curl_manitoba/widgets/sliverWrap.dart';
@@ -10,6 +11,7 @@ import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:http/http.dart' as http;
 import 'package:async/async.dart';
+import 'package:provider/provider.dart';
 
 class ScoreboardScreen extends StatefulWidget {
   ScoreboardScreen(this.competition);
@@ -48,7 +50,9 @@ class _ScoreboardScreenState extends State<ScoreboardScreen>
     super.initState();
 
     competition = widget.competition;
-    CurlingIOAPI _curlingIOAPI = CurlingIOAPI(context);
+        _curlingIOAPI = CurlingIOAPI()
+      ..client = Provider.of<CurlingIOClientProvider>(context, listen: false)
+          .getClient();
     competitionGamesFuture = _curlingIOAPI.fetchGames(competition.id);
   }
 
