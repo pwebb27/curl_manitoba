@@ -1,42 +1,34 @@
-import 'package:curl_manitoba/providers/curlingIOClient.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:http/http.dart' as http;
-import 'dart:convert';
-import 'package:http/http.dart' show Client;
-import 'package:provider/provider.dart';
 
-class CurlingIOAPI {
+class CurlingIOApi {
   late http.Client client;
 
-  static String baseUrl =
+  static const String _baseUrl =
       'https://legacy-curlingio.global.ssl.fastly.net/api/organizations/MTZFJ5miuro/competitions';
 
-  Future<http.Response> fetchGames(String id) async {
-    return await http.get(Uri.parse(baseUrl + '/$id/games'));
-  }
+  Future<http.Response> fetchGames(String competitionID) =>
+      callCurlingIOApi(url: '$_baseUrl/$competitionID/games');
 
-  Future<http.Response> fetchTeams(String id) async {
-    return await http.get(Uri.parse(baseUrl + '/$id/teams'));
-  }
+  Future<http.Response> fetchTeams(String competitionID) =>
+      callCurlingIOApi(url: '$_baseUrl/$competitionID/teams');
 
   Future<http.Response> fetchCompetitions(
-      [String tag = '', int pageNumber = 1]) async {
-    return await client
-        .get(Uri.parse('$baseUrl.json?search=&tags=$tag&page=$pageNumber'));
+      [String tag = '', String pageNumber = '1']) {
+    String queryString =
+        Uri(queryParameters: {'tags': tag, 'page': pageNumber}).query;
+
+    return callCurlingIOApi(url: '$_baseUrl?$queryString');
   }
 
   Future<http.Response> fetchGameResults(
-      String competitionId, String teamId, String id) async {
-    return await http.get(Uri.parse(
-        baseUrl + '/$competitionId/teams/$teamId/game_positions/$id'));
-  }
+          String competitionID, String teamID, String gamePositionsID) =>
+      callCurlingIOApi(
+          url:
+              '$_baseUrl/$competitionID/teams/$teamID/game_positions/$gamePositionsID');
 
-  Future<http.Response> fetchFormat(
-      String competitionId) async {
-    return await http
-        .get(Uri.parse('$baseUrl/$competitionId/formats'));
-  }
-  
-  
+  Future<http.Response> fetchFormat(String competitionID) =>
+      callCurlingIOApi(url: '$_baseUrl/$competitionID/formats');
 
+  Future<http.Response> callCurlingIOApi({required String url}) async =>
+      await client.get(Uri.parse(url));
 }
