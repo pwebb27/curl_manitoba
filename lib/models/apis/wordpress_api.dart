@@ -2,12 +2,14 @@ import 'package:http/http.dart' as http;
 import 'package:intl/intl.dart';
 
 class WordPressApi {
+
   static const String _authority = 'curlmanitoba.org';
   static const String _rootPath = '/wp-json/wp/v2/';
   static const String _eventsCalendarPath = '/wp-json/tribe/events/v1/events';
   static const Map<String, String> _basicQueryParameters = {
     '_fields': 'content'
   };
+    late http.Client client;
 
 
   Future<http.Response> fetchPage(String pageNumber) async {
