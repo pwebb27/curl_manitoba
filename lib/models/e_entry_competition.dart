@@ -21,17 +21,9 @@ class eEntryCompetition {
       required this.location,
       required this.deadline});
 
-  static Future<http.Response> getElectronicEntryData() async {
-    String URL =
-        'https://curlmanitoba.org/wp-json/wp/v2/pages/1979?_fields=content';
-
-    final response = await http.get(Uri.parse(URL));
-    return response;
-  }
-
   static Map<String, dynamic> parseElectronicEntryData(
-      http.Response electronicEntryResponse) {
-    Map<String, dynamic> map = json.decode(electronicEntryResponse.body);
+      http.Response electronicEntryDataResponse) {
+    Map<String, dynamic> map = json.decode(electronicEntryDataResponse.body);
     String htmlData = map['content']['rendered'];
     var document = parse(htmlData);
     List<html.Element> htmlRows =
