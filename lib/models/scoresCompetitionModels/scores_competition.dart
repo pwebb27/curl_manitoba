@@ -1,3 +1,4 @@
+
 import 'package:curl_manitoba/models/scoresCompetitionModels/team.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
@@ -11,18 +12,17 @@ class scoresCompetition {
   late DateTime endDate;
   late String venue;
   late String sponsorImageUrl;
-  Map<String,List<Team>>? formatMap;
+  Map<String, List<Team>>? formatMap;
 
-  scoresCompetition.fromJson(Map<String, dynamic> json) {
-    name = json['title'];
-    venue = getVenueFromJson(json);
-    startDate = DateTime.parse(json['starts_on']);
-    endDate = DateTime.parse(json['ends_on']);
-    sponsorImageUrl = json["logo"];
-    id = json["id"].toString();
-  }
+  scoresCompetition.fromJson(Map<String, dynamic> json)
+      : name = json['title'],
+        venue = getVenueFromJson(json),
+        startDate = DateTime.parse(json['starts_on']),
+        endDate = DateTime.parse(json['ends_on']),
+        sponsorImageUrl = json["logo"],
+        id = json["id"].toString();
 
-  String getVenueFromJson(Map competition) {
+  static String getVenueFromJson(Map competition) {
     if (competition["venue"] != null && competition["venue"] != "")
       return competition["venue"];
 
@@ -53,36 +53,29 @@ class scoresCompetition {
     return 'Location TBA';
   }
 
-
-
   static List<scoresCompetition> parseCompetitionData(
       http.Response competitionsResponse) {
     Map<String, dynamic> jsonMap = json.decode(competitionsResponse.body);
-    List<dynamic> competitionsData =
+    List<dynamic> jsonCompetitions =
         jsonMap["paged_competitions"]["competitions"];
-    List<scoresCompetition> competitions = [];
-    for (var competition in competitionsData) {
-      competitions.add(scoresCompetition.fromJson(competition));
-    }
-    return competitions;
+    return [
+      for (Map<String, dynamic> jsonCompetition in jsonCompetitions)
+        scoresCompetition.fromJson(jsonCompetition)
+    ];
   }
 
-
-
   String formatDateRange() {
-    String dateRange = '';
     if (startDate.year != endDate.year)
-      dateRange = DateFormat('LLL d, y').format(startDate) +
+      return DateFormat('LLL d, y').format(startDate) +
           ' - ' +
           DateFormat('LLL d, y').format(endDate);
     else if (startDate.month != endDate.month)
-      dateRange = DateFormat('LLL d').format(startDate) +
+      return DateFormat('LLL d').format(startDate) +
           ' - ' +
           DateFormat('LLL d, y').format(endDate);
     else
-      dateRange = DateFormat('LLL d').format(startDate) +
+      return DateFormat('LLL d').format(startDate) +
           ' - ' +
           DateFormat('d, y').format(endDate);
-    return dateRange;
   }
 }
