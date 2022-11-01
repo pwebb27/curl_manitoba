@@ -1,4 +1,3 @@
-
 import 'package:http/http.dart';
 import 'package:intl/intl.dart';
 import 'package:http/http.dart' as http;
@@ -8,15 +7,16 @@ class NewsStory {
   late String headline;
   late String imageURL;
   late String author;
-  late String date;
+  late String formattedPublishedDate;
   late String id;
   String? content;
 
-  NewsStory.fromJson(Map<String, dynamic> json)
-      : this.id = json['id'],
-        this.author = getAuthorId(json['author']),
-        this.headline = json['title']['rendered'],
-        this.date = DateFormat('LLL d, y').format(DateTime.parse(json['date'])),
+  NewsStory.fromJson(Map<String, dynamic> jsonPost)
+      : this.id = jsonPost['id'].toString(),
+        this.author = getAuthorId(jsonPost['author']),
+        this.headline = jsonPost['title']['rendered'],
+        this.formattedPublishedDate =
+            DateFormat('LLL d, y').format(DateTime.parse(jsonPost['date'])),
         this.imageURL =
             'https://images.thestar.com/CBZVV_aqoiPFukcZjs74JNLtlF8=/1200x798/smart/filters:cb(2700061000)/https://www.thestar.com/content/dam/thestar/sports/curling/2018/02/04/manitobas-jennifer-jones-heads-to-scotties-tournament-of-hearts-final/jennifer_jones.jpg';
 
@@ -32,11 +32,10 @@ class NewsStory {
   }
 
   static List<NewsStory> parseNewsData(http.Response newsStoriesResponse) {
-    final posts = json.decode(newsStoriesResponse.body);
+    List<dynamic> jsonPosts = json.decode(newsStoriesResponse.body);
     return [
-      posts.forEach((post) {
-        (NewsStory.fromJson(post));
-      })
+      for (Map<String, dynamic> jsonPost in jsonPosts)
+        (NewsStory.fromJson(jsonPost))
     ];
   }
 }
