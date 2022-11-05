@@ -9,7 +9,7 @@ import 'package:intl/intl.dart';
 
 class Team {
   String? name;
-  final String id;
+  final String? id;
   List<Player>? players;
 
   String? coach;
@@ -18,16 +18,16 @@ class Team {
 
   Team(this.id);
 
-  Team.fromJson(Map<String, dynamic> jsonMap)
-      : id = jsonMap['id'].toString(),
-        coach = jsonMap['coach'],
-        location = jsonMap['location'],
-        affiliation = jsonMap['affiliation'],
-        name = jsonMap['name'].split(" ")[0] == 'Team'
-            ? jsonMap['name']
-            : 'Team ' + jsonMap['name'],
+  Team.fromJson(Map<String, dynamic> jsonTeam)
+      : id = jsonTeam['id'].toString(),
+        coach = jsonTeam['coach'],
+        location = jsonTeam['location'],
+        affiliation = jsonTeam['affiliation'],
+        name = jsonTeam['name'].split(" ")[0] == 'Team'
+            ? jsonTeam['name']
+            : 'Team ' + jsonTeam['name'],
         players = [
-          for (Map<String, dynamic> jsonPlayer in jsonMap['team_athletes'])
+          for (Map<String, dynamic> jsonPlayer in jsonTeam['team_athletes'])
             (Player.fromJson(jsonPlayer))
         ];
 
