@@ -1,4 +1,3 @@
-
 import 'package:curl_manitoba/models/scoresCompetitionModels/team.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
@@ -6,51 +5,52 @@ import 'dart:convert';
 import 'package:intl/intl.dart';
 
 class scoresCompetition {
-  late String name;
-  late String id;
-  late DateTime startDate;
-  late DateTime endDate;
-  late String venue;
-  late String sponsorImageUrl;
+  final String? name;
+  final String? id;
+  final DateTime? startDate;
+  final DateTime? endDate;
+  final String? venue;
+  final String? sponsorImageUrl;
   Map<String, List<Team>>? formatMap;
 
-  scoresCompetition.fromJson(Map<String, dynamic> json)
-      : name = json['title'],
-        venue = getVenueFromJson(json),
-        startDate = DateTime.parse(json['starts_on']),
-        endDate = DateTime.parse(json['ends_on']),
-        sponsorImageUrl = json["logo"],
-        id = json["id"].toString();
+  scoresCompetition.fromJson(Map<String, dynamic> jsonCompetition)
+      : name = jsonCompetition['title'],
+        venue = getVenueFromJson(jsonCompetition),
+        startDate = DateTime.parse(jsonCompetition['starts_on']),
+        endDate = DateTime.parse(jsonCompetition['ends_on']),
+        sponsorImageUrl = jsonCompetition["logo"],
+        id = jsonCompetition["id"].toString();
 
-  static String getVenueFromJson(Map competition) {
-    if (competition["venue"] != null && competition["venue"] != "")
-      return competition["venue"];
+  static String getVenueFromJson(Map<String, dynamic> jsonCompetition) {
+    //If venue value exists return venue
+    if (!['', null].contains(jsonCompetition["venue"]))
+      return jsonCompetition["venue"];
 
-    String indexOfString = 'played at the ';
+    //Otherwise try to find venue in 'notes'
+    String notes = jsonCompetition['notes'];
+    List<String> stringsBeforeVenueName = [
+      'played at the ',
+      'played at ',
+      'hosted by the ',
+      'hosted by '
+    ];
+    bool foundVenue = false;
+    String? venue;
+    int i = 0;
+    while (!foundVenue && i < stringsBeforeVenueName.length) {
+      if (notes.contains(stringsBeforeVenueName[i])) {
+        foundVenue = true;
 
-    if ((competition["notes"] as String).lastIndexOf(indexOfString) != -1)
-      return (competition["notes"] as String).substring(
-          (competition["notes"] as String).lastIndexOf(indexOfString) +
-              indexOfString.length,
-          (competition["notes"] as String).length);
+        venue = notes.substring(notes.indexOf(stringsBeforeVenueName[i]) +
+            stringsBeforeVenueName[i].length);
 
-    indexOfString = 'played at ';
-
-    if ((competition["notes"] as String).lastIndexOf(indexOfString) != -1)
-      return (competition["notes"] as String).substring(
-          (competition["notes"] as String).lastIndexOf(indexOfString) +
-              indexOfString.length,
-          (competition["notes"] as String).length);
-
-    indexOfString = 'hosted by ';
-
-    if ((competition["notes"] as String).lastIndexOf(indexOfString) != -1)
-      return (competition["notes"] as String).substring(
-          (competition["notes"] as String).lastIndexOf(indexOfString) +
-              indexOfString.length,
-          (competition["notes"] as String).length);
-
-    return 'Location TBA';
+        //Check if '.' exists and remove everything after it
+        if (venue.contains('.')) venue = venue.substring(0, venue.indexOf('.'));
+      }
+      i++;
+    }
+    //Return venue if found, otherwise try location or set as 'TBD Curling Club'
+    return venue ?? jsonCompetition['location'] ?? 'TBD Curling Club';
   }
 
   static List<scoresCompetition> parseCompetitionData(
@@ -65,17 +65,16 @@ class scoresCompetition {
   }
 
   String formatDateRange() {
-    if (startDate.year != endDate.year)
-      return DateFormat('LLL d, y').format(startDate) +
+    if (startDate!.year != endDate!.year)
+      return DateFormat('LLL d, y').format(startDate!) +
           ' - ' +
-          DateFormat('LLL d, y').format(endDate);
-    else if (startDate.month != endDate.month)
-      return DateFormat('LLL d').format(startDate) +
+          DateFormat('LLL d, y').format(endDate!);
+    else if (startDate!.month != endDate!.month)
+      return DateFormat('LLL d').format(startDate!) +
           ' - ' +
-          DateFormat('LLL d, y').format(endDate);
-    else
-      return DateFormat('LLL d').format(startDate) +
-          ' - ' +
-          DateFormat('d, y').format(endDate);
+          DateFormat('LLL d, y').format(endDate!);
+    return DateFormat('LLL d').format(startDate!) +
+        ' - ' +
+        DateFormat('d, y').format(endDate!);
   }
 }
