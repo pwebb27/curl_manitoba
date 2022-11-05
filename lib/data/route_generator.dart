@@ -16,7 +16,6 @@ class RouteGenerator {
       case '/':
         return MaterialPageRoute(builder: (_) => TabsScreen());
       case '/scoresWebPage':
-
         return MaterialPageRoute(builder: (_) => NewsStoryScreen(args as NewsStory));
       case '/gridView':
         return MaterialPageRoute(builder: (_) => GridViewScreen(args as String));
@@ -33,9 +32,9 @@ class RouteGenerator {
     }
   }
 
-  static Route<dynamic> _errorRoute() {
-    return MaterialPageRoute(builder: (_) {
-      return Scaffold(body: Center(child: Text('ERROR')));
-    });
+  static Route<dynamic> _errorRoute() =>
+     MaterialPageRoute(builder: (_) =>
+       Scaffold(body: Center(child: Text('ERROR')))
+    );
   }
-}
+
