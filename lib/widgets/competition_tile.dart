@@ -1,10 +1,9 @@
 import 'package:curl_manitoba/models/scoresCompetitionModels/scores_competition.dart';
+import 'package:curl_manitoba/screens/tabsScreens/competition_tabs_screen.dart';
 import 'package:curl_manitoba/widgets/font_awesome_pro_icons.dart';
+import 'package:curl_manitoba/widgets/scores_competition_cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
-import 'package:intl/intl.dart';
-import 'package:image_fade/image_fade.dart';
-import 'package:cached_network_image/cached_network_image.dart';
 
 class CompetitionTile extends StatelessWidget {
   scoresCompetition competition;
@@ -30,7 +29,7 @@ class CompetitionTile extends StatelessWidget {
               child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    Text(competition.name + '\n',
+                    Text(competition.name! + '\n',
                         maxLines: 2,
                         style: TextStyle(
                             fontWeight: FontWeight.bold, fontSize: 15)),
@@ -67,13 +66,13 @@ class CompetitionTile extends StatelessWidget {
                                         color: Colors.grey.shade700),
                                     Padding(
                                         padding: const EdgeInsets.only(left: 5),
-                                        child: Text(competition.venue,
+                                        child: Text(competition.venue!,
                                             style: TextStyle(
                                                 fontSize: 12,
                                                 color: Colors.grey.shade700)))
                                   ])
                                 ]),
-                            CompetitionTileImage(competition: competition)
+                                scoresCompetitionCachedNetworkImage(competition: competition, height:30)
                           ]),
                     )
                   ]),
@@ -83,30 +82,3 @@ class CompetitionTile extends StatelessWidget {
   }
 }
 
-class CompetitionTileImage extends StatefulWidget {
-  const CompetitionTileImage({
-    Key? key,
-    required this.competition,
-  }) : super(key: key);
-
-  final scoresCompetition competition;
-
-  @override
-  State<CompetitionTileImage> createState() => _CompetitionTileImageState();
-}
-
-class _CompetitionTileImageState extends State<CompetitionTileImage> {
-  @override
-  Widget build(BuildContext context) {
-    return CachedNetworkImage(
-      imageBuilder: (context, imageProvider) => ImageFade(
-        image: imageProvider,
-        duration: const Duration(milliseconds: 150),
-      ),
-      height: 30,
-      imageUrl: widget.competition.sponsorImageUrl,
-      placeholder: (_, __) => SizedBox.shrink(),
-      errorWidget: (context, url, error) => Icon(Icons.error),
-    );
-  }
-}
