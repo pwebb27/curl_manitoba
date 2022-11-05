@@ -1,5 +1,4 @@
-import 'models/drawer_tile.dart';
-
+import 'package:curl_manitoba/widgets/main_drawer.dart';
 
 List<DrawerTile> PAGE_TILES_DATA = [
   DrawerTile('Competitions', 'medals', height: 24.5 ),
