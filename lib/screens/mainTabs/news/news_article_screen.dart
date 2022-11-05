@@ -1,19 +1,19 @@
 import 'dart:convert';
 
-import 'package:curl_manitoba/models/apis/wordpress_api.dart';
+import 'package:curl_manitoba/apis/wordpress_api.dart';
 import 'package:curl_manitoba/models/news_story.dart';
+import 'package:curl_manitoba/providers/clients/wordpressClient.dart';
 import 'package:curl_manitoba/widgets/circular_progress_bar.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:flutter/material.dart';
-import 'package:html/dom.dart' as dom;
-import 'package:http/http.dart' as http;
 import 'package:html/parser.dart';
-import 'package:intl/intl.dart';
+import 'package:http/http.dart' as http;
+import 'package:provider/provider.dart';
 
 import '../../../widgets/custom_app_bar.dart';
 
 class NewsStoryScreen extends StatefulWidget {
-  NewsStory newsStory;
+  final NewsStory newsStory;
   NewsStoryScreen(this.newsStory);
   static const routeName = '/news-story';
 
@@ -23,24 +23,16 @@ class NewsStoryScreen extends StatefulWidget {
 
 class _NewsStoryScreenState extends State<NewsStoryScreen> {
   late NewsStory newsStory;
-
-  void buildContent(Map<String, dynamic> contentMap) {
-    final document = parse(contentMap['content']['rendered']);
-
-    newsStory.content = parse(document.body!.text).documentElement!.text;
-  }
-
-  Future<Map<String, dynamic>> _getDataFromWeb() async {
-    WordPressAPI api = WordPressAPI();
-    var response = await api.fetchPost(newsStory.id.toString());
-
-    return json.decode(response.body);
-  }
+  late Future<http.Response> _newsArticleFuture;
+  late WordPressApi _wordPressApi;
 
   @override
   void initState() {
     newsStory = widget.newsStory;
-    _getDataFromWeb();
+    _wordPressApi
+      ..client = Provider.of<WordPressClientProvider>(context, listen: false)
+          .getClient();
+    _newsArticleFuture = _wordPressApi.fetchPost('${newsStory.id}');
     super.initState();
   }
 
@@ -79,20 +71,26 @@ class _NewsStoryScreenState extends State<NewsStoryScreen> {
                         ],
                       ),
                     ),
-                    Text('${newsStory.date}'),
+                    Text(newsStory.formattedPublishedDate),
                   ],
                 )),
           ),
           FutureBuilder(
-              future: _getDataFromWeb(),
+              future: _newsArticleFuture,
               builder: (context, snapshot) {
-                if (!snapshot.hasData) {
+                if (snapshot.connectionState == ConnectionState.waiting)
                   return Padding(
                     padding: const EdgeInsets.only(top: 30),
                     child: CircularProgressBar(),
                   );
-                } else
-                  buildContent(snapshot.data as Map<String, dynamic>);
+                http.Response newsArticleResponse =
+                    snapshot.data as http.Response;
+                final document = parse(json
+                    .decode(newsArticleResponse.body)['content']['rendered']);
+
+                newsStory.content =
+                    parse(document.body!.text).documentElement!.text;
+
                 return Padding(
                   padding: const EdgeInsets.all(8.0),
                   child: Text('${newsStory.content}',
