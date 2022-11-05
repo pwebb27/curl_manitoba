@@ -1,7 +1,8 @@
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
 import 'package:timeago/timeago.dart' as timeago;
-
-import 'package:flutter/cupertino.dart';
+import 'package:http/http.dart' as http;
 
 class Tweet {
   late String profilePicURL;
@@ -156,8 +157,10 @@ class Tweet {
         }
       }
       indices.sort((a, b) => a.compareTo(b));
-      final TextStyle normalStyle = TextStyle(color: Colors.black, fontSize: 16);
-      final TextStyle hypertextStyle = TextStyle(color: Colors.blue, fontSize: 16);
+      final TextStyle normalStyle =
+          TextStyle(color: Colors.black, fontSize: 16);
+      final TextStyle hypertextStyle =
+          TextStyle(color: Colors.blue, fontSize: 16);
 
       if (indices.length == 0)
         spans.add(TextSpan(text: text, style: normalStyle));
@@ -184,5 +187,13 @@ class Tweet {
         } while (true);
       }
     }
+  }
+
+  static List<Tweet> parseTweetData(http.Response response) {
+    List<dynamic> jsonTweets = json.decode(response.body);
+    List<Tweet> tweets = [
+    for (Map<String, dynamic> jsonTweet in jsonTweets)
+      Tweet.fromJson(jsonTweet)];
+    return tweets;
   }
 }
