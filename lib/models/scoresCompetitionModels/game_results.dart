@@ -4,21 +4,21 @@ import 'package:http/http.dart' as http;
 import 'dart:convert';
 
 class GameResults {
-  late String id;
-  late String teamId;
-  late String competitionId;
-  Map<String, String>? endScores;
-  bool? firstHammer;
-  String? total;
+   String? id;
+   String? teamId;
+   String? competitionId;
+   Map<String, String>? endScores;
+   bool? firstHammer;
+   String? total;
 
   GameResults(this.teamId, this.id, this.competitionId);
 
-  GameResults.fromJson(Map<String, dynamic> jsonMap)
-      : firstHammer = jsonMap['first_hammer'],
-        total = jsonMap['total'].toString(),
+  GameResults.fromJson(Map<String, dynamic> jsonGameResults)
+      : firstHammer = jsonGameResults['first_hammer'],
+        total = jsonGameResults['total'].toString(),
         endScores = {
           for (MapEntry entry
-              in (jsonMap['end_scores'] as List<dynamic>).asMap().entries)
+              in (jsonGameResults['end_scores'] as List<dynamic>).asMap().entries)
             entry.key: entry.value['score']
         };
 
