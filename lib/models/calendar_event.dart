@@ -19,7 +19,9 @@ class CalendarEvent {
         venue = jsonMap['venue'].isEmpty
             ? null
             : parse(jsonMap['venue']['venue']).body!.text,
-        cost = jsonMap['cost'].isEmpty ? null : jsonMap['cost_details']['values'][0];
+        cost = jsonMap['cost'].isEmpty
+            ? null
+            : jsonMap['cost_details']['values'][0];
 
   static Map<DateTime, List<CalendarEvent>> parseCalendarData(
       http.Response calendarResponse) {
@@ -28,36 +30,29 @@ class CalendarEvent {
     List<CalendarEvent> calendarEvents = [
       for (var event in calendarMap['events']) (CalendarEvent.fromJson(event))
     ];
-    return createEventsMap(calendarEvents);
+    return _createEventsMap(calendarEvents);
   }
 
-  static Map<DateTime, List<CalendarEvent>> createEventsMap(
+  static Map<DateTime, List<CalendarEvent>> _createEventsMap(
       List<CalendarEvent> eventsList) {
+    //eventsMap maps all events with same days with one DateTime instance of the date
     Map<DateTime, List<CalendarEvent>> eventsMap = {};
     for (CalendarEvent event in eventsList) {
-      List<DateTime> eventDays = getListOfDaysForCalendarEvent(event);
-      addEventForEachDayToEventsMap(eventDays, eventsMap, event);
+      //Get list of days that the calendar event falls on
+      List<DateTime> eventDays = [
+        for (int i = 0;
+            i <= event.endDate.difference(event.startDate).inDays;
+            i++)
+          (DateUtils.dateOnly((event.startDate).add(Duration(days: i))))
+      ];
+      ;
+      //Add event to eventsMap for each day event falls on
+      for (DateTime day in eventDays) {
+        //Create empty day map if no events exist for day
+        eventsMap[day] ??= [];
+        eventsMap[day]!.add(event);
+      }
     }
     return eventsMap;
-  }
-
-  static void addEventForEachDayToEventsMap(List<DateTime> eventDays,
-      Map<DateTime, List<CalendarEvent>> events, CalendarEvent event) {
-    for (DateTime day in eventDays) {
-      //Create empty day map if no events exist for day
-      events[day] ??= [];      
-      events[day]!.add(event);
-    }
-  }
-
-  static List<DateTime> getListOfDaysForCalendarEvent(CalendarEvent event) {
-    //https://stackoverflow.com/questions/61362685/return-all-dates-between-two-dates-as-a-list-in-flutter-date-range-picker
-   
-    return [
-      for (int i = 0;
-          i <= event.endDate.difference(event.startDate).inDays;
-          i++)
-        (DateUtils.dateOnly((event.startDate).add(Duration(days: i))))
-    ];
   }
 }
