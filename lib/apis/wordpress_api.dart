@@ -2,43 +2,44 @@ import 'package:http/http.dart' as http;
 import 'package:intl/intl.dart';
 
 class WordPressApi {
-
-  static const String _authority = 'curlmanitoba.org';
+  static const String _baseUrl = 'curlmanitoba.org';
   static const String _rootPath = '/wp-json/wp/v2/';
   static const String _eventsCalendarPath = '/wp-json/tribe/events/v1/events';
   static const Map<String, String> _basicQueryParameters = {
     '_fields': 'content'
   };
-    late http.Client client;
-
+  late http.Client client;
 
   Future<http.Response> fetchPage(String pageNumber) async {
     String extendedPath = _rootPath + 'pages/$pageNumber';
     return await http
-        .get(Uri.https(_authority, extendedPath, _basicQueryParameters));
+        .get(Uri.https(_baseUrl, extendedPath, _basicQueryParameters));
+  }
+
+  Future<http.Response> fetchPosts({required int amountOfPosts}) async {
+    Map<String, String> _eventCalendarQueryParameters = {
+      '_fields': ['id', 'title','date', 'author'].join(','),
+      'per_page': '$amountOfPosts'
+    };
+    String extendedPath = _rootPath + 'posts';
+
+    return await http.get(
+        Uri.https(_baseUrl, extendedPath, _eventCalendarQueryParameters));
   }
 
   Future<http.Response> fetchPost(String postId) async {
     String extendedPath = _rootPath + 'posts/$postId';
     return await http
-        .get(Uri.https(_authority, extendedPath, _basicQueryParameters));
+        .get(Uri.https(_baseUrl, extendedPath, _basicQueryParameters));
   }
 
   Future<http.Response> fetchCalendarData() async {
-      Map<String, String> _eventCalendarQueryParameters = {
-    'per_page': '999',
-    'start_date': _getStartingDateForCalendarEvents()
-  };
+    Map<String, String> _eventCalendarQueryParameters = {
+      'per_page': '999',
+      'start_date': _getStartingDateForCalendarEvents()
+    };
     return await http.get(Uri.https(
-        _authority, _eventsCalendarPath, _eventCalendarQueryParameters));
-  }
-    Future<http.Response> fetchPosts({required int amountOfPosts }) async {
-            Map<String, List<String>> _eventCalendarQueryParameters = {
-    '_fields': ['id','title','date','author'],
-    'per_page': ['$amountOfPosts']
-  };
-    return await http.get(Uri.https(
-        _authority, _rootPath, _eventCalendarQueryParameters));
+        _baseUrl, _eventsCalendarPath, _eventCalendarQueryParameters));
   }
 
   static String _getStartingDateForCalendarEvents() {
@@ -55,5 +56,4 @@ class WordPressApi {
           DateTime(startingDate.year - 1, startingDate.month, startingDate.day);
     return DateFormat('y-MM-dd').format(startingDate);
   }
-
 }
