@@ -7,28 +7,28 @@ class CurlingIOApi {
       'https://legacy-curlingio.global.ssl.fastly.net/api/organizations/MTZFJ5miuro/competitions';
 
   Future<http.Response> fetchGames(String competitionID) =>
-      callCurlingIOApi(url: '$_baseUrl/$competitionID/games');
+      _callCurlingIOApi(url: '$_baseUrl/$competitionID/games');
 
   Future<http.Response> fetchTeams(String competitionID) =>
-      callCurlingIOApi(url: '$_baseUrl/$competitionID/teams');
+      _callCurlingIOApi(url: '$_baseUrl/$competitionID/teams');
 
   Future<http.Response> fetchCompetitions(
       [String tag = '', String pageNumber = '1']) {
     String queryString =
         Uri(queryParameters: {'tags': tag, 'page': pageNumber}).query;
 
-    return callCurlingIOApi(url: '$_baseUrl?$queryString');
+    return _callCurlingIOApi(url: '$_baseUrl?$queryString');
   }
 
   Future<http.Response> fetchGameResults(
           String competitionID, String teamID, String gamePositionsID) =>
-      callCurlingIOApi(
+      _callCurlingIOApi(
           url:
               '$_baseUrl/$competitionID/teams/$teamID/game_positions/$gamePositionsID');
 
   Future<http.Response> fetchFormat(String competitionID) =>
-      callCurlingIOApi(url: '$_baseUrl/$competitionID/formats');
+      _callCurlingIOApi(url: '$_baseUrl/$competitionID/formats');
 
-  Future<http.Response> callCurlingIOApi({required String url}) async =>
+  Future<http.Response> _callCurlingIOApi({required String url}) async =>
       await client.get(Uri.parse(url));
 }
