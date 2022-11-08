@@ -1,11 +1,6 @@
-
-import 'package:curl_manitoba/models/scoresCompetitionModels/game_results.dart';
 import 'package:curl_manitoba/models/scoresCompetitionModels/player.dart';
-import 'package:curl_manitoba/models/scoresCompetitionModels/scores_competition.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
-
-import 'package:intl/intl.dart';
 
 class Team {
   String? name;
