@@ -5,32 +5,33 @@ class WordPressApi {
   static const String _baseUrl = 'curlmanitoba.org';
   static const String _rootPath = '/wp-json/wp/v2/';
   static const String _eventsCalendarPath = '/wp-json/tribe/events/v1/events';
-  static const Map<String, String> _basicQueryParameters = {
-    '_fields': 'content'
-  };
+
   late http.Client client;
 
   Future<http.Response> fetchPage(String pageNumber) async {
+    const Map<String, String> _pageQueryParameters = {'_fields': 'content'};
     String extendedPath = _rootPath + 'pages/$pageNumber';
     return await http
-        .get(Uri.https(_baseUrl, extendedPath, _basicQueryParameters));
+        .get(Uri.https(_baseUrl, extendedPath, _pageQueryParameters));
   }
 
   Future<http.Response> fetchPosts({required int amountOfPosts}) async {
-    Map<String, String> _eventCalendarQueryParameters = {
-      '_fields': ['id', 'title','date', 'author'].join(','),
+    Map<String, String> _postsQueryParameters = {
+      '_fields': ['id', 'title', 'date', 'author'].join(','),
       'per_page': '$amountOfPosts'
     };
     String extendedPath = _rootPath + 'posts';
 
-    return await http.get(
-        Uri.https(_baseUrl, extendedPath, _eventCalendarQueryParameters));
+    return await http
+        .get(Uri.https(_baseUrl, extendedPath, _postsQueryParameters));
   }
 
   Future<http.Response> fetchPost(String postId) async {
+    const Map<String, String> _postQueryParameters = {'_fields': 'content'};
+
     String extendedPath = _rootPath + 'posts/$postId';
     return await http
-        .get(Uri.https(_baseUrl, extendedPath, _basicQueryParameters));
+        .get(Uri.https(_baseUrl, extendedPath, _postQueryParameters));
   }
 
   Future<http.Response> fetchCalendarData() async {
