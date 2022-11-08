@@ -191,9 +191,9 @@ class Tweet {
 
   static List<Tweet> parseTweetData(http.Response response) {
     List<dynamic> jsonTweets = json.decode(response.body);
-    List<Tweet> tweets = [
-    for (Map<String, dynamic> jsonTweet in jsonTweets)
-      Tweet.fromJson(jsonTweet)];
-    return tweets;
+    return [
+      for (Map<String, dynamic> jsonTweet in jsonTweets)
+        Tweet.fromJson(jsonTweet)
+    ];
   }
 }
