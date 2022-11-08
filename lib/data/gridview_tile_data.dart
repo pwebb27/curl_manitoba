@@ -1,68 +1,198 @@
 import 'package:curl_manitoba/screens/grid_view_screen.dart';
 
-List<gridViewTile> COMPETITION_GRID_VIEW_TILES_DATA = [
-  gridViewTile('Rules', 'clipboard-list-check', 'rules'),
-  gridViewTile(
-      'Qualifying Information', 'badge-check', 'qualifying-information'),
-  gridViewTile('CurlManitoba Fees', 'envelope-open-dollar', 'fees', 29, 29),
-  gridViewTile(
-      'Provincial Championships', 'bison', 'provincial-championships', 28, 28),
-  gridViewTile('Championship History', 'wreath', 'championship-history'),
-  gridViewTile('Manitoba Open', 'manitoba-open', 'manitoba-open', 35, 35),
-  gridViewTile('Manitoba Games 2022', 'manitoba-games', 'manitoba-games'),
-  gridViewTile('2023 Canada Winter Games', 'canada-games',
-      'canada-winter-games', 34, 34),
-  gridViewTile('Free Agents', 'people-line', 'rocks'),
-  gridViewTile("O' Grady Challenge", 'challenge', 'rocks'),
-  gridViewTile('Deneen Cup', 'trophy', 'rocks'),
-  gridViewTile('Youth Events', 'calendar-star', 'youth-events'),
-  gridViewTile(
-      'Manitoba Sport Regions', 'map-location-dot', 'manitoba-sport-regions'),
+//Data used inside GridViewScreen
+
+final List<GridViewTile> COMPETITION_GRID_VIEW_TILES_DATA = [
+  GridViewTile(
+      pageTitle: 'Rules',
+      iconFileName: 'clipboard-list-check',
+      imageFileName: 'rules'),
+  GridViewTile(
+      pageTitle: 'Qualifying Information',
+      iconFileName: 'badge-check',
+      imageFileName: 'qualifying-information'),
+  GridViewTile(
+      pageTitle: 'CurlManitoba Fees',
+      iconFileName: 'envelope-open-dollar',
+      imageFileName: 'fees',
+      iconHeight: 29,
+      iconWidth: 29),
+  GridViewTile(
+      pageTitle: 'Provincial Championships',
+      iconFileName: 'bison',
+      imageFileName: 'provincial-championships',
+      iconHeight: 28,
+      iconWidth: 28),
+  GridViewTile(
+      pageTitle: 'Championship History',
+      iconFileName: 'wreath',
+      imageFileName: 'championship-history'),
+  GridViewTile(
+      pageTitle: 'Manitoba Open',
+      iconFileName: 'manitoba-open',
+      imageFileName: 'manitoba-open',
+      iconHeight: 35,
+      iconWidth: 35),
+  GridViewTile(
+      pageTitle: 'Manitoba Games 2022',
+      iconFileName: 'manitoba-games',
+      imageFileName: 'manitoba-games'),
+  GridViewTile(
+      pageTitle: '2023 Canada Winter Games',
+      iconFileName: 'canada-games',
+      imageFileName: 'canada-winter-games',
+      iconHeight: 34,
+      iconWidth: 34),
+  GridViewTile(
+      pageTitle: 'Free Agents',
+      iconFileName: 'people-line',
+      imageFileName: 'rocks'),
+  GridViewTile(
+      pageTitle: "O' Grady Challenge",
+      iconFileName: 'challenge',
+      imageFileName: 'rocks'),
+  GridViewTile(
+      pageTitle: 'Deneen Cup', iconFileName: 'trophy', imageFileName: 'rocks'),
+  GridViewTile(
+      pageTitle: 'Youth Events',
+      iconFileName: 'calendar-star',
+      imageFileName: 'youth-events'),
+  GridViewTile(
+      pageTitle: 'Manitoba Sport Regions',
+      iconFileName: 'map-location-dot',
+      imageFileName: 'manitoba-sport-regions'),
 ];
 
-List<gridViewTile> DEVELOPMENT_GRID_VIEW_TILES_DATA = [
-  gridViewTile('Curling Programs', 'curling', 'curling-programs'),
-  gridViewTile('Coaching', 'megaphone', 'coaching'),
-  gridViewTile('Officiating', 'whistle', 'officiating'),
-  gridViewTile('Ice Tech', 'ice-resurfacer', 'ice-tech'),
-  gridViewTile('LTAD', 'performance', 'LTAD'),
-  gridViewTile('Safe Sport', 'shield-check', 'safe-sport'),
+final List<GridViewTile> DEVELOPMENT_GRID_VIEW_TILES_DATA = [
+  GridViewTile(
+      pageTitle: 'Curling Programs',
+      iconFileName: 'curling',
+      imageFileName: 'curling-programs'),
+  GridViewTile(
+      pageTitle: 'Coaching',
+      iconFileName: 'megaphone',
+      imageFileName: 'coaching'),
+  GridViewTile(
+      pageTitle: 'Officiating',
+      iconFileName: 'whistle',
+      imageFileName: 'officiating'),
+  GridViewTile(
+      pageTitle: 'Ice Tech',
+      iconFileName: 'ice-resurfacer',
+      imageFileName: 'ice-tech'),
+  GridViewTile(
+      pageTitle: 'LTAD', iconFileName: 'performance', imageFileName: 'LTAD'),
+  GridViewTile(
+      pageTitle: 'Safe Sport',
+      iconFileName: 'shield-check',
+      imageFileName: 'safe-sport'),
 ];
 
-List<gridViewTile> HIGH_PERFORMANCE_GRID_VIEW_TILES_DATA = [
-  gridViewTile('HP Webinars', 'user-headset', 'hp-webinars'),
-  gridViewTile(
-      'Junior Development', 'people-gear', 'junior-development', 35, 35),
-  gridViewTile('Junior HP Programs', 'people-gauge-max',
-      'junior-high-performance-programs', 35, 35),
-  gridViewTile('Junior ID Camps', 'id-card', 'rocks'),
+final List<GridViewTile> HIGH_PERFORMANCE_GRID_VIEW_TILES_DATA = [
+  GridViewTile(
+      pageTitle: 'HP Webinars',
+      iconFileName: 'user-headset',
+      imageFileName: 'hp-webinars'),
+  GridViewTile(
+      pageTitle: 'Junior Development',
+      iconFileName: 'people-gear',
+      imageFileName: 'junior-development',
+      iconHeight: 35,
+      iconWidth: 35),
+  GridViewTile(
+      pageTitle: 'Junior HP Programs',
+      iconFileName: 'people-gauge-max',
+      imageFileName: 'junior-high-performance-programs',
+      iconHeight: 35,
+      iconWidth: 35),
+  GridViewTile(
+      pageTitle: 'Junior ID Camps',
+      iconFileName: 'id-card',
+      imageFileName: 'rocks'),
 ];
 
-List<gridViewTile> GETTING_STARTED_GRID_VIEW_TILES_DATA = [
-  gridViewTile('Find a Club', 'magnifying-glass', 'find-a-club'),
-  gridViewTile(
-      'What is Curling?', 'circle-question', 'what-is-curling', 31, 31),
-  gridViewTile('Lessons', 'person-chalkboard', 'lessons'),
-  gridViewTile('League Openings', 'calendar-clock', 'club-openings'),
-  gridViewTile('Curling Tips', 'lightbulb-on', 'tips', 31, 31),
-  gridViewTile(
-      'Manitoba Stick Curling Association', 'stick-curling', 'rocks', 35, 35),
+final List<GridViewTile> GETTING_STARTED_GRID_VIEW_TILES_DATA = [
+  GridViewTile(
+      pageTitle: 'Find a Club',
+      iconFileName: 'magnifying-glass',
+      imageFileName: 'find-a-club'),
+  GridViewTile(
+      pageTitle: 'What is Curling?',
+      iconFileName: 'circle-question',
+      imageFileName: 'what-is-curling',
+      iconHeight: 31,
+      iconWidth: 31),
+  GridViewTile(
+      pageTitle: 'Lessons',
+      iconFileName: 'person-chalkboard',
+      imageFileName: 'lessons'),
+  GridViewTile(
+      pageTitle: 'League Openings',
+      iconFileName: 'calendar-clock',
+      imageFileName: 'club-openings'),
+  GridViewTile(
+      pageTitle: 'Curling Tips',
+      iconFileName: 'lightbulb-on',
+      imageFileName: 'tips',
+      iconHeight: 31,
+      iconWidth: 31),
+  GridViewTile(
+      pageTitle: 'Manitoba Stick Curling Association',
+      iconFileName: 'stick-curling',
+      imageFileName: 'rocks',
+      iconHeight: 35,
+      iconWidth: 35),
 ];
 
-List<gridViewTile> ABOUT_US_TILES_DATA = [
-  gridViewTile('COVID-19 Information', 'virus-covid', 'covid-19'),
-  gridViewTile('Contact Us', 'contact', 'contact-us'),
-  gridViewTile('Mission & Vision', 'bullseye-arrow', 'mission'),
-  gridViewTile('Staff', 'people-group', 'staff'),
-  gridViewTile('Leadership & Governance', 'podium', 'governance'),
-  gridViewTile('Sponsors/Partners', 'handshake', 'sponsors-partners'),
-  gridViewTile('Club Information', 'information-point', 'club-information'),
-  gridViewTile('Hall of Fame & Museum', 'landmark', 'hall-of-fame'),
-  gridViewTile(
-      'Honourary Life Members', 'premium-badge', 'honorary-life-members'),
-  gridViewTile('Classified Ads', 'job-search', 'rocks'),
-  gridViewTile('Volunteer Opportunities', 'hand-heart', 'volunteers'),
-  gridViewTile('Scholarships', 'diploma', 'scholarships'),
-  gridViewTile('Awards', 'award', 'awards'),
-  gridViewTile('History', 'scroll', 'history'),
+final List<GridViewTile> ABOUT_US_TILES_DATA = [
+  GridViewTile(
+      pageTitle: 'COVID-19 Information',
+      iconFileName: 'virus-covid',
+      imageFileName: 'covid-19'),
+  GridViewTile(
+      pageTitle: 'Contact Us',
+      iconFileName: 'contact',
+      imageFileName: 'contact-us'),
+  GridViewTile(
+      pageTitle: 'Mission & Vision',
+      iconFileName: 'bullseye-arrow',
+      imageFileName: 'mission'),
+  GridViewTile(
+      pageTitle: 'Staff', iconFileName: 'people-group', imageFileName: 'staff'),
+  GridViewTile(
+      pageTitle: 'Leadership & Governance',
+      iconFileName: 'podium',
+      imageFileName: 'governance'),
+  GridViewTile(
+      pageTitle: 'Sponsors/Partners',
+      iconFileName: 'handshake',
+      imageFileName: 'sponsors-partners'),
+  GridViewTile(
+      pageTitle: 'Club Information',
+      iconFileName: 'information-point',
+      imageFileName: 'club-information'),
+  GridViewTile(
+      pageTitle: 'Hall of Fame & Museum',
+      iconFileName: 'landmark',
+      imageFileName: 'hall-of-fame'),
+  GridViewTile(
+      pageTitle: 'Honourary Life Members',
+      iconFileName: 'premium-badge',
+      imageFileName: 'honorary-life-members'),
+  GridViewTile(
+      pageTitle: 'Classified Ads',
+      iconFileName: 'job-search',
+      imageFileName: 'rocks'),
+  GridViewTile(
+      pageTitle: 'Volunteer Opportunities',
+      iconFileName: 'hand-heart',
+      imageFileName: 'volunteers'),
+  GridViewTile(
+      pageTitle: 'Scholarships',
+      iconFileName: 'diploma',
+      imageFileName: 'scholarships'),
+  GridViewTile(
+      pageTitle: 'Awards', iconFileName: 'award', imageFileName: 'awards'),
+  GridViewTile(
+      pageTitle: 'History', iconFileName: 'scroll', imageFileName: 'history'),
 ];
