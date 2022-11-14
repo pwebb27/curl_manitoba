@@ -13,14 +13,14 @@ class NewsStory {
 
   NewsStory.fromJson(Map<String, dynamic> jsonPost)
       : this.id = jsonPost['id'].toString(),
-        this.author = getAuthorId(jsonPost['author']),
+        this.author = _getAuthorNameFromId(jsonPost['author']),
         this.headline = jsonPost['title']['rendered'],
         this.formattedPublishedDate =
             DateFormat('LLL d, y').format(DateTime.parse(jsonPost['date'])),
         this.imageURL =
             'https://images.thestar.com/CBZVV_aqoiPFukcZjs74JNLtlF8=/1200x798/smart/filters:cb(2700061000)/https://www.thestar.com/content/dam/thestar/sports/curling/2018/02/04/manitobas-jennifer-jones-heads-to-scotties-tournament-of-hearts-final/jennifer_jones.jpg';
 
-  static String getAuthorId(int authorId) {
+  static String _getAuthorNameFromId(int authorId) {
     switch (authorId) {
       case 3:
         return 'Laurie Macdonell';
