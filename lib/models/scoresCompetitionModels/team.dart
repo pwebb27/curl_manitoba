@@ -14,7 +14,7 @@ class Team {
   Team(this.id);
 
   Team.fromJson(Map<String, dynamic> jsonTeam)
-      : id = jsonTeam['id'].toString(),
+      : id = '${jsonTeam['id']}',
         coach = jsonTeam['coach'],
         location = jsonTeam['location'],
         affiliation = jsonTeam['affiliation'],
