@@ -7,7 +7,6 @@ import 'package:curl_manitoba/widgets/font_awesome_pro_icons.dart';
 import 'package:flutter/material.dart';
 import 'package:carousel_slider/carousel_slider.dart';
 
-import 'package:http/http.dart' as http;
 
 import '../../../widgets/circular_progress_bar.dart';
 
@@ -331,7 +330,7 @@ Widget buildNewsStoryItem(NewsStory newsStory, BuildContext context) {
                         Padding(
                           padding: const EdgeInsets.only(bottom: 7),
                           child: Text(
-                            newsStory.date,
+                            newsStory.formattedPublishedDate,
                             style: TextStyle(
                                 fontSize: 12, color: Colors.grey.shade700),
                           ),
