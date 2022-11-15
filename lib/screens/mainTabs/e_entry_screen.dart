@@ -1,8 +1,10 @@
-import 'package:curl_manitoba/models/apis/wordpress_api.dart';
+import 'package:curl_manitoba/apis/wordpress_api.dart';
 import 'package:curl_manitoba/models/e_entry_competition.dart';
+import 'package:curl_manitoba/providers/clients/wordpressClient.dart';
 import 'package:curl_manitoba/widgets/fixed_column_widget.dart';
 import 'package:curl_manitoba/widgets/scrollable_column_widget.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 import '../../widgets/circular_progress_bar.dart';
 import 'package:http/http.dart' as http;
 
@@ -17,11 +19,15 @@ class _eEntryScreenState extends State<eEntryScreen>
 
   late Future _eEntryDataFuture;
   late Map<String, dynamic> _eEntryCompetitions;
+  late WordPressApi _wordPressApi;
 
   @override
   void initState() {
     super.initState();
-    _eEntryDataFuture = WordPressAPI().fetchPage('1979');
+    _wordPressApi = WordPressApi()
+      ..client = Provider.of<WordPressClientProvider>(context, listen: false)
+          .getClient();
+    _eEntryDataFuture = _wordPressApi.fetchPage('1979');
   }
 
   @override
@@ -46,7 +52,7 @@ class _eEntryScreenState extends State<eEntryScreen>
                 physics: NeverScrollableScrollPhysics(),
                 itemBuilder: ((context, index) => Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [  
+                        children: [
                           Padding(
                             padding: const EdgeInsets.all(10.0),
                             child: Text(
@@ -58,8 +64,8 @@ class _eEntryScreenState extends State<eEntryScreen>
                           Row(
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
-                                FixedColumnWidget(
-                                    _eEntryCompetitions.values.elementAt(index)),
+                                FixedColumnWidget(_eEntryCompetitions.values
+                                    .elementAt(index)),
                                 ScrollableColumnWidget(
                                     _eEntryCompetitions.values.elementAt(index))
                               ]),
