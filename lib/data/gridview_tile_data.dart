@@ -2,7 +2,7 @@ import 'package:curl_manitoba/screens/grid_view_screen.dart';
 
 //Data used inside GridViewScreen
 
-final List<GridViewTile> COMPETITION_GRID_VIEW_TILES_DATA = [
+final List<GridViewTile> COMPETITION_GRID_VIEW_TILES = [
   GridViewTile(
       pageTitle: 'Rules',
       iconFileName: 'clipboard-list-check',
@@ -63,7 +63,7 @@ final List<GridViewTile> COMPETITION_GRID_VIEW_TILES_DATA = [
       imageFileName: 'manitoba-sport-regions'),
 ];
 
-final List<GridViewTile> DEVELOPMENT_GRID_VIEW_TILES_DATA = [
+final List<GridViewTile> DEVELOPMENT_GRID_VIEW_TILES = [
   GridViewTile(
       pageTitle: 'Curling Programs',
       iconFileName: 'curling',
@@ -88,7 +88,7 @@ final List<GridViewTile> DEVELOPMENT_GRID_VIEW_TILES_DATA = [
       imageFileName: 'safe-sport'),
 ];
 
-final List<GridViewTile> HIGH_PERFORMANCE_GRID_VIEW_TILES_DATA = [
+final List<GridViewTile> HIGH_PERFORMANCE_GRID_VIEW_TILES = [
   GridViewTile(
       pageTitle: 'HP Webinars',
       iconFileName: 'user-headset',
@@ -111,7 +111,7 @@ final List<GridViewTile> HIGH_PERFORMANCE_GRID_VIEW_TILES_DATA = [
       imageFileName: 'rocks'),
 ];
 
-final List<GridViewTile> GETTING_STARTED_GRID_VIEW_TILES_DATA = [
+final List<GridViewTile> GETTING_STARTED_GRID_VIEW_TILES = [
   GridViewTile(
       pageTitle: 'Find a Club',
       iconFileName: 'magnifying-glass',
@@ -144,7 +144,7 @@ final List<GridViewTile> GETTING_STARTED_GRID_VIEW_TILES_DATA = [
       iconWidth: 35),
 ];
 
-final List<GridViewTile> ABOUT_US_TILES_DATA = [
+final List<GridViewTile> ABOUT_US_TILES = [
   GridViewTile(
       pageTitle: 'COVID-19 Information',
       iconFileName: 'virus-covid',
