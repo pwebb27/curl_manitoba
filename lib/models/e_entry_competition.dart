@@ -2,6 +2,7 @@ import 'package:http/http.dart' as http;
 import 'dart:convert';
 import 'package:html/dom.dart' as html;
 import 'package:html/parser.dart';
+import 'package:html/dom.dart' as dom;
 
 class eEntryCompetition {
   final String name;
@@ -25,7 +26,7 @@ class eEntryCompetition {
       http.Response electronicEntryDataResponse) {
     Map<String, dynamic> map = json.decode(electronicEntryDataResponse.body);
     String htmlData = map['content']['rendered'];
-    var document = parse(htmlData);
+    dom.Document document = parse(htmlData);
     List<html.Element> htmlRows =
         document.getElementsByTagName('table')[1].getElementsByTagName('tr');
 
