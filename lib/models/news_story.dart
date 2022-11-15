@@ -12,7 +12,7 @@ class NewsStory {
   String? content;
 
   NewsStory.fromJson(Map<String, dynamic> jsonPost)
-      : this.id = jsonPost['id'].toString(),
+      : this.id = '${jsonPost['id']}',
         this.author = _getAuthorNameFromId(jsonPost['author']),
         this.headline = jsonPost['title']['rendered'],
         this.formattedPublishedDate =
