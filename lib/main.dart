@@ -1,14 +1,12 @@
-import 'package:curl_manitoba/main_color_pallete.dart';
-import 'package:curl_manitoba/models/apis/curling_io_api.dart';
-import 'package:curl_manitoba/providers/curlingIOClient.dart';
+import 'package:curl_manitoba/data/main_color_pallete.dart';
+import 'package:curl_manitoba/providers/clients/curlingIOClient.dart';
+import 'package:curl_manitoba/providers/clients/wordpressClient.dart';
 import 'package:curl_manitoba/providers/hasMoreCompetitionsProvider.dart';
 import 'package:curl_manitoba/providers/loadedCompetitionsProvider.dart';
 import 'package:curl_manitoba/providers/loadingProvider.dart';
 import 'package:curl_manitoba/providers/sliverappbar_arrow_provider.dart';
 import 'package:curl_manitoba/providers/sliverappbar_title_provider.dart';
-import 'package:curl_manitoba/route_generator.dart';
-import 'package:curl_manitoba/screens/mainTabs/news/news_article_screen.dart';
-import 'package:curl_manitoba/screens/tabsScreens/home_tabs_screen.dart';
+import 'package:curl_manitoba/data/route_generator.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -25,9 +23,7 @@ void main() async {
     ChangeNotifierProvider(create: (_) => HasMoreCompetitionsProvider()),
     ChangeNotifierProvider(create: (_) => LoadedCompetitionsProvider()),
     ChangeNotifierProvider(create: (_) => CurlingIOClientProvider()),
-
-    
-
+    ChangeNotifierProvider(create: (_) => WordPressClientProvider()),
   ], child: MyApp()));
 }
 
