@@ -1,30 +1,30 @@
 import 'package:curl_manitoba/models/scoresCompetitionModels/game.dart';
 
 class Draw {
-  String drawNumber;
-  DateTime startTime;
-  late List<Game> games;
+  final String drawNumber;
+  final DateTime startTime;
+  final List<Game> games;
 
-  Draw(this.drawNumber, this.startTime) {
-    games = [];
-  }
+  Draw(this.drawNumber, this.startTime) : games = [];
 
   addGame(Game game) {
     games.add(game);
   }
 
-  static List<Draw> createDraws(List<Game> games) {
+  static List<Draw> getDrawsFromGames(List<Game> games) {
+    Draw tempDraw = Draw(games[0].drawNumber!, games[0].startTime!);
     List<Draw> draws = [];
-    
-    Draw tempDraw = Draw(games[0].drawNumber, games[0].startTime);
 
-    for (Game game in games) {
-      if (game.drawNumber != tempDraw.drawNumber) {
-        draws.add(tempDraw);
-        tempDraw = Draw(game.drawNumber, game.startTime);
-      } else
-        tempDraw.addGame(game);
-    }
+    for (Game game in games)
+      game.drawNumber == tempDraw.drawNumber
+      //Keep adding games while draw number is the same
+          ? tempDraw.addGame(game)
+          //Othwerwise add complete draw to draws
+          : {
+              draws.add(tempDraw),
+              tempDraw = Draw(game.drawNumber!, game.startTime!)
+            };
+
     return draws;
   }
 }
