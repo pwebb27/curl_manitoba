@@ -1,13 +1,9 @@
 import 'package:curl_manitoba/models/scoresCompetitionModels/scores_competition.dart';
-import 'package:curl_manitoba/screens/tabsScreens/competition_tabs_screen.dart';
-import 'package:curl_manitoba/widgets/sliverWrap.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/src/foundation/key.dart';
-import 'package:flutter/src/widgets/framework.dart';
 
 class ReportsScreen extends StatefulWidget {
-  scoresCompetition competition;
+  final scoresCompetition competition;
   ReportsScreen(this.competition);
 
   @override
@@ -29,6 +25,7 @@ class _ReportsScreenState extends State<ReportsScreen>
   ];
 
   void initState() {
+    super.initState();
     competition = widget.competition;
   }
 
@@ -39,15 +36,13 @@ class _ReportsScreenState extends State<ReportsScreen>
       return CustomScrollView(slivers: <Widget>[
         SliverOverlapInjector(
             handle: NestedScrollView.sliverOverlapAbsorberHandleFor(context)),
-        SliverList( delegate:
-
-            SliverChildBuilderDelegate( (BuildContext context, int index) {
-
+        SliverList(
+            delegate:
+                SliverChildBuilderDelegate((BuildContext context, int index) {
           return ListTile(
             title: Text(reports[index]),
-            
           );
-        },childCount: reports.length)),
+        }, childCount: reports.length)),
       ]);
     });
   }
