@@ -1,6 +1,6 @@
-import 'package:curl_manitoba/models/apis/curling_io_api.dart';
+import 'package:curl_manitoba/apis/curling_io_api.dart';
 import 'package:curl_manitoba/models/scoresCompetitionModels/scores_competition.dart';
-import 'package:curl_manitoba/providers/curlingIOClient.dart';
+import 'package:curl_manitoba/providers/clients/curlingIOClient.dart';
 import 'package:curl_manitoba/providers/hasMoreCompetitionsProvider.dart';
 import 'package:curl_manitoba/providers/loadedCompetitionsProvider.dart';
 import 'package:curl_manitoba/providers/loadingProvider.dart';
@@ -40,7 +40,7 @@ class _ScoresScreenState extends State<ScoresScreen>
   late Future<http.Response> _competitionDataFuture;
   late int _pageIndex;
   late int _selectedIndex;
-  late CurlingIOAPI _curlingIOAPI;
+  late CurlingIOApi _curlingIOAPI;
   late String searchTags;
 
   filterCompetitions() {}
@@ -50,7 +50,7 @@ class _ScoresScreenState extends State<ScoresScreen>
     _selectedIndex = -1;
     _pageIndex = 1;
     searchTags = '';
-    _curlingIOAPI = CurlingIOAPI()
+    _curlingIOAPI = CurlingIOApi()
       ..client = Provider.of<CurlingIOClientProvider>(context, listen: false)
           .getClient();
     Provider.of<LoadedCompetitionsProvider>(context, listen: false)
@@ -76,7 +76,7 @@ class _ScoresScreenState extends State<ScoresScreen>
       context.read<LoadingProvider>().isLoading = true;
 
       http.Response response =
-          await _curlingIOAPI.fetchCompetitions(searchTags, ++_pageIndex);
+          await _curlingIOAPI.fetchCompetitions(searchTags, (++_pageIndex).toString());
 
       List<scoresCompetition> newCompetitions =
           scoresCompetition.parseCompetitionData(response);
