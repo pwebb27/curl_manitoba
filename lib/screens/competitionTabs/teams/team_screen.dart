@@ -75,18 +75,18 @@ class _TeamDataScreenState extends State<TeamDataScreen> {
                         showDialog(
                             context: context,
                             builder: (context) => ImageDialog(
-                                widget.team.players![index].profilePicUrl));
+                                widget.team.players![index].profilePicUrl!));
                       },
                       child: CircleAvatar(
                         backgroundImage: NetworkImage(
-                            widget.team.players![index].profilePicUrl),
+                            widget.team.players![index].profilePicUrl!),
                       )),
                   subtitle: Text(
-                    widget.team.players![index].position,
+                    widget.team.players![index].position!,
                     style: TextStyle(fontSize: 14),
                   ),
                   title: Text(
-                    widget.team.players![index].name,
+                    widget.team.players![index].name!,
                     style: TextStyle(fontSize: 16),
                   ),
                   children: [

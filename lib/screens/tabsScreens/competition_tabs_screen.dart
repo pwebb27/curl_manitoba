@@ -4,13 +4,14 @@ import 'package:curl_manitoba/providers/sliverappbar_title_provider.dart';
 import 'package:curl_manitoba/screens/competitionTabs/reports_screen.dart';
 import 'package:curl_manitoba/screens/competitionTabs/scoreboard_screen.dart';
 import 'package:curl_manitoba/screens/competitionTabs/teams/teams_screen.dart';
+import 'package:curl_manitoba/widgets/scores_competition_cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:provider/provider.dart';
 
 class CompetitionScreen extends StatefulWidget {
   CompetitionScreen(this.competition);
-  scoresCompetition competition;
+  final scoresCompetition competition;
   static const routeName = '/competition';
 
   @override
@@ -34,7 +35,6 @@ class _CompetitionScreenState extends State<CompetitionScreen>
     _scrollController = ScrollController();
 
     _scrollController.addListener(_setOffset);
-
   }
 
   @override
@@ -45,8 +45,10 @@ class _CompetitionScreenState extends State<CompetitionScreen>
   }
 
   void _setOffset() {
-    context.read<SliverAppBarTitle>().calculateOpacity(_scrollController.offset, _scrollController.position.maxScrollExtent);
-    context.read<SliverAppBarArrow>().calculateOpacity(_scrollController.offset, _scrollController.position.maxScrollExtent);
+    context.read<SliverAppBarTitle>().calculateOpacity(
+        _scrollController.offset, _scrollController.position.maxScrollExtent);
+    context.read<SliverAppBarArrow>().calculateOpacity(
+        _scrollController.offset, _scrollController.position.maxScrollExtent);
   }
 
   @override
@@ -115,7 +117,7 @@ class Title extends StatelessWidget {
     return Opacity(
         opacity: context.watch<SliverAppBarTitle>().opacity,
         child: (Text(
-          competition.name,
+          competition.name!,
           style: TextStyle(fontSize: 22, color: Colors.white),
         )));
   }
@@ -124,16 +126,17 @@ class Title extends StatelessWidget {
 class Arrow extends StatelessWidget {
   Widget build(BuildContext context) {
     return Container(
-                        height: 20,
-                        margin: EdgeInsets.all(8),
-                        decoration: BoxDecoration(
-                            color: Colors.grey.shade500.withOpacity(context.watch<SliverAppBarArrow>().opacity),
-                            shape: BoxShape.circle),
-                        child: Icon(
-                          Icons.arrow_back,
-                          size: 30,
-                          color: Colors.white,
-                        ));
+        height: 20,
+        margin: EdgeInsets.all(8),
+        decoration: BoxDecoration(
+            color: Colors.grey.shade500
+                .withOpacity(context.watch<SliverAppBarArrow>().opacity),
+            shape: BoxShape.circle),
+        child: Icon(
+          Icons.arrow_back,
+          size: 30,
+          color: Colors.white,
+        ));
   }
 }
 
@@ -154,8 +157,7 @@ class MyHeaderDelegate extends StatelessWidget {
             children: [
               Padding(
                   padding: EdgeInsets.symmetric(vertical: 7),
-                  child:
-                      Image.network(competition.sponsorImageUrl, height: 60)),
+                  child: scoresCompetitionCachedNetworkImage(competition: competition, height: 30)),
               Padding(
                 padding: const EdgeInsets.only(
                   left: 12.0,
@@ -164,7 +166,7 @@ class MyHeaderDelegate extends StatelessWidget {
                   top: 3,
                 ),
                 child: Text(
-                  competition.name,
+                  competition.name!,
                   style: TextStyle(fontSize: 22, fontWeight: FontWeight.bold),
                   textAlign: TextAlign.center,
                 ),
@@ -180,7 +182,7 @@ class MyHeaderDelegate extends StatelessWidget {
                   Padding(
                     padding: EdgeInsets.only(left: 10),
                     child: Text(
-                      competition.venue,
+                      competition.venue!,
                       style: TextStyle(
                           fontSize: 16,
                           color: Colors.grey.shade700,
@@ -208,7 +210,6 @@ class MyHeaderDelegate extends StatelessWidget {
     );
   }
 }
-
 class _SliverAppBarDelegate extends StatelessWidget with PreferredSizeWidget {
   _SliverAppBarDelegate(this._tabBar);
 
@@ -227,5 +228,3 @@ class _SliverAppBarDelegate extends StatelessWidget with PreferredSizeWidget {
     );
   }
 }
-
-
