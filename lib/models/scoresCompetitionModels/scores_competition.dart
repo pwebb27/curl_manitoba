@@ -15,20 +15,20 @@ class scoresCompetition {
 
   scoresCompetition.fromJson(Map<String, dynamic> jsonCompetition)
       : name = jsonCompetition['title'],
-        venue = getVenueFromJson(jsonCompetition),
+        venue = _getVenueFromJson(jsonCompetition),
         startDate = DateTime.parse(jsonCompetition['starts_on']),
         endDate = DateTime.parse(jsonCompetition['ends_on']),
-        sponsorImageUrl = jsonCompetition["logo"],
-        id = jsonCompetition["id"].toString();
+        sponsorImageUrl = jsonCompetition['logo'],
+        id = '${jsonCompetition['id']}';
 
-  static String getVenueFromJson(Map<String, dynamic> jsonCompetition) {
+  static String _getVenueFromJson(Map<String, dynamic> jsonCompetition) {
     //If venue value exists return venue
     if (!['', null].contains(jsonCompetition["venue"]))
       return jsonCompetition["venue"];
 
     //Otherwise try to find venue in 'notes'
-    String notes = jsonCompetition['notes'];
-    List<String> stringsBeforeVenueName = [
+    final String notes = jsonCompetition['notes'];
+    const List<String> stringsBeforeVenueName = [
       'played at the ',
       'played at ',
       'hosted by the ',
