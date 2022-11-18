@@ -22,34 +22,49 @@ class eEntryCompetition {
       required this.location,
       required this.deadline});
 
+  //Takes electronic-entry webpage content response and builds all eEntryCompetitions from existing table mapped to categories
   static Map<String, dynamic> parseElectronicEntryData(
-      http.Response electronicEntryDataResponse) {
-    Map<String, dynamic> map = json.decode(electronicEntryDataResponse.body);
-    String htmlData = map['content']['rendered'];
-    dom.Document document = parse(htmlData);
-    List<html.Element> htmlRows =
-        document.getElementsByTagName('table')[1].getElementsByTagName('tr');
+      http.Response eEntryResponse) {
+    Map<String, dynamic> eEntryJsonMap = json.decode(eEntryResponse.body);
+    dom.Document eEntryHtmlDocument =
+        parse(eEntryJsonMap['content']['rendered']);
+    List<html.Element> eEntryHtmlRows = eEntryHtmlDocument
+        .getElementsByTagName('table')[1]
+        .getElementsByTagName('tr');
+    return getEEntryCompetitionsMapFromHtmlRows(eEntryHtmlRows);
+  }
 
-    String category = '';
-    List<html.Element> htmlCells;
+  static getEEntryCompetitionsMapFromHtmlRows(List<html.Element> eEntryHtmlRows) {
+    String competitionCategory = '';
+    List<html.Element> htmlRowCells;
     Map<String, List<eEntryCompetition>> competitionsMap = {};
+    int rowCellsOccupied;
 
-    htmlRows.forEach((row) {
-      htmlCells = row.getElementsByTagName('td');
+    eEntryHtmlRows.forEach((htmlRow) {
+      rowCellsOccupied = 0;
 
-      if (htmlCells[0].text == '' && htmlCells.length != 1) {
-        category = htmlCells[4].text;
-        competitionsMap[category] = [];
-      } else if (htmlCells[0].text != 'Type' && htmlCells[0].text != '') {
-        competitionsMap[category]!.add(eEntryCompetition(
-            type: htmlCells[0].text,
-            month: htmlCells[1].text,
-            dateRange: htmlCells[2].text,
+      htmlRowCells = htmlRow.getElementsByTagName('td');
+
+      //Determine if row is beginning of new category (only one cell will be occupied with category title)
+      htmlRowCells.forEach((htmlCell) {
+        if (htmlCell.text.isNotEmpty) ++rowCellsOccupied;
+      });
+
+      if (rowCellsOccupied == 1) {
+        competitionCategory = htmlRowCells[4].text;
+        competitionsMap[competitionCategory] = [];
+
+        //If it is not an empty row and not a header row, create eEntryCompetition from row data
+      } else if (htmlRowCells[0].text != 'Type' && rowCellsOccupied > 1) {
+        competitionsMap[competitionCategory]!.add(eEntryCompetition(
+            type: htmlRowCells[0].text,
+            month: htmlRowCells[1].text,
+            dateRange: htmlRowCells[2].text,
             fee: '\$' +
-                ((htmlCells[3].text.replaceAll(new RegExp(r'[^0-9]'), ''))),
-            name: htmlCells[4].text,
-            location: htmlCells[5].text,
-            deadline: htmlCells[6].text));
+                ((htmlRowCells[3].text.replaceAll(new RegExp(r'[^0-9]'), ''))),
+            name: htmlRowCells[4].text,
+            location: htmlRowCells[5].text,
+            deadline: htmlRowCells[6].text));
       }
     });
     return competitionsMap;
