@@ -9,8 +9,8 @@ class GameResults {
   bool? firstHammer;
   String? total;
 
-  GameResults.fromJson(
-      Map<String, dynamic> jsonGamePositions, this.competitionId)
+  GameResults.fromJson({
+      required Map<String, dynamic> jsonGamePositions, required this.competitionId})
       : teamId = '${jsonGamePositions['competition_team_id']}',
         id = '${jsonGamePositions['id']}';
 
