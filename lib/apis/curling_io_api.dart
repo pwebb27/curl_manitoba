@@ -1,34 +1,49 @@
+import 'package:curl_manitoba/apis/api_base_helper.dart';
+import 'package:flutter/services.dart';
 import 'package:http/http.dart' as http;
 
 class CurlingIOApi {
-  late http.Client client;
+  static final CurlingIOApi _singleton = CurlingIOApi._internal();
+  CurlingIOApi._internal();
+  final ApiBaseHelper _apiBaseHelper = ApiBaseHelper(http.Client());
+
+  factory CurlingIOApi() => _singleton;
 
   static const String _baseUrl =
       'https://legacy-curlingio.global.ssl.fastly.net/api/organizations/MTZFJ5miuro/competitions';
 
   Future<http.Response> fetchGames(String competitionID) =>
-      _callCurlingIOApi(url: '$_baseUrl/$competitionID/games');
+      _apiBaseHelper.callApi(url: '$_baseUrl/$competitionID/games');
 
   Future<http.Response> fetchTeams(String competitionID) =>
-      _callCurlingIOApi(url: '$_baseUrl/$competitionID/teams');
+      _apiBaseHelper.callApi(url: '$_baseUrl/$competitionID/teams');
 
   Future<http.Response> fetchCompetitions(
       [String tag = '', String pageNumber = '1']) {
     String queryString =
         Uri(queryParameters: {'tags': tag, 'page': pageNumber}).query;
 
-    return _callCurlingIOApi(url: '$_baseUrl?$queryString');
+    return _apiBaseHelper.callApi(url: '$_baseUrl?$queryString');
   }
 
   Future<http.Response> fetchGameResults(
           String competitionID, String teamID, String gamePositionsID) =>
-      _callCurlingIOApi(
+      _apiBaseHelper.callApi(
           url:
               '$_baseUrl/$competitionID/teams/$teamID/game_positions/$gamePositionsID');
 
   Future<http.Response> fetchFormat(String competitionID) =>
-      _callCurlingIOApi(url: '$_baseUrl/$competitionID/formats');
+      _apiBaseHelper.callApi(url: '$_baseUrl/$competitionID/formats');
+}
 
-  Future<http.Response> _callCurlingIOApi({required String url}) async =>
-      await client.get(Uri.parse(url));
+//Temporary class for mocking CurlingIOApi to mitigate extensive use of the API
+class MockCurlingIOApi {
+  static final MockCurlingIOApi _singleton = MockCurlingIOApi._internal();
+  MockCurlingIOApi._internal();
+
+  factory MockCurlingIOApi() => _singleton;
+
+  Future<http.Response> fetchCompetitions() async => http.Response(
+      await rootBundle.loadString('assets/json/competitions.json'), 200);
+
 }
