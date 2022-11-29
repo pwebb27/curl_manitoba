@@ -2,9 +2,9 @@ import 'package:http/http.dart' as http;
 import 'dart:convert';
 
 class GameResults {
-  String? id;
-  String? teamId;
-  String? competitionId;
+  final String? id;
+  final String? teamId;
+  final String? competitionId;
   Map<int, int>? endScores;
   bool? firstHammer;
   String? total;
