@@ -7,11 +7,11 @@ class ApiBaseHelper {
   ApiBaseHelper(this.client);
 
   Future<http.Response> callApi(
-      {required String url,
+      {required String authority, required String unencodedPath,
       Map<String, String> queryParameters = const {}}) async {
     try {
       final http.Response response =
-          await http.get(Uri.https(url, '', queryParameters));
+          await http.get(Uri.https(authority, unencodedPath, queryParameters));
       switch (response.statusCode) {
         case 200:
           return response;

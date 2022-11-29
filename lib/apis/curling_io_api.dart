@@ -9,31 +9,41 @@ class CurlingIOApi {
 
   factory CurlingIOApi() => _singleton;
 
-  static const String _baseUrl =
-      'https://legacy-curlingio.global.ssl.fastly.net/api/organizations/MTZFJ5miuro/competitions';
+  static const String baseUrl =
+      'https://legacy-curlingio.global.ssl.fastly.net';
 
-  Future<http.Response> fetchGames(String competitionID) =>
-      _apiBaseHelper.callApi(url: '$_baseUrl/$competitionID/games');
+  static const String _rootPath = '/api/organizations/MTZFJ5miuro/competitions';
 
-  Future<http.Response> fetchTeams(String competitionID) =>
-      _apiBaseHelper.callApi(url: '$_baseUrl/$competitionID/teams');
+  Future<http.Response> fetchGames(String competitionID) {
+    String fullPath = _rootPath + '/$competitionID/games';
+    return _apiBaseHelper.callApi(authority: baseUrl, unencodedPath: fullPath);
+  }
+
+  Future<http.Response> fetchTeams(String competitionID) {
+    String fullPath = _rootPath + '/$competitionID/teams';
+    return _apiBaseHelper.callApi(authority: baseUrl, unencodedPath: fullPath);
+  }
 
   Future<http.Response> fetchCompetitions(
       [String tag = '', String pageNumber = '1']) {
-    String queryString =
+    String fullPath = _rootPath +
+        '?' +
         Uri(queryParameters: {'tags': tag, 'page': pageNumber}).query;
 
-    return _apiBaseHelper.callApi(url: '$_baseUrl?$queryString');
+    return _apiBaseHelper.callApi(authority: baseUrl, unencodedPath: fullPath);
   }
 
   Future<http.Response> fetchGameResults(
-          String competitionID, String teamID, String gamePositionsID) =>
-      _apiBaseHelper.callApi(
-          url:
-              '$_baseUrl/$competitionID/teams/$teamID/game_positions/$gamePositionsID');
+      String competitionID, String teamID, String gamePositionsID) {
+    String fullPath = _rootPath +
+        '/$competitionID/teams/$teamID/game_positions/$gamePositionsID';
+    return _apiBaseHelper.callApi(authority: baseUrl, unencodedPath: fullPath);
+  }
 
-  Future<http.Response> fetchFormat(String competitionID) =>
-      _apiBaseHelper.callApi(url: '$_baseUrl/$competitionID/formats');
+  Future<http.Response> fetchFormat(String competitionID) {
+    String fullPath = _rootPath + '/$competitionID/formats';
+    return _apiBaseHelper.callApi(authority: baseUrl, unencodedPath: fullPath);
+  }
 }
 
 //Temporary class for mocking CurlingIOApi to mitigate extensive use of the API
@@ -45,5 +55,4 @@ class MockCurlingIOApi {
 
   Future<http.Response> fetchCompetitions() async => http.Response(
       await rootBundle.loadString('assets/json/competitions.json'), 200);
-
 }

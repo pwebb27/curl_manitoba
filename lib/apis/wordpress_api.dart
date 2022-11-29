@@ -3,9 +3,8 @@ import 'package:http/http.dart' as http;
 import 'package:intl/intl.dart';
 
 class WordPressApi {
-  static const String _baseUrl = 'curlmanitoba.org';
+  static const String baseUrl = 'curlmanitoba.org';
   static const String _rootPath = '/wp-json/wp/v2/';
-  static const String _eventsCalendarPath = '/wp-json/tribe/events/v1/events';
 
   static final WordPressApi _singleton = WordPressApi._internal();
   WordPressApi._internal();
@@ -16,13 +15,13 @@ class WordPressApi {
   Future<http.Response> fetchPage(String pageNumber) async {
     String extendedPath = _rootPath + 'pages/$pageNumber';
     return _apiBaseHelper.callApi(
-        url: _baseUrl + extendedPath, queryParameters: {'_fields': 'content'});
+        authority: baseUrl,unencodedPath:  extendedPath, queryParameters: {'_fields': 'content'});
   }
 
   Future<http.Response> fetchPosts({required int amountOfPosts}) async {
     String extendedPath = _rootPath + 'posts';
     return _apiBaseHelper
-        .callApi(url: _baseUrl + extendedPath, queryParameters: {
+        .callApi(authority: baseUrl,unencodedPath:  extendedPath, queryParameters: {
       '_fields': ['id', 'title', 'date', 'author'].join(','),
       'per_page': '$amountOfPosts'
     });
@@ -31,12 +30,14 @@ class WordPressApi {
   Future<http.Response> fetchPost(String postId) async {
     String extendedPath = _rootPath + 'posts/$postId';
     return _apiBaseHelper.callApi(
-        url: _baseUrl + extendedPath, queryParameters: {'_fields': 'content'});
+        authority: baseUrl,unencodedPath:  extendedPath, queryParameters: {'_fields': 'content'});
   }
 
   Future<http.Response> fetchCalendarData() async {
+  const String _eventsCalendarPath = '/wp-json/tribe/events/v1/events';
+
     return _apiBaseHelper.callApi(
-        url: _baseUrl + _eventsCalendarPath,
+        authority: baseUrl ,unencodedPath: _eventsCalendarPath,
         queryParameters: {
           'per_page': '999',
           'start_date': _getStartingDateForCalendarEvents()
