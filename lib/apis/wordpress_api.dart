@@ -1,3 +1,4 @@
+import 'package:curl_manitoba/apis/api_base_helper.dart';
 import 'package:http/http.dart' as http;
 import 'package:intl/intl.dart';
 
@@ -6,41 +7,40 @@ class WordPressApi {
   static const String _rootPath = '/wp-json/wp/v2/';
   static const String _eventsCalendarPath = '/wp-json/tribe/events/v1/events';
 
-  late http.Client client;
+  static final WordPressApi _singleton = WordPressApi._internal();
+  WordPressApi._internal();
+  final ApiBaseHelper _apiBaseHelper = ApiBaseHelper(http.Client());
+
+  factory WordPressApi() => _singleton;
 
   Future<http.Response> fetchPage(String pageNumber) async {
-    const Map<String, String> _pageQueryParameters = {'_fields': 'content'};
     String extendedPath = _rootPath + 'pages/$pageNumber';
-    return await http
-        .get(Uri.https(_baseUrl, extendedPath, _pageQueryParameters));
+    return _apiBaseHelper.callApi(
+        url: _baseUrl + extendedPath, queryParameters: {'_fields': 'content'});
   }
 
   Future<http.Response> fetchPosts({required int amountOfPosts}) async {
-    Map<String, String> _postsQueryParameters = {
+    String extendedPath = _rootPath + 'posts';
+    return _apiBaseHelper
+        .callApi(url: _baseUrl + extendedPath, queryParameters: {
       '_fields': ['id', 'title', 'date', 'author'].join(','),
       'per_page': '$amountOfPosts'
-    };
-    String extendedPath = _rootPath + 'posts';
-
-    return await http
-        .get(Uri.https(_baseUrl, extendedPath, _postsQueryParameters));
+    });
   }
 
   Future<http.Response> fetchPost(String postId) async {
-    const Map<String, String> _postQueryParameters = {'_fields': 'content'};
-
     String extendedPath = _rootPath + 'posts/$postId';
-    return await http
-        .get(Uri.https(_baseUrl, extendedPath, _postQueryParameters));
+    return _apiBaseHelper.callApi(
+        url: _baseUrl + extendedPath, queryParameters: {'_fields': 'content'});
   }
 
   Future<http.Response> fetchCalendarData() async {
-    Map<String, String> _eventCalendarQueryParameters = {
-      'per_page': '999',
-      'start_date': _getStartingDateForCalendarEvents()
-    };
-    return await http.get(Uri.https(
-        _baseUrl, _eventsCalendarPath, _eventCalendarQueryParameters));
+    return _apiBaseHelper.callApi(
+        url: _baseUrl + _eventsCalendarPath,
+        queryParameters: {
+          'per_page': '999',
+          'start_date': _getStartingDateForCalendarEvents()
+        });
   }
 
   static String _getStartingDateForCalendarEvents() {
