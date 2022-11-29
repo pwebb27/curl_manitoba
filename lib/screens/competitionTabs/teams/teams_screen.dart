@@ -2,7 +2,6 @@ import 'package:curl_manitoba/apis/curling_io_api.dart';
 import 'package:curl_manitoba/models/scoresCompetitionModels/format.dart';
 import 'package:curl_manitoba/models/scoresCompetitionModels/scores_competition.dart';
 import 'package:curl_manitoba/models/scoresCompetitionModels/team.dart';
-import 'package:curl_manitoba/providers/clients/curlingIOClient.dart';
 import 'package:curl_manitoba/screens/tabsScreens/competition_tabs_screen.dart';
 import 'package:curl_manitoba/screens/competitionTabs/teams/team_screen.dart';
 import 'package:curl_manitoba/widgets/circular_progress_bar.dart';
@@ -10,7 +9,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 
 import 'package:http/http.dart' as http;
-import 'package:provider/provider.dart';
 
 class TeamsScreen extends StatefulWidget {
   TeamsScreen(this.competition);
@@ -32,9 +30,7 @@ class _TeamsScreenState extends State<TeamsScreen>
   late List<Team> teams;
   void initState() {
     teams = [];
-    _curlingIOAPI = CurlingIOApi()
-      ..client = Provider.of<CurlingIOClientProvider>(context, listen: false)
-          .getClient();
+    _curlingIOAPI = CurlingIOApi();
 
     competition = widget.competition;
     print(competition.id);

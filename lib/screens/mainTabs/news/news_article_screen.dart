@@ -2,13 +2,11 @@ import 'dart:convert';
 
 import 'package:curl_manitoba/apis/wordpress_api.dart';
 import 'package:curl_manitoba/models/news_story.dart';
-import 'package:curl_manitoba/providers/clients/wordpressClient.dart';
 import 'package:curl_manitoba/widgets/circular_progress_bar.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:flutter/material.dart';
 import 'package:html/parser.dart';
 import 'package:http/http.dart' as http;
-import 'package:provider/provider.dart';
 
 import '../../../widgets/custom_app_bar.dart';
 
@@ -29,9 +27,6 @@ class _NewsStoryScreenState extends State<NewsStoryScreen> {
   @override
   void initState() {
     newsStory = widget.newsStory;
-    _wordPressApi
-      ..client = Provider.of<WordPressClientProvider>(context, listen: false)
-          .getClient();
     _newsArticleFuture = _wordPressApi.fetchPost('${newsStory.id}');
     super.initState();
   }

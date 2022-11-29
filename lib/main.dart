@@ -1,6 +1,4 @@
 import 'package:curl_manitoba/data/main_color_pallete.dart';
-import 'package:curl_manitoba/providers/clients/curlingIOClient.dart';
-import 'package:curl_manitoba/providers/clients/wordpressClient.dart';
 import 'package:curl_manitoba/providers/hasMoreCompetitionsProvider.dart';
 import 'package:curl_manitoba/providers/loadedCompetitionsProvider.dart';
 import 'package:curl_manitoba/providers/loadingProvider.dart';
@@ -22,8 +20,6 @@ void main() async {
     ChangeNotifierProvider(create: (_) => LoadingProvider()),
     ChangeNotifierProvider(create: (_) => HasMoreCompetitionsProvider()),
     ChangeNotifierProvider(create: (_) => LoadedCompetitionsProvider()),
-    ChangeNotifierProvider(create: (_) => CurlingIOClientProvider()),
-    ChangeNotifierProvider(create: (_) => WordPressClientProvider()),
   ], child: MyApp()));
 }
 

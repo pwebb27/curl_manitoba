@@ -1,10 +1,8 @@
 import 'package:curl_manitoba/apis/wordpress_api.dart';
 import 'package:curl_manitoba/models/e_entry_competition.dart';
-import 'package:curl_manitoba/providers/clients/wordpressClient.dart';
 import 'package:curl_manitoba/widgets/fixed_column_widget.dart';
 import 'package:curl_manitoba/widgets/scrollable_column_widget.dart';
 import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
 import '../../widgets/circular_progress_bar.dart';
 import 'package:http/http.dart' as http;
 
@@ -24,9 +22,7 @@ class _eEntryScreenState extends State<eEntryScreen>
   @override
   void initState() {
     super.initState();
-    _wordPressApi = WordPressApi()
-      ..client = Provider.of<WordPressClientProvider>(context, listen: false)
-          .getClient();
+    _wordPressApi = WordPressApi();
     _eEntryDataFuture = _wordPressApi.fetchPage('1979');
   }
 

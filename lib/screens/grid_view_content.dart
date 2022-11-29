@@ -1,12 +1,10 @@
 import 'dart:convert';
 import 'package:curl_manitoba/apis/wordpress_api.dart';
-import 'package:curl_manitoba/providers/clients/wordpressClient.dart';
 import 'package:curl_manitoba/widgets/circular_progress_bar.dart';
 import 'package:curl_manitoba/widgets/custom_app_bar.dart';
 import 'package:flutter/material.dart';
 import 'package:html/parser.dart';
 import 'package:http/http.dart' as http;
-import 'package:provider/provider.dart';
 
 class GridViewContentScreen extends StatefulWidget {
   final String pageTitle;
@@ -26,9 +24,7 @@ class _GridViewContentScreenState extends State<GridViewContentScreen> {
   void initState() {
     super.initState();
     pageTitle = widget.pageTitle;
-    _wordPressApi = WordPressApi()
-      ..client =
-          Provider.of<WordPressClientProvider>(context, listen: false).getClient();
+    _wordPressApi = WordPressApi();
   }
 
   @override

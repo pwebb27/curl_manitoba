@@ -1,6 +1,5 @@
 import 'package:curl_manitoba/apis/curling_io_api.dart';
 import 'package:curl_manitoba/models/scoresCompetitionModels/scores_competition.dart';
-import 'package:curl_manitoba/providers/clients/curlingIOClient.dart';
 import 'package:curl_manitoba/providers/hasMoreCompetitionsProvider.dart';
 import 'package:curl_manitoba/providers/loadedCompetitionsProvider.dart';
 import 'package:curl_manitoba/providers/loadingProvider.dart';
@@ -50,9 +49,7 @@ class _ScoresScreenState extends State<ScoresScreen>
     _selectedIndex = -1;
     _pageIndex = 1;
     searchTags = '';
-    _curlingIOAPI = CurlingIOApi()
-      ..client = Provider.of<CurlingIOClientProvider>(context, listen: false)
-          .getClient();
+    _curlingIOAPI = CurlingIOApi();
     Provider.of<LoadedCompetitionsProvider>(context, listen: false)
         .addCompetitions(widget.preloadedCompetitions);
 
