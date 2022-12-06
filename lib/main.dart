@@ -34,7 +34,7 @@ class MyApp extends StatelessWidget {
         theme: ThemeData(
           primaryColor: const Color(0xff6f1200),
 
-          primaryColorLight: const Color(0xff8c4133), //40%
+          primaryColorLight:const Color.fromRGBO(143, 108, 102, 1), //40%
         ),
         initialRoute: '/',
         onGenerateRoute: RouteGenerator.generateRoute);

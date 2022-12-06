@@ -27,6 +27,7 @@ class CustomAppBar extends StatelessWidget with PreferredSizeWidget {
   ) {
     return Container(
         child: AppBar(
+          backgroundColor: Theme.of(context).primaryColor,
             leading: Builder(
                 builder: (context) => IconButton(
                     icon: Icon(FontAwesomePro.bars, size: 24),

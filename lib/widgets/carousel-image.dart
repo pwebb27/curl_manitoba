@@ -29,7 +29,7 @@ class CarouselImage extends StatelessWidget {
                    padding: const EdgeInsets.only(bottom:2.0),
                    child: Text(
                      name,
-                     style: TextStyle(fontSize: 23, fontWeight: FontWeight.w500, color: Theme.of(context).colorScheme.secondary),
+                     style: TextStyle(fontSize: 23, fontWeight: FontWeight.w500, color: Theme.of(context).primaryColor),
                    ),
                  ),
                  Text(subtext, style: TextStyle(color:Colors.white, fontSize:15))

@@ -138,7 +138,6 @@ class _HomeFeedScreenState extends State<HomeFeedScreen> {
                                   begin: Alignment.topRight,
                                   end: Alignment.bottomLeft,
                                   colors: [
-                                Theme.of(context).colorScheme.primary,
                                 Colors.black
                               ])),
                           child: CarouselSlider(

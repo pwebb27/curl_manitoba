@@ -77,7 +77,7 @@ class homeTabbar extends StatelessWidget with PreferredSizeWidget {
                     height: 39,
                     color: Colors.white,
                     child: TabBar(
-                      labelColor: Theme.of(context).colorScheme.primary,
+                      labelColor: Theme.of(context).primaryColor,
                         controller: _tabController,
                         indicatorWeight: 3.5,
                         unselectedLabelColor: Colors.grey.shade700,

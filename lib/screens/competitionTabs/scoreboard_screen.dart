@@ -159,7 +159,7 @@ class _ScoreboardScreenState extends State<ScoreboardScreen>
                                     children: [
                                       FixedColumn(),
                                       ScrollableColumn(
-                                          selectedDraw!.games[index]),
+                                          selectedDraw!.games[index], context),
                                     ]),
                               ])
                         ]),
@@ -208,7 +208,7 @@ buildFixedColumnCell(String text) {
       )));
 }
 
-ScrollableColumn(Game game) {
+ScrollableColumn(Game game, BuildContext context) {
   const List<String> headers = [
     'LSFE',
     '1',
@@ -230,8 +230,8 @@ ScrollableColumn(Game game) {
         headingRowHeight: 40,
         dataRowHeight: 40,
         headingRowColor: MaterialStateProperty.all(
-          Color.fromRGBO(143, 108, 102, 1),
-        ),
+          
+        Theme.of(context).primaryColorLight),
         columnSpacing: 15,
         decoration: BoxDecoration(
           border: Border(

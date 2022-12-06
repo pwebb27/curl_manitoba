@@ -141,7 +141,7 @@ class _TabsScreenState extends State<TabsScreen> {
     return BottomNavigationBarItem(
       label: title,
       activeIcon: SvgPicture.asset('assets/icons/' + iconName + '.svg',
-          height: iconSize, color: Theme.of(context).colorScheme.primary),
+          height: iconSize, color: Theme.of(context).primaryColor),
       icon: SvgPicture.asset(
         'assets/icons/' + iconName + '.svg',
         height: iconSize,

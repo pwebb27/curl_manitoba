@@ -108,10 +108,10 @@ class _CalendarScreenState extends State<CalendarScreen>
         calendarStyle: CalendarStyle(
             markersMaxCount: 1,
             todayDecoration: BoxDecoration(
-                color: Color.fromRGBO(169, 113, 102, 1),
+                color: Theme.of(context).primaryColorLight,
                 shape: BoxShape.circle),
             selectedDecoration: BoxDecoration(
-                color: Theme.of(context).colorScheme.primary, shape: BoxShape.circle)),
+                color: Theme.of(context).primaryColor, shape: BoxShape.circle)),
 
         onDaySelected: (DateTime selectedDay, _) {
           setState(() {

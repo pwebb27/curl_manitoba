@@ -16,7 +16,7 @@ class ScrollableColumnWidget extends StatelessWidget {
           headingRowHeight: 45,
           border: TableBorder.symmetric(outside: BorderSide(width: .2)),
           dataRowHeight: 90,
-          headingRowColor: MaterialStateProperty.all(Colors.grey.shade400),
+          headingRowColor: MaterialStateProperty.all<Color>(Theme.of(context).primaryColorLight),
           columnSpacing: 40,
           decoration: BoxDecoration(
             border: Border(
