@@ -10,7 +10,7 @@ class CurlingIOApi {
   factory CurlingIOApi() => _singleton;
 
   static const String baseUrl =
-      'https://legacy-curlingio.global.ssl.fastly.net';
+      'legacy-curlingio.global.ssl.fastly.net';
 
   static const String _rootPath = '/api/organizations/MTZFJ5miuro/competitions';
 
