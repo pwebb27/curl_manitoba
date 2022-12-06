@@ -156,8 +156,8 @@ class MyHeaderDelegate extends StatelessWidget {
           child: new Column(
             children: [
               Padding(
-                  padding: EdgeInsets.symmetric(vertical: 7),
-                  child: scoresCompetitionCachedNetworkImage(competition: competition, height: 30)),
+                  padding: EdgeInsets.symmetric(vertical: 12),
+                  child: scoresCompetitionCachedNetworkImage(competition: competition, height: 70)),
               Padding(
                 padding: const EdgeInsets.only(
                   left: 12.0,

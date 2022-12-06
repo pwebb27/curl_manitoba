@@ -55,7 +55,7 @@ class eEntryCompetition {
         competitionsMap[competitionCategory] = [];
 
         //If it is not an empty row and not a header row, create eEntryCompetition from row data
-      } else if (htmlRowCells[0].text != 'Type' && rowCellsOccupied > 1) {
+      } else if (htmlRowCells[0].text.toLowerCase() != 'type' && rowCellsOccupied > 1) {
         competitionsMap[competitionCategory]!.add(eEntryCompetition(
             type: htmlRowCells[0].text,
             month: htmlRowCells[1].text,

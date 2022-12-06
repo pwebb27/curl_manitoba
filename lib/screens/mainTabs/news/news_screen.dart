@@ -1,3 +1,4 @@
+import 'package:curl_manitoba/apis/wordpress_api.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'package:flutter_svg/flutter_svg.dart';
@@ -8,7 +9,6 @@ import '../../../models/news_story.dart';
 import '../../../widgets/circular_progress_bar.dart';
 
 class NewsFeedScreen extends StatefulWidget {
-  
   NewsFeedScreen(this.loadedNews);
   late List<NewsStory> loadedNews;
 
@@ -16,17 +16,20 @@ class NewsFeedScreen extends StatefulWidget {
   State<NewsFeedScreen> createState() => _NewsFeedScreenState();
 }
 
-class _NewsFeedScreenState extends State<NewsFeedScreen> with AutomaticKeepAliveClientMixin{
-    bool get wantKeepAlive => true;
+class _NewsFeedScreenState extends State<NewsFeedScreen>
+    with AutomaticKeepAliveClientMixin {
+  bool get wantKeepAlive => true;
 
   static const routeName = '/news';
   late Future<http.Response> fetchRemainingNews;
   late List<NewsStory> preloadedNews;
+  late WordPressApi _wordPressApi;
 
   @override
   void initState() {
     preloadedNews = widget.loadedNews;
-    fetchRemainingNews = NewsStory.getNewsData(22);
+    _wordPressApi = WordPressApi();
+    fetchRemainingNews = _wordPressApi.fetchPosts(amountOfPosts: 22);
 
     super.initState();
   }
@@ -63,8 +66,10 @@ class _NewsFeedScreenState extends State<NewsFeedScreen> with AutomaticKeepAlive
         FutureBuilder(
           future: fetchRemainingNews,
           builder: (context, snapshot) {
-            if (!snapshot.hasData) return CircularProgressBar();
-            return buildNewsWidgets(NewsStory.parseNewsData(snapshot.data as http.Response));
+            if (snapshot.connectionState == ConnectionState.waiting)
+              return CircularProgressBar();
+            return buildNewsWidgets(
+                NewsStory.parseNewsData(snapshot.data as http.Response));
           },
         ),
         buildEndOfScrollMessage()
@@ -164,7 +169,7 @@ class _NewsFeedScreenState extends State<NewsFeedScreen> with AutomaticKeepAlive
                       Padding(
                         padding: const EdgeInsets.only(bottom: 7.0),
                         child: Text(
-                          newsStory.date,
+                          newsStory.formattedPublishedDate,
                           style: TextStyle(
                               fontSize: 13, color: Colors.grey.shade700),
                         ),

@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:url_launcher/url_launcher.dart';
-import '../data/drawer_data.dart';
+import '../data/drawer_tile_data.dart';
 
 class MainDrawer extends StatelessWidget {
   @override
@@ -20,11 +20,11 @@ class MainDrawer extends StatelessWidget {
                 child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      for (DrawerTile tile in PAGE_TILES_DATA) tile,
+                      ...PAGE_DRAWER_TILES,
                       drawerSection(sectionName: 'Useful Links'),
-                      for (DrawerTile tile in USEFUL_LINKS_DATA) tile,
+                      ...USEFUL_LINKS_DRAWER_TILES,
                       drawerSection(sectionName: 'Social Media'),
-                      for (DrawerTile tile in SOCIAL_MEDIA_LINKS_DATA) tile,
+                      ...SOCIAL_MEDIA_DRAWER_TILES
                     ]))
           ]),
         ),
@@ -59,23 +59,24 @@ class drawerSection extends StatelessWidget {
 }
 
 class DrawerTile extends StatelessWidget {
-  late String title;
-  late Widget icon;
+  final String _title;
+  final Container _icon;
 
-  DrawerTile(this.title, String iconName,
-      {double width = 20, double height = 20}) {
-    this.icon = Container(
-        alignment: Alignment.centerLeft,
-        height: height,
-        width: width,
-        child: SvgPicture.asset(
-          'assets/icons/' + iconName + '.svg',
-          color: Colors.grey.shade700,
-        ));
-  }
+  DrawerTile(
+      {required title, required iconFileName, double iconWidth = 20, double iconHeight = 20})
+      : _title = title,
+        _icon = Container(
+            height: iconHeight,
+            width: iconWidth,
+            child: SvgPicture.asset(
+              'assets/icons/' + iconFileName + '.svg',
+              color: Colors.grey.shade700,
+              height: iconHeight,
+              width: iconWidth,
+            ));
 
-  Navigate(BuildContext context) {
-    Navigator.pushNamed(context, '/gridView', arguments: title);
+  void Navigate(BuildContext context) {
+    Navigator.pushNamed(context, '/gridView', arguments: _title);
   }
 
   @override
@@ -85,9 +86,9 @@ class DrawerTile extends StatelessWidget {
       },
       child: ListTile(
           dense: true,
-          leading: Container(child: icon),
+          leading: Container(child: _icon),
           title: Text(
-            title,
+            _title,
             style: TextStyle(
               fontSize: 14,
               color: Colors.grey.shade700,
@@ -98,22 +99,28 @@ class DrawerTile extends StatelessWidget {
 }
 
 class ExternalLinkDrawerTile extends DrawerTile {
-  String url;
+  final String _url;
 
-  ExternalLinkDrawerTile(String title, String iconName, this.url,
-      {double width = 20, double height = 20})
-      : super(title, iconName, width: width, height: height) {
-    this.url = url;
-  }
+  ExternalLinkDrawerTile(
+      {required String title,
+      required String iconFileName,
+      required String url,
+      double iconWidth = 20,
+      double iconHeight = 20})
+      : _url = url,
+        super(
+            title: title,
+            iconFileName: iconFileName,
+            iconWidth: iconWidth,
+            iconHeight: iconHeight);
 
-  Navigate(BuildContext context) {
+  void Navigate(BuildContext context) {
     () async {
-      if (await canLaunch(url)) {
+      if (await canLaunch(_url))
         await launch(
-          url,
+          _url,
           forceSafariVC: false,
         );
-      }
     };
   }
 }

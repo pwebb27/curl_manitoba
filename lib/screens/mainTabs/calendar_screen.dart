@@ -84,7 +84,7 @@ class _CalendarScreenState extends State<CalendarScreen>
                 padding: const EdgeInsets.all(5.0),
                 child: Text(
                   widget.preloadedEvents[DateUtils.dateOnly(day)]!.length
-                      .toString(),
+                      .toString(), style: TextStyle(color: Colors.white),
                 ),
               ),
             );
@@ -111,7 +111,7 @@ class _CalendarScreenState extends State<CalendarScreen>
                 color: Color.fromRGBO(169, 113, 102, 1),
                 shape: BoxShape.circle),
             selectedDecoration: BoxDecoration(
-                color: Theme.of(context).primaryColor, shape: BoxShape.circle)),
+                color: Theme.of(context).colorScheme.primary, shape: BoxShape.circle)),
 
         onDaySelected: (DateTime selectedDay, _) {
           setState(() {
@@ -229,7 +229,7 @@ class _TileSubtitle extends StatelessWidget {
                 style: TextStyle(
                     fontSize: 14,
                     fontWeight: FontWeight.bold,
-                    color: Theme.of(context).colorScheme.primary),
+                    color: Colors.red,),
                 child: Row(
                   children: [
                     if (event.venue != null)

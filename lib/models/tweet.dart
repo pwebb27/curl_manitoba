@@ -1,72 +1,93 @@
 import 'dart:convert';
-
 import 'package:flutter/material.dart';
 import 'package:timeago/timeago.dart' as timeago;
 import 'package:http/http.dart' as http;
 
 class Tweet {
-  late String profilePicURL;
-  late String timePassed;
-  late String text;
-  String mediaURL = "";
-  String userName = 'Curl Manitoba';
-  bool retweet = false;
+  String? profilePicURL;
+  String? timeAgo;
+  String? text;
+  String? mediaURL = "";
+  String? handle = 'Curl Manitoba';
+  bool isRetweet = false;
+  bool isQuoteTweet = false;
   List<TextSpan> spans = [];
 
-  Tweet.fromJson(Map<String, dynamic> json) {
-    (json['retweeted_status'] != null)
-        ? generateRetweet(json)
-        : generateTweet(json);
+  Tweet.fromJson(Map<String, dynamic> jsonTweet) {
+    jsonTweet['retweeted_status'] != null
+        ? Tweet.retweetFromJson(jsonTweet)
+        : jsonTweet['quoted_status'] != null? Tweet.quoteTweetFromJson(jsonTweet)
+        : {
+            timeAgo = _dateTimeToTimePassed(jsonTweet['created_at']),
+            profilePicURL = jsonTweet['user']['profile_image_url'],
+            text = jsonTweet['full_text'],
+            spans = _generateColoredText(jsonTweet['entities'], text!),
+            if (jsonTweet['entities']['media'] != null)
+              mediaURL = jsonTweet['entities']['media'][0]['media_url']
+          };
   }
 
-  generateRetweet(Map<String, dynamic> json) {
-    retweet = true;
+  Tweet.retweetFromJson(Map<String, dynamic> jsonRetweet) {
+    isRetweet = true;
 
-    timePassed = generateTimePassed(json['created_at']);
+    timeAgo = _dateTimeToTimePassed(jsonRetweet['created_at']);
 
-    text = json['retweeted_status']['full_text'];
-    generateColoredText(
-        json['retweeted_status']['entities']['hashtags'],
-        json['retweeted_status']['entities']['user_mentions'],
-        json['retweeted_status']['entities']['urls'],
-        text);
-    spans[0] = removeUserMentions(json, spans[0]);
+    text = jsonRetweet['retweeted_status']['full_text'];
 
-    profilePicURL = json['retweeted_status']['user']['profile_image_url'];
-    userName = json['retweeted_status']['user']['name'];
-    if (json['retweeted_status']['entities']['media'] != null) {
-      mediaURL = json['retweeted_status']['entities']['media'][0]['media_url'];
-      spans[spans.length - 1] = removeMediaURL(json, spans[spans.length - 1]);
+    spans = _generateColoredText(
+        jsonRetweet['retweeted_status']['entities'], text!);
+    spans[0] = _removeUserMentions(jsonRetweet['retweeted_status'], spans[0]);
+
+    profilePicURL =
+        jsonRetweet['retweeted_status']['user']['profile_image_url'];
+    handle = jsonRetweet['retweeted_status']['user']['name'];
+    if (jsonRetweet['retweeted_status']['entities']['media'] != null) {
+      mediaURL =
+          jsonRetweet['retweeted_status']['entities']['media'][0]['media_url'];
+      spans[spans.length - 1] =
+          _removeMediaURL(jsonRetweet['retweeted_status'], spans[spans.length - 1]);
     }
   }
 
-  generateTweet(Map<String, dynamic> json) {
-    timePassed = generateTimePassed(json['created_at']);
+   Tweet.quoteTweetFromJson(Map<String, dynamic> jsonQuoteTweet) {
+    isQuoteTweet = true;
 
-    profilePicURL = json['user']['profile_image_url'];
-    text = json['full_text'];
-    generateColoredText(json['entities']['hashtags'],
-        json['entities']['user_mentions'], json['entities']['urls'], text);
+    timeAgo = _dateTimeToTimePassed(jsonQuoteTweet['created_at']);
 
-    if (json['entities']['media'] != null) {
-      mediaURL = json['entities']['media'][0]['media_url'];
+    text = jsonQuoteTweet['quoted_status']['full_text'];
+
+    spans = _generateColoredText(
+        jsonQuoteTweet['quoted_status']['entities'], text!);
+    spans[0] = _removeUserMentions(jsonQuoteTweet['quoted_status'], spans[0]);
+
+    profilePicURL =
+        jsonQuoteTweet['quoted_status']['user']['profile_image_url'];
+    handle = jsonQuoteTweet['quoted_status']['user']['name'];
+    if (jsonQuoteTweet['quoted_status']['entities']['media'] != null) {
+      mediaURL =
+          jsonQuoteTweet['quoted_status']['entities']['media'][0]['media_url'];
+      spans[spans.length - 1] =
+          _removeMediaURL(jsonQuoteTweet['quoted_status'], spans[spans.length - 1]);
     }
   }
 
-  String generateTimePassed(String timestamp) {
-    DateTime timeNow = DateTime.now().toUtc();
-    timeNow = DateTime.parse(timeNow.toString().substring(0, 19));
+  static String _dateTimeToTimePassed(String createdAtString) {
+    DateTime currentDateTime = DateTime.now().toUtc();
+    //Remove seconds from currentDateTime
+    currentDateTime =
+        DateTime.parse(currentDateTime.toString().substring(0, 19));
 
-    DateTime timeOfTweet = DateTime.parse(convertToDateTimeFormat(timestamp));
+    DateTime timeOfTweet =
+        DateTime.parse(_createdAtToDateTimeFormat(createdAtString));
     timeOfTweet = DateTime.parse(timeOfTweet.toString().substring(0, 19));
 
-    final difference = timeNow.difference(timeOfTweet);
+    final difference = currentDateTime.difference(timeOfTweet);
 
     return timeago.format(DateTime.now().subtract(difference));
   }
 
-  TextSpan removeMediaURL(Map<String, dynamic> json, TextSpan span) {
-    String mediaURL = json['retweeted_status']['entities']['media'][0]['url'];
+  static TextSpan _removeMediaURL(Map<String, dynamic> json, TextSpan span) {
+    String mediaURL = json['entities']['media'][0]['url'];
     String spanText = span.text as String;
 
     spanText = spanText.replaceAll(
@@ -74,10 +95,11 @@ class Tweet {
     return TextSpan(text: spanText, style: TextStyle(color: Colors.black));
   }
 
-  TextSpan removeUserMentions(Map<String, dynamic> json, TextSpan span) {
+  static TextSpan _removeUserMentions(
+      Map<String, dynamic> json, TextSpan span) {
     String usermentions = "";
     String spanText = span.text as String;
-    for (Map<String, dynamic> usermention in json['retweeted_status']
+    for (Map<String, dynamic> usermention in json
         ['entities']['user_mentions']) {
       usermentions = usermentions + '@' + usermention['screen_name'] + " ";
     }
@@ -85,8 +107,8 @@ class Tweet {
     return TextSpan(text: spanText, style: TextStyle(color: Colors.black));
   }
 
-  String convertToDateTimeFormat(String timestamp) {
-    String year = timestamp.substring(26, 30);
+  static String _createdAtToDateTimeFormat(String timestamp) {
+    final String year = timestamp.substring(26, 30);
     String month = timestamp.substring(4, 7);
     switch (month) {
       case 'Jan':
@@ -126,9 +148,8 @@ class Tweet {
         month = '12';
     }
     String day = timestamp.substring(8, 10);
-    if (day.length == 1) {
-      day = '0' + day;
-    }
+    if (day.length == 1) day = '0' + day;
+
     String hours = timestamp.substring(11, 13);
     String minutes = timestamp.substring(14, 16);
     String seconds = timestamp.substring(17, 19);
@@ -136,13 +157,19 @@ class Tweet {
     return year + month + day + 'T' + hours + minutes + seconds;
   }
 
-  generateColoredText(
-      List hashtags, List usermentions, List urls, String text) {
+  static _generateColoredText(Map<String, dynamic> entitiesMap, String text) {
+    List hashtags = entitiesMap['hashtags'];
+    List usermentions = entitiesMap['user_mentions'];
+    List urls = entitiesMap['urls'];
+
+    List<TextSpan> spans = [];
+
     List<int> indices = [];
     if (hashtags != null) {
       for (var hashtag in hashtags) {
-        indices.add(hashtag['indices'][0]);
-        indices.add(hashtag['indices'][1]);
+        indices
+          ..add(hashtag['indices'][0])
+          ..add(hashtag['indices'][1]);
       }
       if (usermentions != null) {
         for (var usermention in usermentions) {
@@ -187,10 +214,11 @@ class Tweet {
         } while (true);
       }
     }
+    return spans;
   }
 
-  static List<Tweet> parseTweetData(http.Response response) {
-    List<dynamic> jsonTweets = json.decode(response.body);
+  static List<Tweet> parseTweetData(http.Response tweetsResponse) {
+    List<dynamic> jsonTweets = json.decode(tweetsResponse.body);
     return [
       for (Map<String, dynamic> jsonTweet in jsonTweets)
         Tweet.fromJson(jsonTweet)

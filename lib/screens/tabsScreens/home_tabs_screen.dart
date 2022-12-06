@@ -1,20 +1,14 @@
-import 'dart:convert';
-
 import 'package:curl_manitoba/data/main_color_pallete.dart';
 import 'package:curl_manitoba/apis/curling_io_api.dart';
 import 'package:curl_manitoba/apis/wordpress_api.dart';
 import 'package:curl_manitoba/models/calendar_event.dart';
 import 'package:curl_manitoba/models/news_story.dart';
 import 'package:curl_manitoba/models/scoresCompetitionModels/scores_competition.dart';
-import 'package:curl_manitoba/providers/clients/wordpressClient.dart';
 import 'package:curl_manitoba/screens/mainTabs/news/news_screen.dart';
 import 'package:curl_manitoba/screens/mainTabs/scores_screen.dart';
 import 'package:curl_manitoba/widgets/circular_progress_bar.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:http/http.dart' as http;
-import 'package:http/testing.dart';
-import 'package:provider/provider.dart';
 import '../../widgets/custom_app_bar.dart';
 import '../../widgets/main_drawer.dart';
 import '../mainTabs/calendar_screen.dart';
@@ -34,32 +28,19 @@ class _TabsScreenState extends State<TabsScreen> {
   late Map<DateTime, List<CalendarEvent>> loadedEvents;
   late List<NewsStory> loadedNews;
   late final List<Widget> _pages;
-  late String test;
   Future<void>? resultsFuture;
-  late CurlingIOApi _curlingIoApi;
+  late MockCurlingIOApi _mockCurlingIOApi;
   late WordPressApi _wordPressApi;
 
   late int _selectedPageIndex;
 
-  void _selectPage(int index) {
-    setState(() {
-      _selectedPageIndex = index;
-    });
-  }
-
   void initState() {
     _selectedPageIndex = 0;
-    _wordPressApi = WordPressApi()
-      ..client =
-          Provider.of<WordPressClientProvider>(context, listen: false).getClient();
-    _curlingIoApi = CurlingIOApi()
-      ..client = MockClient((request) async {
-        return http.Response(
-            await rootBundle.loadString('assets/json/competitions.json'), 200);
-      });
+    _wordPressApi = WordPressApi();
+    _mockCurlingIOApi = MockCurlingIOApi();
 
     tabsScreenFutures = [
-      _curlingIoApi.fetchCompetitions(),
+      _mockCurlingIOApi.fetchCompetitions(),
       _wordPressApi.fetchPosts(amountOfPosts: 8),
       _wordPressApi.fetchCalendarData()
     ];
@@ -84,22 +65,7 @@ class _TabsScreenState extends State<TabsScreen> {
   @override
   void dispose() {
     _pageController.dispose();
-
     super.dispose();
-  }
-
-  _buildBottomNavigationBarItem(String title, String iconName,
-      [double iconSize = 24]) {
-    return BottomNavigationBarItem(
-      label: title,
-      activeIcon: SvgPicture.asset('assets/icons/' + iconName + '.svg',
-          height: iconSize, color: Theme.of(context).colorScheme.primary),
-      icon: SvgPicture.asset(
-        'assets/icons/' + iconName + '.svg',
-        height: iconSize,
-        color: Colors.grey.shade700,
-      ),
-    );
   }
 
   @override
@@ -168,5 +134,19 @@ class _TabsScreenState extends State<TabsScreen> {
                 ),
               ));
         });
+  }
+
+  _buildBottomNavigationBarItem(String title, String iconName,
+      [double iconSize = 24]) {
+    return BottomNavigationBarItem(
+      label: title,
+      activeIcon: SvgPicture.asset('assets/icons/' + iconName + '.svg',
+          height: iconSize, color: Theme.of(context).colorScheme.primary),
+      icon: SvgPicture.asset(
+        'assets/icons/' + iconName + '.svg',
+        height: iconSize,
+        color: Colors.grey.shade700,
+      ),
+    );
   }
 }

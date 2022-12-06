@@ -10,7 +10,7 @@ class scoresCompetitionCachedNetworkImage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return CachedNetworkImage(
-      maxHeightDiskCache: 60,
+      
       cacheKey: competition.sponsorImageUrl,
       height: height,
       fadeInDuration: Duration(milliseconds: 150),
