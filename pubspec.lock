@@ -176,6 +176,13 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "1.2.1"
+  dart_twitter_api:
+    dependency: "direct main"
+    description:
+      name: dart_twitter_api
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "0.5.6+1"
   data_table_2:
     dependency: "direct main"
     description:
@@ -286,6 +293,13 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "1.0.6"
+  flutter_linkify:
+    dependency: "direct main"
+    description:
+      name: flutter_linkify
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "5.0.2"
   flutter_math_fork:
     dependency: transitive
     description:
@@ -408,6 +422,27 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "0.6.4"
+  json_annotation:
+    dependency: transitive
+    description:
+      name: json_annotation
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "4.7.0"
+  linkfy_text:
+    dependency: "direct main"
+    description:
+      name: linkfy_text
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "1.1.5"
+  linkify:
+    dependency: transitive
+    description:
+      name: linkify
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "4.1.0"
   logging:
     dependency: transitive
     description:
@@ -471,6 +506,13 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "1.1.1"
+  oauth1:
+    dependency: transitive
+    description:
+      name: oauth1
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "2.0.0"
   octo_image:
     dependency: transitive
     description:
