@@ -16,12 +16,16 @@ class CalendarEvent {
         startDate = DateTime.parse(jsonMap['start_date']),
         endDate = DateTime.parse(jsonMap['end_date']),
         htmlDescription = jsonMap['description'],
-        venue = jsonMap['venue'].isEmpty
-            ? null
-            : parse(jsonMap['venue']['venue']).body!.text,
-        cost = jsonMap['cost'].isEmpty
-            ? null
-            : jsonMap['cost_details']['values'][0];
+        venue = _getParsedHtmlText(jsonMap['venue']),
+        cost = jsonMap['cost'] ??= jsonMap['cost_details']['values'][0];
+
+  static _getParsedHtmlText(dynamic json) {
+    try {
+      return parse(json['venue']).body!.text;
+    } catch(e){
+      return null;
+    }
+  }
 
   static Map<DateTime, List<CalendarEvent>> parseCalendarData(
       http.Response calendarResponse) {
