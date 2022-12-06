@@ -56,9 +56,7 @@ class _CalendarScreenState extends State<CalendarScreen>
                 style: TextStyle(fontSize: 19, fontWeight: FontWeight.w700)),
           ),
         ),
-        ...selectedEvents.map((event) => Theme(
-            data: ThemeData().copyWith(dividerColor: Colors.transparent),
-            child: _eventTile(event, scrollController)))
+        ...selectedEvents.map((event) => _eventTile(event, scrollController))
       ]),
     );
   }
@@ -84,7 +82,8 @@ class _CalendarScreenState extends State<CalendarScreen>
                 padding: const EdgeInsets.all(5.0),
                 child: Text(
                   widget.preloadedEvents[DateUtils.dateOnly(day)]!.length
-                      .toString(), style: TextStyle(color: Colors.white),
+                      .toString(),
+                  style: TextStyle(color: Colors.white),
                 ),
               ),
             );
@@ -127,11 +126,13 @@ class _CalendarScreenState extends State<CalendarScreen>
 }
 
 class _eventTile extends StatelessWidget {
-  _eventTile(this.event, this.scrollController);
+  _eventTile(
+    this.event,
+    this.scrollController,
+  );
   final ScrollController scrollController;
 
   final CalendarEvent event;
-  
 
   @override
   Widget build(BuildContext context) {
@@ -143,7 +144,9 @@ class _eventTile extends StatelessWidget {
                 title: _TileTitle(
                   event: event,
                 ),
-                subtitle: _TileSubtitle(event: event)));
+                subtitle: _TileSubtitle(
+                  event: event,
+                )));
   }
 }
 
@@ -158,45 +161,45 @@ class eventExpansionTile extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return ExpansionTile(
-        //Key value required to prevent other event tiles from pre-expanding
-        key: Key(event.name),
-        onExpansionChanged: ((value) => {
-              if (value)
-                {
-                  Future.delayed(Duration(milliseconds: 100))
-                      .then((value) {
-                    Scrollable.ensureVisible(context,
-                        duration: Duration(milliseconds: 200));
-                  })
-                }
-            }),
+      //Key value required to prevent other event tiles from pre-expanding
+      key: Key(event.name),
+      onExpansionChanged: ((value) => {
+            if (value)
+              {
+                Future.delayed(Duration(milliseconds: 100)).then((value) {
+                  Scrollable.ensureVisible(context,
+                      duration: Duration(milliseconds: 200));
+                })
+              }
+          }),
 
-        title: _TileTitle(event: event),
-        subtitle: _TileSubtitle(event: event),
-        children: [
-          Column(
-            children: [
-              Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 10.0),
-                child: Html(
-                    data: event.htmlDescription,
-                    style: {
-                      "p": Style(
-                        margin: EdgeInsets.only(bottom: 8),
-                      )
-                    },
-                    onLinkTap:
-                        ((url, context, attributes, element) async {
-                      if (await canLaunch(url!))
-                        await launch(url);
-                      else
-                        throw "Error occurred";
-                    })),
-              )
-            ],
-          )
-        ],
-      );
+      title: _TileTitle(event: event),
+      subtitle: _TileSubtitle(
+        event: event,
+      ),
+      children: [
+        Column(
+          children: [
+            Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 10.0),
+              child: Html(
+                  data: event.htmlDescription,
+                  style: {
+                    "p": Style(
+                      margin: EdgeInsets.only(bottom: 8),
+                    )
+                  },
+                  onLinkTap: ((url, context, attributes, element) async {
+                    if (await canLaunch(url!))
+                      await launch(url);
+                    else
+                      throw "Error occurred";
+                  })),
+            )
+          ],
+        )
+      ],
+    );
   }
 }
 
@@ -227,18 +230,18 @@ class _TileSubtitle extends StatelessWidget {
             if (event.venue != null || event.cost != null)
               DefaultTextStyle(
                 style: TextStyle(
-                    fontSize: 14,
-                    fontWeight: FontWeight.bold,
-                    color: Colors.red,),
+                  fontSize: 14,
+                  fontWeight: FontWeight.bold,
+                  color: Theme.of(context).primaryColor,
+                ),
                 child: Row(
                   children: [
                     if (event.venue != null)
                       Row(
                         children: [
-                          SvgPicture.asset(
-                            'assets/icons/landmark.svg',
-                            height: 13,
-                          ),
+                          SvgPicture.asset('assets/icons/landmark.svg',
+                              height: 13,
+                              color: Theme.of(context).primaryColor),
                           Padding(
                             padding:
                                 const EdgeInsets.only(left: 4.0, right: 12),
@@ -251,8 +254,11 @@ class _TileSubtitle extends StatelessWidget {
                     if (event.cost != null)
                       Row(
                         children: [
-                          SvgPicture.asset('assets/icons/circle-dollar.svg',
-                              height: 14),
+                          SvgPicture.asset(
+                            'assets/icons/circle-dollar.svg',
+                            height: 14,
+                            color: Theme.of(context).primaryColor,
+                          ),
                           Padding(
                             padding: const EdgeInsets.only(left: 4.0),
                             child: Text(event.cost!),
