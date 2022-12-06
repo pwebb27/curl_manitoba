@@ -32,10 +32,10 @@ class MyApp extends StatelessWidget {
 
     return MaterialApp(
         theme: ThemeData(
-            colorScheme: ColorScheme.fromSwatch(
-          accentColor: Color.fromRGBO(251, 205, 7, 1),
-          primarySwatch: MainColorPallette.kToDark,
-        )),
+          primaryColor: const Color(0xff6f1200),
+
+          primaryColorLight: const Color(0xff8c4133), //40%
+        ),
         initialRoute: '/',
         onGenerateRoute: RouteGenerator.generateRoute);
   }
