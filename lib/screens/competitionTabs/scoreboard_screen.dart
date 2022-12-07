@@ -3,10 +3,10 @@ import 'package:curl_manitoba/models/draw.dart';
 import 'package:curl_manitoba/models/scoresCompetitionModels/game.dart';
 import 'package:curl_manitoba/models/scoresCompetitionModels/game_results.dart';
 import 'package:curl_manitoba/models/scoresCompetitionModels/scores_competition.dart';
+import 'package:curl_manitoba/models/scoresCompetitionModels/team.dart';
 import 'package:curl_manitoba/widgets/circular_progress_bar.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
-import 'package:http/http.dart' as http;
 import 'package:async/async.dart';
 
 class ScoreboardScreen extends StatefulWidget {
@@ -24,16 +24,21 @@ class _ScoreboardScreenState extends State<ScoreboardScreen>
   List<Draw>? draws;
   FutureGroup<void>? _gameResultsFutureGroup;
   late CurlingIOApi _curlingIOAPI;
-  late Future<http.Response> _competitionGamesFuture;
   late List<DropdownMenuItem> items;
   Draw? selectedDraw;
+  late FutureGroup<void> _teamsAndGamesFutureGroup;
+  late List<Team> teams;
 
   @override
   void initState() {
     super.initState();
     competition = widget.competition;
+
     _curlingIOAPI = CurlingIOApi();
-    _competitionGamesFuture = _curlingIOAPI.fetchGames(competition.id!);
+    _teamsAndGamesFutureGroup = FutureGroup()
+      ..add(_curlingIOAPI.fetchTeams(competition.id!))
+      ..add(_curlingIOAPI.fetchGames(competition.id!));
+      _teamsAndGamesFutureGroup.close();
   }
 
   @override
@@ -48,12 +53,16 @@ class _ScoreboardScreenState extends State<ScoreboardScreen>
                 padding: const EdgeInsets.only(left: 12.0, right: 12, top: 12),
                 sliver: SliverToBoxAdapter(
                   child: FutureBuilder(
-                      future: _competitionGamesFuture,
+                      future: _teamsAndGamesFutureGroup.future,
                       builder: (context, snapshot) {
                         if (snapshot.connectionState == ConnectionState.waiting)
                           return CircularProgressBar();
+                        List<dynamic> FutureGroupResponses =
+                            snapshot.data as List<dynamic>;
+
+                        teams = Team.parseTeamsData(FutureGroupResponses[0]);
                         games = Game.parseGamesData(
-                            snapshot.data as http.Response, competition);
+                            FutureGroupResponses[1], competition);
                         draws = Draw.getDrawsFromGames(games);
                         //Choose first draw to display as default
                         selectedDraw = draws![0];
@@ -127,9 +136,10 @@ class _ScoreboardScreenState extends State<ScoreboardScreen>
 
           int i = 0;
           for (Game game in selectedDraw!.games)
-            game.gameResultsbyTeamMap!.forEach((_, gameResults) {
+            game.gameResultsbyTeamMap!.forEach((team, gameResults) {
               gameResults.addVariablesFromGamesResultsResponse(
                   FutureGroupResponses[i++]);
+              team.name = getTeamNamefromTeamsId(team.id!);
             });
           return ListView.builder(
               shrinkWrap: true,
@@ -157,7 +167,7 @@ class _ScoreboardScreenState extends State<ScoreboardScreen>
                                     crossAxisAlignment:
                                         CrossAxisAlignment.start,
                                     children: [
-                                      FixedColumn(),
+                                      FixedColumn(selectedDraw!.games[index]),
                                       ScrollableColumn(
                                           selectedDraw!.games[index], context),
                                     ]),
@@ -167,7 +177,13 @@ class _ScoreboardScreenState extends State<ScoreboardScreen>
         });
   }
 
-  FixedColumn() => Container(
+  getTeamNamefromTeamsId(String teamId) {
+    for (Team team in teams) {
+      if (team.id == teamId) return team.name;
+    }
+  }
+
+  FixedColumn(Game game) => Container(
         width: 140,
         child: DataTable(
             border: TableBorder.symmetric(outside: BorderSide(width: .2)),
@@ -193,17 +209,22 @@ class _ScoreboardScreenState extends State<ScoreboardScreen>
               ),
             ],
             rows: [
-              DataRow(cells: [buildFixedColumnCell('test')]),
-              DataRow(cells: [buildFixedColumnCell('test')])
+              DataRow(cells: [
+                buildFixedColumnCell(
+                    game.gameResultsbyTeamMap!.keys.first.name!)
+              ]),
+              DataRow(cells: [
+                buildFixedColumnCell(game.gameResultsbyTeamMap!.keys.last.name!)
+              ])
             ]),
       );
 }
 
-buildFixedColumnCell(String text) {
+buildFixedColumnCell(String teamName) {
   return DataCell(Container(
       width: 145,
       child: Text(
-        'test',
+        teamName,
         style: TextStyle(fontWeight: FontWeight.bold, fontSize: 15),
       )));
 }
@@ -229,9 +250,8 @@ ScrollableColumn(Game game, BuildContext context) {
         border: TableBorder.symmetric(outside: BorderSide(width: .2)),
         headingRowHeight: 40,
         dataRowHeight: 40,
-        headingRowColor: MaterialStateProperty.all(
-          
-        Theme.of(context).primaryColorLight),
+        headingRowColor:
+            MaterialStateProperty.all(Theme.of(context).primaryColorLight),
         columnSpacing: 15,
         decoration: BoxDecoration(
           border: Border(
@@ -254,8 +274,8 @@ ScrollableColumn(Game game, BuildContext context) {
             )),
         ],
         rows: [
-          buildDataRow(game.gameResultsbyTeamMap!.values.first!),
-          buildDataRow(game.gameResultsbyTeamMap!.values.last!)
+          buildDataRow(game.gameResultsbyTeamMap!.values.first),
+          buildDataRow(game.gameResultsbyTeamMap!.values.last)
         ],
       ),
     ),
