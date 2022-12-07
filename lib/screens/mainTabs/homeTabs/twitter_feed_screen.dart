@@ -53,79 +53,76 @@ class TweetItem extends StatelessWidget {
   TweetItem(this.tweet);
 
   @override
-  Widget build(BuildContext context) => Theme(
-        data: ThemeData(fontFamily: 'NeuzeitOffice'),
-        child: InkWell(
-            child: Container(
-          color: Colors.grey.shade400,
-          child: Card(
-              margin: EdgeInsets.only(bottom: 1.3),
-              child: Container(
-                padding: const EdgeInsets.only(
-                    left: 7, right: 7, bottom: 16, top: 12),
-                child: Column(children: [
-                  if (tweet.isRetweet)
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        Icon(FontAwesomePro.retweet,
-                            size: 15, color: Colors.grey.shade700),
-                        Text('   Curl Manitoba retweeted',
-                            style: TextStyle(
-                                fontWeight: FontWeight.w700,
-                                color: Colors.grey.shade700)),
-                      ],
-                    ),
+  Widget build(BuildContext context) => InkWell(
+      child: Container(
+    color: Colors.grey.shade400,
+    child: Card(
+        margin: EdgeInsets.only(bottom: 4),
+        child: Container(
+          padding: const EdgeInsets.only(
+              left: 7, right: 7, bottom: 24, top: 12),
+          child: Column(children: [
+            if (tweet.isRetweet)
+              Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Icon(FontAwesomePro.retweet,
+                      size: 15, color: Colors.grey.shade700),
+                  Text('   Curl Manitoba retweeted',
+                      style: TextStyle(
+                          fontWeight: FontWeight.w700,
+                          color: Colors.grey.shade700)),
+                ],
+              ),
+            Padding(
+              padding: const EdgeInsets.only(top: 5, bottom: 6),
+              child: Row(
+                children: [
                   Padding(
-                    padding: const EdgeInsets.only(top: 5, bottom: 6),
-                    child: Row(
-                      children: [
-                        Padding(
-                            padding: const EdgeInsets.only(right: 7),
-                            child: ClipRRect(
-                              borderRadius: BorderRadius.circular(8.0),
-                              child: Image.network(
-                                tweet.profilePicURL!,
-                                height: 38,
-                              ),
-                            )),
-                        Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Text(tweet.handle!,
-                                style: TextStyle(fontWeight: FontWeight.bold)),
-                            Text(tweet.timeAgo!)
-                          ],
-                        )
-                      ],
-                    ),
-                  ),
-                  if (tweet.text != null)
-                    LinkifyText(
-                      tweet.text!,
-                      linkStyle: TextStyle(color: Colors.blue),
-                      linkTypes: [
-                        LinkType.email,
-                        LinkType.url,
-                        LinkType.hashTag,
-                        LinkType.userTag
-                      ],
-                      onTap: (link) async {
-                        if (link.value![0] == '#')
-                          await launch(
-                              'https://twitter.com/hashtag/${link.value!.substring(1)}?src=hashtag_click');
-                        else if (link.value![0] == '@')
-                          await launch('https://twitter.com/${link.value!.substring(1)}');
-                        await launch(link.value!);
-                      },
-                    ),
-                  if (tweet.mediaURL != "")
-                    Padding(
-                      padding: const EdgeInsets.only(top: 6),
-                      child: Image.network(tweet.mediaURL!),
-                    )
-                ]),
-              )),
+                      padding: const EdgeInsets.only(right: 7),
+                      child: ClipRRect(
+                        borderRadius: BorderRadius.circular(8.0),
+                        child: Image.network(
+                          tweet.profilePicURL!,
+                          height: 38,
+                        ),
+                      )),
+                  Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(tweet.handle!,
+                          style: TextStyle(fontWeight: FontWeight.bold)),
+                      Text(tweet.timeAgo!)
+                    ],
+                  )
+                ],
+              ),
+            ),
+            if (tweet.text != null)
+              LinkifyText(
+                tweet.text!,
+                linkStyle: TextStyle(color: Colors.blue),
+                linkTypes: [
+                  LinkType.email,
+                  LinkType.url,
+                  LinkType.hashTag,
+                  LinkType.userTag
+                ],
+                onTap: (link) async {
+                  if (link.value![0] == '#')
+                    await launch(
+                        'https://twitter.com/hashtag/${link.value!.substring(1)}?src=hashtag_click');
+                  else if (link.value![0] == '@')
+                    await launch('https://twitter.com/${link.value!.substring(1)}');
+                  await launch(link.value!);
+                },
+              ),
+            if (tweet.mediaURL != "")
+              Padding(
+                padding: const EdgeInsets.only(top: 6),
+                child: Image.network(tweet.mediaURL!),
+              )
+          ]),
         )),
-      );
+  ));
 }
