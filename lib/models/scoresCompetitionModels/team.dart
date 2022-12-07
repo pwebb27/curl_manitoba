@@ -18,9 +18,10 @@ class Team {
         coach = jsonTeam['coach'],
         location = jsonTeam['location'],
         affiliation = jsonTeam['affiliation'],
-        name = jsonTeam['name'].split(" ")[0] == 'Team'
+        //Remove leading 'team' word in team name if present
+        name = '${jsonTeam['name']}'.split(" ")[0].toLowerCase() != 'team'
             ? jsonTeam['name']
-            : 'Team ' + jsonTeam['name'],
+            : '${jsonTeam['name']}'.split(" ").sublist(1,'${jsonTeam['name']}'.length).join(" "),
         players = [
           for (Map<String, dynamic> jsonPlayer in jsonTeam['team_athletes'])
             (Player.fromJson(jsonPlayer))
