@@ -51,7 +51,7 @@ class _CalendarScreenState extends State<CalendarScreen>
           padding: const EdgeInsets.only(left: 12, top: 15, bottom: 18),
           child: Text(
               'Events for ' + DateFormat('LLL d, y').format(_selectedDay),
-              style: TextStyle(fontSize: 19, fontWeight: FontWeight.w700)),
+              style: TextStyle(fontSize: 19.5, fontWeight: FontWeight.w700)),
         ),
         ...selectedEvents.map((event) => _eventTile(event, scrollController))
       ]),
@@ -138,7 +138,7 @@ class _eventTile extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Padding(
-        padding: const EdgeInsets.only(bottom: 17.0),
+        padding: const EdgeInsets.only(bottom:20.0),
         child: (event.htmlDescription != '')
             ? eventExpansionTile(event: event)
             : ListTile(
