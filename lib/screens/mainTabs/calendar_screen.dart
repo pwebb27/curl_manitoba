@@ -46,15 +46,12 @@ class _CalendarScreenState extends State<CalendarScreen>
       controller: scrollController,
       child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
         buildTableCalendar(context),
-        Divider(thickness: 1, height: 40),
+        Divider(thickness: 1, height: 5),
         Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 12),
-          child: Padding(
-            padding: const EdgeInsets.only(bottom: 12.0),
-            child: Text(
-                'Events for ' + DateFormat('LLL d, y').format(_selectedDay),
-                style: TextStyle(fontSize: 19, fontWeight: FontWeight.w700)),
-          ),
+          padding: const EdgeInsets.only(left: 12, top: 15, bottom: 18),
+          child: Text(
+              'Events for ' + DateFormat('LLL d, y').format(_selectedDay),
+              style: TextStyle(fontSize: 19, fontWeight: FontWeight.w700)),
         ),
         ...selectedEvents.map((event) => _eventTile(event, scrollController))
       ]),
@@ -65,17 +62,21 @@ class _CalendarScreenState extends State<CalendarScreen>
     return widget.preloadedEvents[DateUtils.dateOnly(date)] ?? [];
   }
 
-  SizedBox buildTableCalendar(BuildContext context) {
+  Widget buildTableCalendar(BuildContext context) {
     return SizedBox(
       height: 370,
+    
       child: TableCalendar(
+        
+        
         shouldFillViewport: true,
+        
         calendarBuilders:
             CalendarBuilders(markerBuilder: ((context, day, events) {
           if (events.isNotEmpty)
             return Positioned(
-              top: -2,
-              right: -2,
+              top: 0,
+              right: 5,
               child: Container(
                 decoration:
                     BoxDecoration(color: Colors.blue, shape: BoxShape.circle),
@@ -83,7 +84,7 @@ class _CalendarScreenState extends State<CalendarScreen>
                 child: Text(
                   widget.preloadedEvents[DateUtils.dateOnly(day)]!.length
                       .toString(),
-                  style: TextStyle(color: Colors.white),
+                  style: TextStyle(color: Colors.white, fontSize: 12),
                 ),
               ),
             );
@@ -111,7 +112,7 @@ class _CalendarScreenState extends State<CalendarScreen>
                 shape: BoxShape.circle),
             selectedDecoration: BoxDecoration(
                 color: Theme.of(context).primaryColor, shape: BoxShape.circle)),
-
+    
         onDaySelected: (DateTime selectedDay, _) {
           setState(() {
             if (!isSameDay(_selectedDay, selectedDay)) {
