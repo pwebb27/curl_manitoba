@@ -197,7 +197,7 @@ class PopUp extends StatelessWidget {
           contentPadding: EdgeInsets.all(15),
           shape: RoundedRectangleBorder(
               borderRadius: BorderRadius.all(Radius.circular(8.0))),
-          insetPadding: EdgeInsets.symmetric(horizontal: 20, vertical: 140),
+          insetPadding: EdgeInsets.symmetric(horizontal: 20, vertical: 145),
           content: Stack(
               alignment: Alignment.topCenter,
               clipBehavior: Clip.none,
@@ -283,7 +283,7 @@ class NewsletterFormField extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Padding(
-        padding: EdgeInsets.symmetric(vertical: 8.0),
+        padding: EdgeInsets.symmetric(vertical: 7.0),
         child: Container(
           decoration: BoxDecoration(
               border: Border.all(width: 1),
