@@ -15,7 +15,7 @@ class ScrollableColumnWidget extends StatelessWidget {
         child: DataTable(
           headingRowHeight: 45,
           border: TableBorder.symmetric(outside: BorderSide(width: .2)),
-          dataRowHeight: 90,
+          dataRowHeight: 75,
           headingRowColor: MaterialStateProperty.all<Color>(Theme.of(context).primaryColorLight),
           columnSpacing: 40,
           decoration: BoxDecoration(

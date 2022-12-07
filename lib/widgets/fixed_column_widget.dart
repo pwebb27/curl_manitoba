@@ -15,7 +15,7 @@ class FixedColumnWidget extends StatelessWidget {
             outside: BorderSide(color: Colors.grey.shade400, width: .2),
           ),
           headingRowHeight: 45,
-          dataRowHeight: 90,
+          dataRowHeight: 75,
           headingRowColor:
               MaterialStateProperty.all<Color?>(Theme.of(context).primaryColor),
           decoration: BoxDecoration(
@@ -28,7 +28,7 @@ class FixedColumnWidget extends StatelessWidget {
           ),
           columns: [
             DataColumn(
-              label: Text('Event', style: TextStyle(color: Colors.black)),
+              label: Text('Event', style: TextStyle(color: Colors.white)),
             ),
           ],
           rows: [
