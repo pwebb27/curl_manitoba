@@ -184,8 +184,9 @@ class _ScoreboardScreenState extends State<ScoreboardScreen>
   }
 
   FixedColumn(Game game) => Container(
-        width: 140,
+        width: 170,
         child: DataTable(
+          horizontalMargin: 10,
             border: TableBorder.symmetric(outside: BorderSide(width: .2)),
             headingRowHeight: 40,
             dataRowHeight: 40,
@@ -247,9 +248,13 @@ ScrollableColumn(Game game, BuildContext context) {
     child: SingleChildScrollView(
       scrollDirection: Axis.horizontal,
       child: DataTable(
+        horizontalMargin: 8,
         border: TableBorder.symmetric(outside: BorderSide(width: .2)),
         headingRowHeight: 40,
         dataRowHeight: 40,
+        
+
+
         headingRowColor:
             MaterialStateProperty.all(Theme.of(context).primaryColorLight),
         columnSpacing: 15,
@@ -264,14 +269,19 @@ ScrollableColumn(Game game, BuildContext context) {
         columns: [
           for (String header in headers)
             DataColumn(
-                label: Text(
-              header,
-              style: TextStyle(
-                color: Colors.white,
-                fontSize: 15,
-              ),
-              textAlign: TextAlign.center,
-            )),
+
+
+              
+                label: Expanded(
+                  child: Text(
+                              header,
+                              style: TextStyle(
+                  color: Colors.white,
+                  fontSize: 15,
+                  
+                              ),
+                            ),
+                )),
         ],
         rows: [
           buildDataRow(game.gameResultsbyTeamMap!.values.first),
@@ -293,10 +303,11 @@ buildDataRow(GameResults results) {
 
   return DataRow(cells: [
     for (String cellText in teamRowCells)
-      DataCell(Text(
-        cellText,
-        style: TextStyle(fontSize: 15),
-        textAlign: TextAlign.center,
+      DataCell(Center(
+        child: Text(
+          cellText,
+          style: TextStyle(fontSize: 15),
+        ),
       ))
   ]);
 }
