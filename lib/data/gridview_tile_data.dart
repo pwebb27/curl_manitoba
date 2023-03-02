@@ -1,4 +1,4 @@
-import 'package:curl_manitoba/screens/grid_view_screen.dart';
+import 'package:curl_manitoba/presentation/screens/grid_view_screen.dart';
 
 //Data used inside GridViewScreen
 

@@ -1,4 +1,4 @@
-import 'package:curl_manitoba/widgets/main_drawer.dart';
+import 'package:curl_manitoba/presentation/widgets/main_drawer.dart';
 
 //Data used inside MainDrawer widget
 

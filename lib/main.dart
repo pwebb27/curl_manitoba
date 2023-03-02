@@ -1,13 +1,15 @@
 import 'package:curl_manitoba/data/main_color_pallete.dart';
-import 'package:curl_manitoba/providers/hasMoreCompetitionsProvider.dart';
-import 'package:curl_manitoba/providers/loadedCompetitionsProvider.dart';
-import 'package:curl_manitoba/providers/loadingProvider.dart';
-import 'package:curl_manitoba/providers/sliverappbar_arrow_provider.dart';
-import 'package:curl_manitoba/providers/sliverappbar_title_provider.dart';
+import 'package:curl_manitoba/presentation/providers/hasMoreCompetitionsProvider.dart';
+import 'package:curl_manitoba/presentation/providers/loadedCompetitionsProvider.dart';
+import 'package:curl_manitoba/presentation/providers/loadingProvider.dart';
+import 'package:curl_manitoba/presentation/providers/sliverappbar_arrow_provider.dart';
+import 'package:curl_manitoba/presentation/providers/sliverappbar_title_provider.dart';
 import 'package:curl_manitoba/data/route_generator.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:flutter/services.dart';
+
 import 'package:wakelock/wakelock.dart';
 
 void main() async {
@@ -29,6 +31,10 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     Wakelock.enable();
+        SystemChrome.setPreferredOrientations([
+      DeviceOrientation.portraitUp,
+      DeviceOrientation.portraitDown,
+    ]);
 
     return MaterialApp(
         theme: ThemeData(
