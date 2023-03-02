@@ -44,6 +44,8 @@ dependencies:
   file_picker: ^5.0.1
   provider: ^6.0.3
   data_table_2: ^2.3.6
+  equatable: ^2.0.5
+  dartz: ^0.10.1
  
 
 
@@ -66,7 +68,7 @@ dependencies:
 dev_dependencies:
   flutter_test:
     sdk: flutter
-
+  mockito: ^5.3.2
   flutter_native_splash: ^2.0.1+1
 
 flutter_native_splash: 
