@@ -28,6 +28,7 @@ class eEntryCompetition {
     Map<String, dynamic> eEntryJsonMap = json.decode(eEntryResponse.body);
     dom.Document eEntryHtmlDocument =
         parse(eEntryJsonMap['content']['rendered']);
+        
     List<html.Element> eEntryHtmlRows = eEntryHtmlDocument
         .getElementsByTagName('table')[1]
         .getElementsByTagName('tr');

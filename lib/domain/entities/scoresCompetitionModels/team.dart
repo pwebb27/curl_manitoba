@@ -1,4 +1,4 @@
-import 'package:curl_manitoba/models/scoresCompetitionModels/player.dart';
+import 'package:curl_manitoba/data/models/scoresCompetitionModels/player.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
 

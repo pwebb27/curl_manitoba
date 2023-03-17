@@ -1,6 +1,6 @@
-import 'package:curl_manitoba/models/scoresCompetitionModels/game_results.dart';
-import 'package:curl_manitoba/models/scoresCompetitionModels/scores_competition.dart';
-import 'package:curl_manitoba/models/scoresCompetitionModels/team.dart';
+import 'package:curl_manitoba/data/models/scoresCompetitionModels/game_results.dart';
+import 'package:curl_manitoba/data/models/scoresCompetitionModels/scores_competition.dart';
+import 'package:curl_manitoba/data/models/scoresCompetitionModels/team.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
 
