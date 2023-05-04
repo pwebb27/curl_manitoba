@@ -1,12 +1,9 @@
-import 'package:curl_manitoba/models/news_story.dart';
-import 'package:curl_manitoba/models/scoresCompetitionModels/scores_competition.dart';
+import 'package:curl_manitoba/domain/entities/news_story.dart';
+import 'package:curl_manitoba/domain/entities/scoresCompetitionModels/scores_competition.dart';
 import 'package:curl_manitoba/presentation/screens/mainTabs/homeTabs/home_feed_screen.dart';
-import 'package:curl_manitoba/presentation/screens/mainTabs/scores_screen.dart';
-import 'package:curl_manitoba/presentation/widgets/custom_app_bar.dart';
 import 'package:curl_manitoba/presentation/widgets/font_awesome_pro_icons.dart';
 import 'package:flutter/material.dart';
 
-import 'news/news_screen.dart';
 import 'homeTabs/twitter_feed_screen.dart';
 
 class HomeScreen extends StatefulWidget with PreferredSizeWidget {
@@ -66,7 +63,7 @@ class homeTabbar extends StatelessWidget with PreferredSizeWidget {
   ) {
     return Container(
         child: AppBar(
-          backgroundColor: Theme.of(context).primaryColor,
+            backgroundColor: Theme.of(context).primaryColor,
             leading: Builder(
                 builder: (context) => IconButton(
                     icon: Icon(FontAwesomePro.bars, size: 24),
@@ -78,7 +75,7 @@ class homeTabbar extends StatelessWidget with PreferredSizeWidget {
                     height: 39,
                     color: Colors.white,
                     child: TabBar(
-                      labelColor: Theme.of(context).primaryColor,
+                        labelColor: Theme.of(context).primaryColor,
                         controller: _tabController,
                         indicatorWeight: 3.5,
                         unselectedLabelColor: Colors.grey.shade700,

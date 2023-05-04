@@ -1,5 +1,5 @@
-import 'package:curl_manitoba/models/e_entry_competition.dart';
-import 'package:curl_manitoba/models/scoresCompetitionModels/scores_competition.dart';
+import 'package:curl_manitoba/domain/entities/e_entry_competition.dart';
+import 'package:curl_manitoba/domain/entities/scoresCompetitionModels/scores_competition.dart';
 import 'package:flutter/material.dart';
 
 class FixedColumnWidget extends StatelessWidget {

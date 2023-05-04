@@ -1,4 +1,4 @@
-import 'package:curl_manitoba/models/scoresCompetitionModels/scores_competition.dart';
+import 'package:curl_manitoba/domain/entities/scoresCompetitionModels/scores_competition.dart';
 import 'package:curl_manitoba/presentation/providers/sliverappbar_arrow_provider.dart';
 import 'package:curl_manitoba/presentation/providers/sliverappbar_title_provider.dart';
 import 'package:curl_manitoba/presentation/screens/competitionTabs/reports_screen.dart';

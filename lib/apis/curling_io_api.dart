@@ -1,4 +1,5 @@
 import 'package:curl_manitoba/apis/api_base_helper.dart';
+import 'package:dartz/dartz.dart';
 import 'package:flutter/services.dart';
 import 'package:http/http.dart' as http;
 
@@ -9,8 +10,7 @@ class CurlingIOApi {
 
   factory CurlingIOApi() => _singleton;
 
-  static const String baseUrl =
-      'legacy-curlingio.global.ssl.fastly.net';
+  static const String baseUrl = 'legacy-curlingio.global.ssl.fastly.net';
 
   static const String _rootPath = '/api/organizations/MTZFJ5miuro/competitions';
 

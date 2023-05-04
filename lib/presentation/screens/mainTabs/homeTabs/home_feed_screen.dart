@@ -1,18 +1,15 @@
-import 'package:curl_manitoba/models/calendar_event.dart';
-import 'package:curl_manitoba/models/news_story.dart';
-import 'package:curl_manitoba/models/scoresCompetitionModels/scores_competition.dart';
+import 'package:curl_manitoba/domain/entities/calendar_event.dart';
+import 'package:curl_manitoba/domain/entities/news_story.dart';
+import 'package:curl_manitoba/domain/entities/scoresCompetitionModels/scores_competition.dart';
 import 'package:curl_manitoba/presentation/widgets/carousel-image.dart';
 import 'package:curl_manitoba/presentation/widgets/competition_tile.dart';
 import 'package:curl_manitoba/presentation/widgets/font_awesome_pro_icons.dart';
 import 'package:flutter/material.dart';
 import 'package:carousel_slider/carousel_slider.dart';
 
-
-import '../../../widgets/circular_progress_bar.dart';
-
 class HomeFeedScreen extends StatefulWidget {
-  List<scoresCompetition> loadedCompetitions;
-  List<NewsStory> loadedNews;
+  final List<scoresCompetition> loadedCompetitions;
+  final List<NewsStory> loadedNews;
   HomeFeedScreen(this.loadedCompetitions, this.loadedNews);
 
   @override
@@ -131,15 +128,13 @@ class _HomeFeedScreenState extends State<HomeFeedScreen> {
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: <Widget>[
                       Padding(
-                        padding: const EdgeInsets.only(top:3.0),
+                        padding: const EdgeInsets.only(top: 3.0),
                         child: Container(
                           decoration: BoxDecoration(
                               gradient: LinearGradient(
                                   begin: Alignment.topRight,
                                   end: Alignment.bottomLeft,
-                                  colors: [
-                                Colors.black
-                              ])),
+                                  colors: [Colors.black])),
                           child: CarouselSlider(
                             items: carouselImages,
                             options: CarouselOptions(
@@ -355,4 +350,3 @@ Widget buildAdBanner() {
             width: double.infinity),
       ));
 }
-

@@ -1,11 +1,10 @@
-import 'package:curl_manitoba/models/calendar_event.dart';
+import 'package:curl_manitoba/domain/entities/calendar_event.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:intl/intl.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'package:table_calendar/table_calendar.dart';
 import 'package:flutter_html/flutter_html.dart';
-import 'package:http/http.dart' as http;
 
 class CalendarScreen extends StatefulWidget {
   final Map<DateTime, List<CalendarEvent>> preloadedEvents;
@@ -19,9 +18,6 @@ class _CalendarScreenState extends State<CalendarScreen>
     with AutomaticKeepAliveClientMixin {
   bool get wantKeepAlive => true;
   final ScrollController scrollController = ScrollController();
-
-  late Future<http.Response> calendarDataFuture;
-
   late DateTime _selectedDay;
   late List<CalendarEvent> selectedEvents;
 
@@ -41,7 +37,6 @@ class _CalendarScreenState extends State<CalendarScreen>
   @override
   Widget build(BuildContext context) {
     super.build(context);
-
     return SingleChildScrollView(
       controller: scrollController,
       child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
@@ -65,12 +60,8 @@ class _CalendarScreenState extends State<CalendarScreen>
   Widget buildTableCalendar(BuildContext context) {
     return SizedBox(
       height: 370,
-    
       child: TableCalendar(
-        
-        
         shouldFillViewport: true,
-        
         calendarBuilders:
             CalendarBuilders(markerBuilder: ((context, day, events) {
           if (events.isNotEmpty)
@@ -112,7 +103,7 @@ class _CalendarScreenState extends State<CalendarScreen>
                 shape: BoxShape.circle),
             selectedDecoration: BoxDecoration(
                 color: Theme.of(context).primaryColor, shape: BoxShape.circle)),
-    
+
         onDaySelected: (DateTime selectedDay, _) {
           setState(() {
             if (!isSameDay(_selectedDay, selectedDay)) {
@@ -132,13 +123,12 @@ class _eventTile extends StatelessWidget {
     this.scrollController,
   );
   final ScrollController scrollController;
-
   final CalendarEvent event;
 
   @override
   Widget build(BuildContext context) {
     return Padding(
-        padding: const EdgeInsets.only(bottom:20.0),
+        padding: const EdgeInsets.only(bottom: 20.0),
         child: (event.htmlDescription != '')
             ? eventExpansionTile(event: event)
             : ListTile(

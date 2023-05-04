@@ -1,6 +1,4 @@
-import 'package:curl_manitoba/models/scoresCompetitionModels/team.dart';
-import 'package:flutter/src/foundation/key.dart';
-import 'package:flutter/src/widgets/framework.dart';
+import 'package:curl_manitoba/domain/entities/scoresCompetitionModels/team.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 
@@ -132,7 +130,7 @@ class _TeamDataScreenState extends State<TeamDataScreen> {
 class ImageDialog extends StatelessWidget {
   final String imageUrl;
   ImageDialog(this.imageUrl);
- 
+
   @override
   Widget build(BuildContext context) {
     return Dialog(

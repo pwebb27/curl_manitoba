@@ -11,6 +11,8 @@ class NewsStory {
   late String id;
   String? content;
 
+  NewsStory();
+
   NewsStory.fromJson(Map<String, dynamic> jsonPost)
       : this.id = '${jsonPost['id']}',
         this.author = _getAuthorNameFromId(jsonPost['author']),

@@ -1,4 +1,4 @@
-import 'package:curl_manitoba/models/scoresCompetitionModels/scores_competition.dart';
+import 'package:curl_manitoba/domain/entities/scoresCompetitionModels/scores_competition.dart';
 import 'package:curl_manitoba/presentation/screens/tabsScreens/competition_tabs_screen.dart';
 import 'package:curl_manitoba/presentation/widgets/font_awesome_pro_icons.dart';
 import 'package:curl_manitoba/presentation/widgets/scores_competition_cached_network_image.dart';
@@ -72,7 +72,8 @@ class CompetitionTile extends StatelessWidget {
                                                 color: Colors.grey.shade700)))
                                   ])
                                 ]),
-                                scoresCompetitionCachedNetworkImage(competition: competition, height:30)
+                            scoresCompetitionCachedNetworkImage(
+                                competition: competition, height: 30)
                           ]),
                     )
                   ]),
@@ -81,4 +82,3 @@ class CompetitionTile extends StatelessWidget {
     );
   }
 }
-

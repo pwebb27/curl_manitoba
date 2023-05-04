@@ -1,5 +1,5 @@
-import 'package:curl_manitoba/models/news_story.dart';
-import 'package:curl_manitoba/models/scoresCompetitionModels/scores_competition.dart';
+import 'package:curl_manitoba/domain/entities/news_story.dart';
+import 'package:curl_manitoba/domain/entities/scoresCompetitionModels/scores_competition.dart';
 import 'package:curl_manitoba/presentation/screens/tabsScreens/competition_tabs_screen.dart';
 import 'package:curl_manitoba/presentation/screens/grid_view_content.dart';
 import 'package:curl_manitoba/presentation/screens/mainTabs/news/news_article_screen.dart';
