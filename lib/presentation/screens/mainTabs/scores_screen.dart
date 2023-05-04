@@ -1,5 +1,7 @@
 import 'package:curl_manitoba/apis/curling_io_api.dart';
-import 'package:curl_manitoba/models/scoresCompetitionModels/scores_competition.dart';
+import 'package:curl_manitoba/data/repositories/curling_io_repository.dart';
+import 'package:curl_manitoba/domain/entities/scoresCompetitionModels/scores_competition.dart';
+import 'package:curl_manitoba/domain/useCases/curling_io_repository_use_cases.dart';
 import 'package:curl_manitoba/presentation/providers/hasMoreCompetitionsProvider.dart';
 import 'package:curl_manitoba/presentation/providers/loadedCompetitionsProvider.dart';
 import 'package:curl_manitoba/presentation/providers/loadingProvider.dart';
@@ -36,10 +38,8 @@ class _ScoresScreenState extends State<ScoresScreen>
   ];
 
   late ScrollController _scrollController;
-  late Future<http.Response> _competitionDataFuture;
   late int _pageIndex;
   late int _selectedIndex;
-  late CurlingIOApi _curlingIOAPI;
   late String searchTags;
 
   filterCompetitions() {}
@@ -49,7 +49,6 @@ class _ScoresScreenState extends State<ScoresScreen>
     _selectedIndex = -1;
     _pageIndex = 1;
     searchTags = '';
-    _curlingIOAPI = CurlingIOApi();
     Provider.of<LoadedCompetitionsProvider>(context, listen: false)
         .addCompetitions(widget.preloadedCompetitions);
 
@@ -72,11 +71,9 @@ class _ScoresScreenState extends State<ScoresScreen>
         context.read<HasMoreCompetitionsProvider>().hasMoreCompetitions) {
       context.read<LoadingProvider>().isLoading = true;
 
-      http.Response response =
-          await _curlingIOAPI.fetchCompetitions(searchTags, (++_pageIndex).toString());
-
       List<scoresCompetition> newCompetitions =
-          scoresCompetition.parseCompetitionData(response);
+          GetScoresCompetitions(CurlingIORepositoryImp())(
+              searchTags, (++_pageIndex).toString());
 
       if (newCompetitions.length < 10)
         context.read<HasMoreCompetitionsProvider>().hasMoreCompetitions = false;
@@ -157,11 +154,9 @@ class _ScoresScreenState extends State<ScoresScreen>
 
               searchTags = entry.value.replaceAll(' ', '%20');
               _pageIndex = 1;
-              http.Response response =
-                  await _curlingIOAPI.fetchCompetitions(searchTags);
 
               context.read<LoadedCompetitionsProvider>().loadedCompetitions =
-                  scoresCompetition.parseCompetitionData(response);
+                  GetScoresCompetitions(CurlingIORepositoryImp())(searchTags);
 
               if (context
                       .read<LoadedCompetitionsProvider>()

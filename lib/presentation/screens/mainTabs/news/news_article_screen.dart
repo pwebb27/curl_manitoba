@@ -1,12 +1,9 @@
-import 'dart:convert';
-
-import 'package:curl_manitoba/apis/wordpress_api.dart';
-import 'package:curl_manitoba/models/news_story.dart';
+import 'package:curl_manitoba/data/repositories/word_press_repository.dart';
+import 'package:curl_manitoba/domain/entities/news_story.dart';
+import 'package:curl_manitoba/domain/useCases/wordpress_repository_use_cases.dart';
 import 'package:curl_manitoba/presentation/widgets/circular_progress_bar.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:flutter/material.dart';
-import 'package:html/parser.dart';
-import 'package:http/http.dart' as http;
 
 import '../../../widgets/custom_app_bar.dart';
 
@@ -21,13 +18,9 @@ class NewsStoryScreen extends StatefulWidget {
 
 class _NewsStoryScreenState extends State<NewsStoryScreen> {
   late NewsStory newsStory;
-  late Future<http.Response> _newsArticleFuture;
-  late WordPressApi _wordPressApi;
-
   @override
   void initState() {
     newsStory = widget.newsStory;
-    _newsArticleFuture = _wordPressApi.fetchPost('${newsStory.id}');
     super.initState();
   }
 
@@ -71,20 +64,15 @@ class _NewsStoryScreenState extends State<NewsStoryScreen> {
                 )),
           ),
           FutureBuilder(
-              future: _newsArticleFuture,
+              future: GetNewsStoryContent(WordPressRepositoryImp())(
+                  '${newsStory.id}'),
               builder: (context, snapshot) {
                 if (snapshot.connectionState == ConnectionState.waiting)
                   return Padding(
                     padding: const EdgeInsets.only(top: 30),
                     child: CircularProgressBar(),
                   );
-                http.Response newsArticleResponse =
-                    snapshot.data as http.Response;
-                final document = parse(json
-                    .decode(newsArticleResponse.body)['content']['rendered']);
-
-                newsStory.content =
-                    parse(document.body!.text).documentElement!.text;
+                newsStory.content = snapshot.data as String;
 
                 return Padding(
                   padding: const EdgeInsets.all(8.0),

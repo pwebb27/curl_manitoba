@@ -1,9 +1,11 @@
 import 'package:curl_manitoba/apis/curling_io_api.dart';
-import 'package:curl_manitoba/models/draw.dart';
-import 'package:curl_manitoba/models/scoresCompetitionModels/game.dart';
-import 'package:curl_manitoba/models/scoresCompetitionModels/game_results.dart';
-import 'package:curl_manitoba/models/scoresCompetitionModels/scores_competition.dart';
-import 'package:curl_manitoba/models/scoresCompetitionModels/team.dart';
+import 'package:curl_manitoba/data/repositories/curling_io_repository.dart';
+import 'package:curl_manitoba/domain/entities/draw.dart';
+import 'package:curl_manitoba/domain/entities/scoresCompetitionModels/game.dart';
+import 'package:curl_manitoba/domain/entities/scoresCompetitionModels/game_results.dart';
+import 'package:curl_manitoba/domain/entities/scoresCompetitionModels/scores_competition.dart';
+import 'package:curl_manitoba/domain/entities/scoresCompetitionModels/team.dart';
+import 'package:curl_manitoba/domain/useCases/curling_io_repository_use_cases.dart';
 import 'package:curl_manitoba/presentation/widgets/circular_progress_bar.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
@@ -23,7 +25,6 @@ class _ScoreboardScreenState extends State<ScoreboardScreen>
   late List<Game> games;
   List<Draw>? draws;
   FutureGroup<void>? _gameResultsFutureGroup;
-  late CurlingIOApi _curlingIOAPI;
   late List<DropdownMenuItem> items;
   Draw? selectedDraw;
   late FutureGroup<void> _teamsAndGamesFutureGroup;
@@ -34,11 +35,10 @@ class _ScoreboardScreenState extends State<ScoreboardScreen>
     super.initState();
     competition = widget.competition;
 
-    _curlingIOAPI = CurlingIOApi();
     _teamsAndGamesFutureGroup = FutureGroup()
-      ..add(_curlingIOAPI.fetchTeams(competition.id!))
-      ..add(_curlingIOAPI.fetchGames(competition.id!));
-      _teamsAndGamesFutureGroup.close();
+      ..add(GetTeams(CurlingIORepositoryImp())(competition.id!))
+      ..add(GetGames(CurlingIORepositoryImp())(competition.id!));
+    _teamsAndGamesFutureGroup.close();
   }
 
   @override
@@ -60,9 +60,8 @@ class _ScoreboardScreenState extends State<ScoreboardScreen>
                         List<dynamic> FutureGroupResponses =
                             snapshot.data as List<dynamic>;
 
-                        teams = Team.parseTeamsData(FutureGroupResponses[0]);
-                        games = Game.parseGamesData(
-                            FutureGroupResponses[1], competition);
+                        teams = FutureGroupResponses[0];
+                        games = FutureGroupResponses[1];
                         draws = Draw.getDrawsFromGames(games);
                         //Choose first draw to display as default
                         selectedDraw = draws![0];
@@ -72,11 +71,11 @@ class _ScoreboardScreenState extends State<ScoreboardScreen>
 
                           for (Game game in selectedDraw!.games)
                             _gameResultsFutureGroup!
-                              ..add(_curlingIOAPI.fetchGameResults(
+                              ..add(GetGameResults(CurlingIORepositoryImp())(
                                   competition.id!,
                                   game.gameResultsbyTeamMap!.keys.first.id!,
                                   game.gameResultsbyTeamMap!.values.first!.id!))
-                              ..add(_curlingIOAPI.fetchGameResults(
+                              ..add(GetGameResults(CurlingIORepositoryImp())(
                                   competition.id!,
                                   game.gameResultsbyTeamMap!.keys.first.id!,
                                   game.gameResultsbyTeamMap!.values.first!
@@ -186,7 +185,7 @@ class _ScoreboardScreenState extends State<ScoreboardScreen>
   FixedColumn(Game game) => Container(
         width: 170,
         child: DataTable(
-          horizontalMargin: 10,
+            horizontalMargin: 10,
             border: TableBorder.symmetric(outside: BorderSide(width: .2)),
             headingRowHeight: 40,
             dataRowHeight: 40,
@@ -252,9 +251,6 @@ ScrollableColumn(Game game, BuildContext context) {
         border: TableBorder.symmetric(outside: BorderSide(width: .2)),
         headingRowHeight: 40,
         dataRowHeight: 40,
-        
-
-
         headingRowColor:
             MaterialStateProperty.all(Theme.of(context).primaryColorLight),
         columnSpacing: 15,
@@ -269,19 +265,15 @@ ScrollableColumn(Game game, BuildContext context) {
         columns: [
           for (String header in headers)
             DataColumn(
-
-
-              
                 label: Expanded(
-                  child: Text(
-                              header,
-                              style: TextStyle(
+              child: Text(
+                header,
+                style: TextStyle(
                   color: Colors.white,
                   fontSize: 15,
-                  
-                              ),
-                            ),
-                )),
+                ),
+              ),
+            )),
         ],
         rows: [
           buildDataRow(game.gameResultsbyTeamMap!.values.first),

@@ -1,14 +1,16 @@
 import 'package:curl_manitoba/data/main_color_pallete.dart';
 import 'package:curl_manitoba/apis/curling_io_api.dart';
-import 'package:curl_manitoba/apis/wordpress_api.dart';
-import 'package:curl_manitoba/models/calendar_event.dart';
-import 'package:curl_manitoba/models/news_story.dart';
-import 'package:curl_manitoba/models/scoresCompetitionModels/scores_competition.dart';
+import 'package:curl_manitoba/data/repositories/curling_io_repository.dart';
+import 'package:curl_manitoba/data/repositories/word_press_repository.dart';
+import 'package:curl_manitoba/domain/entities/calendar_event.dart';
+import 'package:curl_manitoba/domain/entities/news_story.dart';
+import 'package:curl_manitoba/domain/entities/scoresCompetitionModels/scores_competition.dart';
+import 'package:curl_manitoba/domain/useCases/curling_io_repository_use_cases.dart';
+import 'package:curl_manitoba/domain/useCases/wordpress_repository_use_cases.dart';
 import 'package:curl_manitoba/presentation/screens/mainTabs/news/news_screen.dart';
 import 'package:curl_manitoba/presentation/screens/mainTabs/scores_screen.dart';
 import 'package:curl_manitoba/presentation/widgets/circular_progress_bar.dart';
 import 'package:flutter/material.dart';
-import 'package:http/http.dart' as http;
 import '../../widgets/custom_app_bar.dart';
 import '../../widgets/main_drawer.dart';
 import '../mainTabs/calendar_screen.dart';
@@ -23,31 +25,26 @@ class TabsScreen extends StatefulWidget {
 
 class _TabsScreenState extends State<TabsScreen> {
   late PageController _pageController;
-  late List<Future<http.Response>> tabsScreenFutures;
+  late List<Future<dynamic>> tabsScreenFutures;
   late List<scoresCompetition> loadedCompetitions;
   late Map<DateTime, List<CalendarEvent>> loadedEvents;
   late List<NewsStory> loadedNews;
   late final List<Widget> _pages;
   Future<void>? resultsFuture;
   late MockCurlingIOApi _mockCurlingIOApi;
-  late WordPressApi _wordPressApi;
 
   late int _selectedPageIndex;
 
   void initState() {
     _selectedPageIndex = 0;
-    _wordPressApi = WordPressApi();
-    _mockCurlingIOApi = MockCurlingIOApi();
-
-    tabsScreenFutures = [
-      _mockCurlingIOApi.fetchCompetitions(),
-      _wordPressApi.fetchPosts(amountOfPosts: 8),
-      _wordPressApi.fetchCalendarData()
-    ];
-    resultsFuture = Future.wait(tabsScreenFutures).then((data) {
-      loadedCompetitions = scoresCompetition.parseCompetitionData(data[0]);
-      loadedNews = NewsStory.parseNewsData(data[1]);
-      loadedEvents = CalendarEvent.parseCalendarData(data[2]);
+    resultsFuture = Future.wait([
+      GetScoresCompetitions(CurlingIORepositoryImp())(),
+      GetNewsStoryPosts(WordPressRepositoryImp())(amountOfPosts: 8),
+      GetCalendarEvents(WordPressRepositoryImp())()
+    ]).then((data) {
+      loadedCompetitions = data[0];
+      loadedNews = data[1];
+      loadedEvents = data[2];
 
       _pages = [
         HomeScreen(loadedCompetitions, loadedNews),
@@ -75,7 +72,6 @@ class _TabsScreenState extends State<TabsScreen> {
         builder: (context, snapshot) {
           if (snapshot.connectionState == ConnectionState.waiting)
             return Scaffold(body: CircularProgressBar());
-
           return DefaultTabController(
               length: 2,
               child: Scaffold(

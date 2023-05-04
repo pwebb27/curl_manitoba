@@ -1,10 +1,8 @@
-import 'dart:convert';
-import 'package:curl_manitoba/apis/wordpress_api.dart';
+import 'package:curl_manitoba/data/repositories/word_press_repository.dart';
+import 'package:curl_manitoba/domain/useCases/wordpress_repository_use_cases.dart';
 import 'package:curl_manitoba/presentation/widgets/circular_progress_bar.dart';
 import 'package:curl_manitoba/presentation/widgets/custom_app_bar.dart';
 import 'package:flutter/material.dart';
-import 'package:html/parser.dart';
-import 'package:http/http.dart' as http;
 
 class GridViewContentScreen extends StatefulWidget {
   final String pageTitle;
@@ -17,14 +15,12 @@ class GridViewContentScreen extends StatefulWidget {
 
 class _GridViewContentScreenState extends State<GridViewContentScreen> {
   String? pageContent;
-  late final WordPressApi _wordPressApi;
   late final String pageTitle;
 
   @override
   void initState() {
     super.initState();
     pageTitle = widget.pageTitle;
-    _wordPressApi = WordPressApi();
   }
 
   @override
@@ -34,16 +30,11 @@ class _GridViewContentScreenState extends State<GridViewContentScreen> {
         pageTitle,
       ),
       body: FutureBuilder(
-          future: _wordPressApi.fetchPage('1996'),
+          future: GetPageContent(WordPressRepositoryImp())('1996'),
           builder: (context, snapshot) {
             if (snapshot.connectionState == ConnectionState.waiting)
               return SliverFillRemaining(
                   child: Center(child: CircularProgressBar()));
-            http.Response wordPressPageResponse =
-                snapshot.data as http.Response;
-            final document = parse((json.decode(wordPressPageResponse.body)
-                as Map<String, dynamic>)['content']['rendered']);
-            pageContent = parse(document.body!.text).documentElement!.text;
-            return Text(pageContent!);
+            return Text(snapshot.data as String);
           }));
 }

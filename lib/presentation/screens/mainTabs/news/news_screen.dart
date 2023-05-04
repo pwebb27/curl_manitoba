@@ -1,16 +1,16 @@
-import 'package:curl_manitoba/apis/wordpress_api.dart';
+import 'package:curl_manitoba/data/repositories/word_press_repository.dart';
+import 'package:curl_manitoba/domain/useCases/wordpress_repository_use_cases.dart';
 import 'package:flutter/material.dart';
-import 'package:http/http.dart' as http;
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'package:flutter/gestures.dart';
 
-import '../../../../models/news_story.dart';
+import '../../../../domain/entities/news_story.dart';
 import '../../../widgets/circular_progress_bar.dart';
 
 class NewsFeedScreen extends StatefulWidget {
   NewsFeedScreen(this.loadedNews);
-  late List<NewsStory> loadedNews;
+  final List<NewsStory> loadedNews;
 
   @override
   State<NewsFeedScreen> createState() => _NewsFeedScreenState();
@@ -21,16 +21,11 @@ class _NewsFeedScreenState extends State<NewsFeedScreen>
   bool get wantKeepAlive => true;
 
   static const routeName = '/news';
-  late Future<http.Response> fetchRemainingNews;
   late List<NewsStory> preloadedNews;
-  late WordPressApi _wordPressApi;
 
   @override
   void initState() {
     preloadedNews = widget.loadedNews;
-    _wordPressApi = WordPressApi();
-    fetchRemainingNews = _wordPressApi.fetchPosts(amountOfPosts: 22);
-
     super.initState();
   }
 
@@ -64,12 +59,12 @@ class _NewsFeedScreenState extends State<NewsFeedScreen>
             )),
         buildNewsWidgets(preloadedNews),
         FutureBuilder(
-          future: fetchRemainingNews,
+          future:
+              GetNewsStoryPosts(WordPressRepositoryImp())(amountOfPosts: 22),
           builder: (context, snapshot) {
             if (snapshot.connectionState == ConnectionState.waiting)
               return CircularProgressBar();
-            return buildNewsWidgets(
-                NewsStory.parseNewsData(snapshot.data as http.Response));
+            return buildNewsWidgets(snapshot.data as List<NewsStory>);
           },
         ),
         buildEndOfScrollMessage()
@@ -277,7 +272,7 @@ class PopUp extends StatelessWidget {
 }
 
 class NewsletterFormField extends StatelessWidget {
-  String hintText;
+  final String hintText;
 
   NewsletterFormField(this.hintText);
   @override

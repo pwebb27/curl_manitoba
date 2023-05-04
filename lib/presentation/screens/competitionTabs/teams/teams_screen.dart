@@ -1,7 +1,9 @@
 import 'package:curl_manitoba/apis/curling_io_api.dart';
-import 'package:curl_manitoba/models/scoresCompetitionModels/format.dart';
-import 'package:curl_manitoba/models/scoresCompetitionModels/scores_competition.dart';
-import 'package:curl_manitoba/models/scoresCompetitionModels/team.dart';
+import 'package:curl_manitoba/data/repositories/curling_io_repository.dart';
+import 'package:curl_manitoba/domain/entities/scoresCompetitionModels/format.dart';
+import 'package:curl_manitoba/domain/entities/scoresCompetitionModels/scores_competition.dart';
+import 'package:curl_manitoba/domain/entities/scoresCompetitionModels/team.dart';
+import 'package:curl_manitoba/domain/useCases/curling_io_repository_use_cases.dart';
 import 'package:curl_manitoba/presentation/screens/tabsScreens/competition_tabs_screen.dart';
 import 'package:curl_manitoba/presentation/screens/competitionTabs/teams/team_screen.dart';
 import 'package:curl_manitoba/presentation/widgets/circular_progress_bar.dart';
@@ -22,23 +24,18 @@ class _TeamsScreenState extends State<TeamsScreen>
     with AutomaticKeepAliveClientMixin {
   bool get wantKeepAlive => true;
   late scoresCompetition competition;
-  late Future<List<http.Response>> futures;
+  late Future<List> futures;
   late List<Format> formats;
   late int defaultChoiceIndex = -1;
-  late CurlingIOApi _curlingIOAPI;
 
   late List<Team> teams;
   void initState() {
     teams = [];
-    _curlingIOAPI = CurlingIOApi();
-
     competition = widget.competition;
-    print(competition.id);
     futures = Future.wait([
-      _curlingIOAPI.fetchTeams(competition.id!),
-      _curlingIOAPI.fetchFormat(competition.id!)
+      GetTeams(CurlingIORepositoryImp())(competition.id!),
+      GetFormats(CurlingIORepositoryImp())(competition.id!)
     ]);
-
     super.initState();
   }
 
@@ -51,8 +48,8 @@ class _TeamsScreenState extends State<TeamsScreen>
           if (snapshot.connectionState == ConnectionState.waiting)
             return CircularProgressBar();
           List<http.Response> responses = snapshot.data as List<http.Response>;
-          teams = Team.parseTeamsData(responses[0]);
-          formats = Format.parseFormatData(responses[1]);
+          teams = responses[0];
+          formats = responses[1];
 
           return Scaffold(
             bottomNavigationBar: Container(
