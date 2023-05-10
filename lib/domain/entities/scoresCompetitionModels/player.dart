@@ -1,4 +1,4 @@
-import 'package:string_extensions/string_extensions.dart';
+// ignore_for_file: public_member_api_docs, sort_constructors_first
 
 class Player {
   final String? name;
@@ -8,13 +8,12 @@ class Player {
   final String? club;
   final String? delivery;
 
-  Player.fromJson(Map<String, dynamic> jsonPlayer)
-      : this.name = '${jsonPlayer['athlete']['first_name']}'.capitalize! +
-            ' ' +
-            '${jsonPlayer['athlete']['last_name']}'.capitalize!,
-        this.position = '${jsonPlayer['position']}'.capitalize!,
-        this.city = jsonPlayer['athlete']['city'],
-        this.club = jsonPlayer['athlete']['club_name'],
-        this.delivery = jsonPlayer['athlete']['delivery'],
-        this.profilePicUrl = (jsonPlayer['athlete']['photo_url']);
+  Player({
+    required this.name,
+    required this.profilePicUrl,
+    required this.position,
+    required this.city,
+    required this.club,
+    required this.delivery,
+  });
 }
