@@ -27,18 +27,20 @@ class CustomAppBar extends StatelessWidget with PreferredSizeWidget {
   ) {
     return Container(
         child: AppBar(
-          backgroundColor: Theme.of(context).primaryColor,
+            backgroundColor: Theme.of(context).primaryColor,
             leading: Builder(
                 builder: (context) => IconButton(
                     icon: Icon(FontAwesomePro.bars, size: 24),
                     onPressed: () => Scaffold.of(context).openDrawer())),
-            title: pageTitle!=''?Text(
-              pageTitle,
-              style: TextStyle(
-                  fontSize: 20.5,
-                  color: Colors.white,
-                  fontWeight: FontWeight.w400),
-            ):buildAppBarImage(),
+            title: pageTitle != ''
+                ? Text(
+                    pageTitle,
+                    style: TextStyle(
+                        fontSize: 20.5,
+                        color: Colors.white,
+                        fontWeight: FontWeight.w400),
+                  )
+                : buildAppBarImage(),
             bottom: searchBar ? buildSearchBar() : null));
   }
 

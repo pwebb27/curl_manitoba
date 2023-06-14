@@ -9,11 +9,12 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:flutter/services.dart';
-
+import 'injection_container.dart' as di;
 import 'package:wakelock/wakelock.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
+  await di.init();
   await Firebase.initializeApp();
 
   runApp(MultiProvider(providers: [
@@ -31,7 +32,7 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     Wakelock.enable();
-        SystemChrome.setPreferredOrientations([
+    SystemChrome.setPreferredOrientations([
       DeviceOrientation.portraitUp,
       DeviceOrientation.portraitDown,
     ]);
@@ -40,7 +41,7 @@ class MyApp extends StatelessWidget {
         theme: ThemeData(
           primaryColor: const Color(0xff6f1200),
 
-          primaryColorLight:const Color.fromRGBO(143, 108, 102, 1), //40%
+          primaryColorLight: const Color.fromRGBO(143, 108, 102, 1), //40%
         ),
         initialRoute: '/',
         onGenerateRoute: RouteGenerator.generateRoute);

@@ -1,6 +1,5 @@
 import 'package:curl_manitoba/domain/entities/scoresCompetitionModels/scores_competition.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/src/foundation/key.dart';
 
 class ReportsScreen extends StatefulWidget {
   final scoresCompetition competition;

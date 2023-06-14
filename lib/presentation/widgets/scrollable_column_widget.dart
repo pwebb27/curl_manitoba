@@ -1,5 +1,4 @@
 import 'package:curl_manitoba/domain/entities/e_entry_competition.dart';
-import 'package:curl_manitoba/domain/entities/scoresCompetitionModels/scores_competition.dart';
 import 'package:flutter/material.dart';
 
 class ScrollableColumnWidget extends StatelessWidget {
@@ -16,7 +15,8 @@ class ScrollableColumnWidget extends StatelessWidget {
           headingRowHeight: 45,
           border: TableBorder.symmetric(outside: BorderSide(width: .2)),
           dataRowHeight: 75,
-          headingRowColor: MaterialStateProperty.all<Color>(Theme.of(context).primaryColorLight),
+          headingRowColor: MaterialStateProperty.all<Color>(
+              Theme.of(context).primaryColorLight),
           columnSpacing: 40,
           decoration: BoxDecoration(
             border: Border(
