@@ -1,5 +1,4 @@
 import 'package:curl_manitoba/apis/api_base_helper.dart';
-import 'package:dartz/dartz.dart';
 import 'package:flutter/services.dart';
 import 'package:http/http.dart' as http;
 
